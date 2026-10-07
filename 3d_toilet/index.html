@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 변기 모델링 & 물 내리기 시뮬레이터</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Three.js r128 CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- 3D Canvas Viewport -->
+    <div id="webgl-container"></div>
+
+    <!-- Header UI -->
+    <header class="ui-header">
+      <div class="title-group">
+        <h1>🚽 3D Porcelain Toilet Simulator</h1>
+        <p class="subtitle">세라믹 3D 변기 모델 & 회오리 물 내리기 시뮬레이션</p>
+      </div>
+      <div class="status-badge" id="flush-status">대기 중</div>
+    </header>
+
+    <!-- Sidebar Control Panel -->
+    <aside class="ui-panel">
+      <div class="panel-section">
+        <h3>🎮 다른 게임으로 이동</h3>
+        <select class="nav-game-select" onchange="if(this.value) window.location.href=this.value;">
+          <option value="">🎮 다른 게임 선택...</option>
+          <option value="../index.html">🏠 아케이드 포털 허브</option>
+          <option value="../physics_game/index.html">🏀 최단 경로 물리 게임</option>
+          <option value="../3d_pool/index.html">🏊 3D 수영장 시뮬레이터</option>
+          <option value="index.html" selected>🚽 3D 도자기 변기 & 설사</option>
+          <option value="../snake_game/index.html">🐍 아케이드 스네이크 게임</option>
+          <option value="../camera_app/index.html">📷 카메라 URL 스캐너</option>
+        </select>
+      </div>
+
+      <div class="panel-section">
+        <h3>🎮 변기 인터랙션</h3>
+        <button id="flush-btn" class="btn btn-primary">
+          <span class="icon">🚽</span> 물 내리기 (Flush & Clean)
+        </button>
+        <button id="diarrhea-btn" class="btn btn-poo">
+          <span class="icon">💩</span> 물설사 투하!
+        </button>
+        <button id="toggle-lid-btn" class="btn btn-secondary">
+          <span class="icon">📂</span> 변기 덮개 열기 / 닫기
+        </button>
+        <button id="toggle-seat-btn" class="btn btn-secondary">
+          <span class="icon">🪑</span> 시트 올리기 / 내리기
+        </button>
+      </div>
+
+      <div class="panel-section">
+        <h3>🎵 커스텀 사운드 설정</h3>
+        <button id="sound-picker-btn" class="btn btn-sound">
+          <span class="icon">🎵</span> 사운드 파일 정하기 (탐색기)
+        </button>
+        <input type="file" id="audio-file-input" accept="audio/*" class="hidden">
+        
+        <div class="sound-info-box">
+          <div class="sound-info-item">
+            <span>💩 물설사:</span>
+            <span id="diarrhea-sound-name" class="sound-name font-mono">기본 합성 음향</span>
+          </div>
+          <div class="sound-info-item">
+            <span>🌊 물 내리기:</span>
+            <span id="flush-sound-name" class="sound-name font-mono">기본 합성 음향</span>
+          </div>
+        </div>
+        <button id="reset-sound-btn" class="btn btn-secondary btn-sm">
+          🔄 기본 사운드로 복원
+        </button>
+      </div>
+
+      <div class="panel-section">
+        <h3>🎨 세라믹 재질 스킨</h3>
+        <div class="skin-options">
+          <button class="skin-btn active" data-skin="white" style="background:#ffffff;" title="클래식 화이트"></button>
+          <button class="skin-btn" data-skin="black" style="background:#1e293b;" title="매트 블랙"></button>
+          <button class="skin-btn" data-skin="gold" style="background:linear-gradient(135deg, #f59e0b, #fbbf24);" title="럭셔리 골드"></button>
+          <button class="skin-btn" data-skin="rosegold" style="background:linear-gradient(135deg, #fb7185, #fda4af);" title="로즈 골드"></button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>✨ 조명 & 광택 효과</h3>
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>도자기 광택 (Glossiness):</span>
+            <span id="roughness-val" class="font-mono">0.10</span>
+          </div>
+          <input type="range" id="roughness-slider" min="0.02" max="0.5" value="0.1" step="0.01">
+        </div>
+        <label class="toggle-group">
+          <input type="checkbox" id="water-visible-toggle" checked>
+          <span>변기 수조 물 표면 표시</span>
+        </label>
+      </div>
+
+      <div class="panel-footer">
+        <p>💡 팁: [🎵 사운드 파일 정하기]를 누르면 파일 탐색기에서 내 음원(MP3/WAV)을 선택해 물설사 또는 물 내리기 소리로 지정할 수 있습니다!</p>
+      </div>
+    </aside>
+
+    <!-- Sound Mapping Modal Dialog -->
+    <div id="sound-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <h3>🎵 사운드 적용 위치 선택</h3>
+        <p>선택한 음원 파일: <strong id="modal-filename" class="font-mono">sample.mp3</strong></p>
+        <p class="modal-sub">이 소리를 어디에 지정하시겠습니까?</p>
+
+        <div class="modal-buttons">
+          <button id="map-diarrhea-btn" class="btn btn-poo">
+            💩 물설사 소리로 지정
+          </button>
+          <button id="map-flush-btn" class="btn btn-primary">
+            🌊 물 내리기 소리로 지정
+          </button>
+          <button id="modal-cancel-btn" class="btn btn-secondary">
+            취소
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="toilet_model.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

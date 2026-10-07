@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>카메라 URL 스캐너 & 자동 연결 실행 앱</title>
+  <link rel="stylesheet" href="camera_style.css">
+  <!-- jsQR Library for QR / Barcode decoding -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">📷</span>
+        <h1>Camera URL Scanner</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Camera Viewfinder & Scanner Frame -->
+    <main class="viewfinder-container">
+      <video id="webcam-feed" playsinline autoplay muted></video>
+      <canvas id="scan-canvas" class="hidden"></canvas>
+      
+      <!-- Target Overlay Box -->
+      <div class="scanner-overlay">
+        <div class="scanner-box">
+          <div class="laser-line"></div>
+          <span class="corner top-left"></span>
+          <span class="corner top-right"></span>
+          <span class="corner bottom-left"></span>
+          <span class="corner bottom-right"></span>
+        </div>
+        <p class="scan-instruction">카메라를 QR 코드나 URL 주소에 비춰주세요</p>
+      </div>
+    </main>
+
+    <!-- Scanner Controls & Results Panel -->
+    <section class="result-panel">
+      <div class="status-indicator">
+        <span id="status-dot" class="dot searching"></span>
+        <span id="status-text">카메라 탐색 중...</span>
+      </div>
+
+      <div class="cam-controls-row">
+        <button id="restart-cam-btn" class="btn btn-secondary btn-sm">
+          🔄 카메라 다시 연결
+        </button>
+        <button id="switch-cam-btn" class="btn btn-secondary btn-sm">
+          🔄 전/후면 전환
+        </button>
+      </div>
+
+      <!-- Scanned URL Result Card -->
+      <div id="result-card" class="result-card hidden">
+        <span class="label">인식된 주소:</span>
+        <div id="scanned-url" class="scanned-url-text">https://example.com</div>
+        <div class="btn-group">
+          <button id="launch-app-btn" class="btn btn-primary">
+            🚀 연결 프로그램 설정 & 실행
+          </button>
+          <button id="copy-url-btn" class="btn btn-secondary">
+            📋 복사
+          </button>
+        </div>
+      </div>
+
+      <!-- Fallback Input Option for Photos / Files -->
+      <div class="fallback-options">
+        <label for="photo-file-input" class="btn btn-outline">
+          📁 갤러리/사진 선택 스캔 (QR 사진 파일)
+        </label>
+        <input type="file" id="photo-file-input" accept="image/*" class="hidden">
+      </div>
+
+      <div class="auto-open-setting">
+        <label class="toggle-switch">
+          <input type="checkbox" id="auto-open-toggle" checked>
+          <span class="slider"></span>
+        </label>
+        <span>URL 인식 시 자동으로 연결 프로그램 실행</span>
+      </div>
+    </section>
+
+    <!-- History Panel -->
+    <footer class="history-panel">
+      <div class="history-header">
+        <h3>📜 최근 스캔 기록</h3>
+        <button id="clear-history-btn" class="btn-text">삭제</button>
+      </div>
+      <ul id="history-list" class="history-list">
+        <li class="empty-msg">아직 스캔된 기록이 없습니다.</li>
+      </ul>
+    </footer>
+  </div>
+
+  <script src="camera_app.js"></script>
+</body>
+</html>

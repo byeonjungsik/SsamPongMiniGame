@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📱 유튜브 쇼츠 3D 공익광고 (MP4) - 학생 작품</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">📱</span>
+        <h1>유튜브 쇼츠 3D 공익광고 (MP4)</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Player Aspect Switcher -->
+      <div class="player-aspect-bar">
+        <button id="btn-view-shorts" class="btn-aspect active">📱 유튜브 쇼츠 (9:16 세로형 MP4)</button>
+        <button id="btn-view-hd" class="btn-aspect">📺 일반 와이드 (16:9 가로형 MP4)</button>
+      </div>
+
+      <!-- Player Video & WebGL Canvas Container -->
+      <div id="player-frame" class="player-container shorts-mode">
+        <!-- Direct MP4 File HTML5 Video Player -->
+        <video id="psa-video-player" controls loop autoplay muted playsinline preload="auto">
+          <source id="video-src" src="psa_3d_shorts.mp4" type="video/mp4">
+          브라우저가 MP4 비디오 태그를 지원하지 않습니다.
+        </video>
+
+        <!-- Shorts Side UI Overlays -->
+        <div class="shorts-ui-overlay">
+          <div class="shorts-action-item">
+            <span class="icon">❤️</span>
+            <span class="count">12.4K</span>
+          </div>
+          <div class="shorts-action-item">
+            <span class="icon">💬</span>
+            <span class="count">842</span>
+          </div>
+          <div class="shorts-action-item">
+            <span class="icon">↗️</span>
+            <span class="count">공유</span>
+          </div>
+        </div>
+
+        <!-- Channel & Caption Overlay -->
+        <div id="caption-overlay" class="caption-overlay">
+          <div class="channel-tag">@Student_3D_PSA • 구독</div>
+          <div id="caption-title" class="caption-title">우리가 외면한 3초... 🌿</div>
+          <div id="caption-sub" class="caption-sub">#학생3D공익광고 #환경보호 #Shorts</div>
+        </div>
+      </div>
+
+      <!-- Action & Control Bar -->
+      <div class="control-panel">
+        <div class="download-section">
+          <div class="download-btn-group">
+            <a id="download-shorts-link" href="psa_3d_shorts.mp4" download="psa_3d_shorts.mp4" class="btn btn-download">
+              📥 9:16 쇼츠 MP4 다운로드
+            </a>
+            <a id="download-hd-link" href="psa_3d_ad.mp4" download="psa_3d_ad.mp4" class="btn btn-download btn-secondary">
+              📥 16:9 HD MP4 다운로드
+            </a>
+          </div>
+          <span class="file-info-badge">H.264 High Quality MP4 Video</span>
+        </div>
+
+        <!-- Scene Jump Buttons -->
+        <div class="scene-jump-bar">
+          <span class="scene-label">장면 바로가기:</span>
+          <button class="btn-scene" data-time="0">Scene 1: 경고 (3D 지구)</button>
+          <button class="btn-scene" data-time="3.5">Scene 2: 위기 (도시 & 오염)</button>
+          <button class="btn-scene" data-time="7.5">Scene 3: 희망 (새싹 & 치유)</button>
+          <button class="btn-scene" data-time="11.5">Scene 4: 실천 약속 (캠페인)</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Info Footer -->
+    <footer class="app-footer">
+      <p>🎬 유튜브 쇼츠(`gK4gON8hvLc`) 스타일 학생 3D 공익광고 VFX 비디오 작품입니다.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

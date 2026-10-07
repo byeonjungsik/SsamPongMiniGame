@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 나비에-스토크스 수영장 유체 시뮬레이터</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Reliable Three.js r128 CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- 3D WebGL Canvas Viewport -->
+    <div id="webgl-container"></div>
+
+    <!-- UI Overlay Header -->
+    <header class="ui-header">
+      <div class="title-group">
+        <h1>🏊 3D Navier-Stokes Pool Simulator</h1>
+        <p class="subtitle">현실 지구 중력 ($g=9.81\text{m/s}^2$) & 나비에-스토크스 유체 물리 시뮬레이션</p>
+      </div>
+      <div class="fps-badge" id="fps-counter">60 FPS</div>
+    </header>
+
+    <!-- UI Control Panel Sidebar -->
+    <aside class="ui-panel">
+      <div class="panel-section">
+        <h3>🎮 다른 게임으로 이동</h3>
+        <select class="nav-game-select" onchange="if(this.value) window.location.href=this.value;">
+          <option value="">🎮 다른 게임 선택...</option>
+          <option value="../index.html">🏠 아케이드 포털 허브</option>
+          <option value="../physics_game/index.html">🏀 최단 경로 물리 게임</option>
+          <option value="index.html" selected>🏊 3D 수영장 시뮬레이터</option>
+          <option value="../3d_toilet/index.html">🚽 3D 도자기 변기 & 설사</option>
+          <option value="../snake_game/index.html">🐍 아케이드 스네이크 게임</option>
+          <option value="../camera_app/index.html">📷 카메라 URL 스캐너</option>
+        </select>
+      </div>
+
+      <div class="panel-section">
+        <h3>🏊 수영장 인터랙션</h3>
+        <button id="drop-ball-btn" class="btn btn-primary">
+          <span class="icon">⚽</span> 공 떨어뜨리기 (Splash)
+        </button>
+        <button id="poop-pool-btn" class="btn btn-poo">
+          <span class="icon">💩</span> 사람 수영장에 설사 지리기!
+        </button>
+
+        <button id="filter-pool-btn" class="btn btn-secondary">
+          <span class="icon">🧼</span> 수영장 정화 & 수질 청소
+        </button>
+
+        <button id="wave-impulse-btn" class="btn btn-secondary">
+          <span class="icon">🌊</span> 강한 파도 충격 발생
+        </button>
+        <button id="reset-water-btn" class="btn btn-danger">
+          <span class="icon">🔄</span> 수면 파동 초기화
+        </button>
+      </div>
+
+      <div class="panel-section">
+        <h3>🌊 나비에-스토크스 물리 설정</h3>
+        
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>파동 전달 속도 ($c$):</span>
+            <span id="speed-val" class="font-mono">3.2</span>
+          </div>
+          <input type="range" id="speed-slider" min="0.5" max="6.0" value="3.2" step="0.1">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>점성 감쇄 ($\gamma$):</span>
+            <span id="damping-val" class="font-mono">0.04</span>
+          </div>
+          <input type="range" id="damping-slider" min="0.005" max="0.1" value="0.04" step="0.005">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>실제 지구 중력 가속도 ($g$):</span>
+            <span id="gravity-val" class="font-mono">9.81</span>
+          </div>
+          <input type="range" id="gravity-slider" min="2.0" max="25.0" value="9.81" step="0.01">
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>🎨 수질 & 렌더링 설정</h3>
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>수영장 물 색상:</span>
+          </div>
+          <div class="color-options">
+            <button class="color-btn active" data-color="#00d2ff" style="background:#00d2ff;" title="에메랄드 블루"></button>
+            <button class="color-btn" data-color="#0066ff" style="background:#0066ff;" title="딥 아쿠아"></button>
+            <button class="color-btn" data-color="#00ffcc" style="background:#00ffcc;" title="트로피컬 시"></button>
+            <button class="color-btn" data-color="#990033" style="background:#990033;" title="와인 칵테일"></button>
+          </div>
+        </div>
+
+        <label class="toggle-group">
+          <input type="checkbox" id="caustics-toggle" checked>
+          <span>바닥 수중 빛 굴절(Caustics) 표시</span>
+        </label>
+        <label class="toggle-group">
+          <input type="checkbox" id="particles-toggle" checked>
+          <span>물보라(Splash Particles) 표시</span>
+        </label>
+      </div>
+
+      <div class="panel-footer">
+        <p>💡 팁: 실제 지구 중력 $g = 9.81\text{m/s}^2$과 아르키메데스 부력 & 포물선 포탄 운동 물리 수식이 적용되어 수영 선수 다이빙과 물체 낙하 속도가 실제와 똑같습니다!</p>
+      </div>
+    </aside>
+  </div>
+
+  <script src="navier_stokes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

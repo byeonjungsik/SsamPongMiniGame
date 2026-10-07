@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>최단 경로 곡선 2D 자유낙하 & 탄성 벽 물리 게임</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- UI Controls Header -->
+    <header class="ui-header">
+      <div class="header-left">
+        <h1>🏀 2D Bouncy Wall Physics Game</h1>
+        <p class="subtitle">v = v₀ + at 적용 2D 자유낙하 & 탄성 벽 마찰 물리 시뮬레이션</p>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Canvas Viewport -->
+    <main class="canvas-container">
+      <canvas id="gameCanvas" width="900" height="550"></canvas>
+    </main>
+
+    <!-- Control Toolbar -->
+    <footer class="ui-toolbar">
+      <div class="tool-group">
+        <button id="startBtn" class="btn btn-primary">▶ 시작 (Start)</button>
+        <button id="resetBtn" class="btn btn-secondary">🔄 초기화 (Reset)</button>
+        <button id="clearLinesBtn" class="btn btn-danger">🗑️ 그린 벽 지우기</button>
+      </div>
+
+      <div class="tool-group">
+        <span class="tool-label">도구 모드:</span>
+        <button id="drawModeBtn" class="btn btn-tool active">✏️ 벽 그리기 (Multi-Stroke)</button>
+        <button id="eraseModeBtn" class="btn btn-tool">🧹 지우개 (Eraser)</button>
+      </div>
+
+      <div class="tool-group sliders">
+        <div class="slider-item">
+          <label for="gravitySlider">중력 가속도 ($g$): <span id="gravityVal">980</span> px/s²</label>
+          <input type="range" id="gravitySlider" min="200" max="2500" value="980">
+        </div>
+
+        <div class="slider-item">
+          <label for="elasticitySlider">반발 계수 ($e$): <span id="elasticityVal">0.75</span></label>
+          <input type="range" id="elasticitySlider" min="0.1" max="1.0" step="0.05" value="0.75">
+        </div>
+
+        <div class="slider-item">
+          <label for="frictionSlider">벽 마찰 계수 ($\mu$): <span id="frictionVal">0.10</span></label>
+          <input type="range" id="frictionSlider" min="0.00" max="0.50" step="0.01" value="0.10">
+        </div>
+      </div>
+
+      <div class="tool-group toggles">
+        <label class="toggle-label">
+          <input type="checkbox" id="cycloidToggle"> 사이클로이드 이론 가이드 표시
+        </label>
+      </div>
+    </footer>
+  </div>
+
+  <script src="physics.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🔥❄️ 얼불춤 (A Dance of Fire and Ice) - 웹 리듬 액션 게임</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">🔥❄️</span>
+        <h1>얼불춤 (A Dance of Fire and Ice)</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Main Game Viewport -->
+    <main class="main-content">
+      <!-- Game Canvas Container -->
+      <div id="canvas-container" class="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- In-Game HUD Overlay -->
+        <div id="game-hud" class="game-hud hidden">
+          <div class="hud-top">
+            <div class="hud-stage-name" id="hud-stage-name">STAGE 1</div>
+            <div class="hud-progress-wrapper">
+              <div class="hud-progress-bar" id="hud-progress-bar"></div>
+            </div>
+            <div class="hud-percent" id="hud-percent">0%</div>
+          </div>
+
+          <div class="hud-center">
+            <div id="hit-feedback" class="hit-feedback">PERFECT!</div>
+          </div>
+
+          <div class="hud-bottom">
+            <div class="hud-stat-box">
+              <span class="stat-label">COMBO</span>
+              <span class="stat-value combo-val" id="hud-combo">0</span>
+            </div>
+            <div class="hud-stat-box">
+              <span class="stat-label">ACCURACY</span>
+              <span class="stat-value" id="hud-accuracy">100.0%</span>
+            </div>
+            <div class="hud-stat-box">
+              <span class="stat-label">SCORE</span>
+              <span class="stat-value" id="hud-score">0</span>
+            </div>
+            <button id="pause-btn" class="hud-pause-btn">⏸️</button>
+          </div>
+        </div>
+
+        <!-- Stage Selection Overlay Panel -->
+        <div id="stage-menu" class="overlay-panel">
+          <div class="menu-box">
+            <div class="menu-header">
+              <h2>🔥❄️ 스테이지 선택</h2>
+              <p class="menu-desc">키보드 아무 키(Spacebar/J/K/Enter)나 화면 클릭으로 타일에 맞춰 회전하는 행성을 착지시키세요!</p>
+            </div>
+
+            <!-- Stage Grid Cards -->
+            <div class="stage-grid">
+              <div class="stage-card active" data-stage="0">
+                <div class="stage-badge easy">EASY</div>
+                <div class="stage-icon">🔥</div>
+                <h3>STAGE 1. 불과 얼음의 시작</h3>
+                <p>기본 180° 및 90° 꺾임 트랙 | BPM 100</p>
+                <div class="stage-high-score">최고 기록: <span id="hs-0">0점 (0.0%)</span></div>
+              </div>
+
+              <div class="stage-card" data-stage="1">
+                <div class="stage-badge normal">NORMAL</div>
+                <div class="stage-icon">⚡</div>
+                <h3>STAGE 2. 네온 펄스 비트</h3>
+                <p>180°, 90°, U턴 복합 트랙 | BPM 130</p>
+                <div class="stage-high-score">최고 기록: <span id="hs-1">0점 (0.0%)</span></div>
+              </div>
+
+              <div class="stage-card" data-stage="2">
+                <div class="stage-badge hard">HARD</div>
+                <div class="stage-icon">🌀</div>
+                <h3>STAGE 3. 광란의 나선</h3>
+                <p>45° 사선 & 원형 스파이럴 트랙 | BPM 160</p>
+                <div class="stage-high-score">최고 기록: <span id="hs-2">0점 (0.0%)</span></div>
+              </div>
+
+              <div class="stage-card" data-stage="3">
+                <div class="stage-badge insane">INSANE</div>
+                <div class="stage-icon">👑</div>
+                <h3>STAGE 4. 인페르노 프로스트 (보스)</h3>
+                <p>극악의 변속 & 복합 비트 곡선 | BPM 190</p>
+                <div class="stage-high-score">최고 기록: <span id="hs-3">0점 (0.0%)</span></div>
+              </div>
+            </div>
+
+            <!-- Game Options Bar -->
+            <div class="options-bar">
+              <div class="option-item">
+                <label for="speed-select">속도 (Speed):</label>
+                <select id="speed-select">
+                  <option value="0.8">0.8x (느리게)</option>
+                  <option value="1.0" selected>1.0x (정속)</option>
+                  <option value="1.2">1.2x (빠르게)</option>
+                  <option value="1.5">1.5x (매우 빠르게)</option>
+                </select>
+              </div>
+
+              <div class="option-item">
+                <label for="offset-input">판정 싱크 오프셋 (ms):</label>
+                <input type="range" id="offset-input" min="-150" max="150" value="0" step="5">
+                <span id="offset-val">0ms</span>
+              </div>
+            </div>
+
+            <!-- Menu Action Buttons -->
+            <div class="menu-actions">
+              <button id="start-stage-btn" class="btn btn-primary btn-large">🔥 스테이지 시작 (Space / Enter)</button>
+              <button id="open-editor-btn" class="btn btn-secondary btn-large">🎨 나만의 맵 에디터</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Map Editor Overlay -->
+        <div id="editor-menu" class="overlay-panel hidden">
+          <div class="menu-box editor-box">
+            <div class="menu-header">
+              <h2>🎨 커스텀 타일 맵 에디터</h2>
+              <p>방향 버튼을 눌러 나만의 얼불춤 트랙을 생성하고 테스트해 보세요!</p>
+            </div>
+
+            <div class="editor-controls">
+              <div class="dir-buttons-grid">
+                <button class="dir-btn" data-dir="0">➡️ 0° (우)</button>
+                <button class="dir-btn" data-dir="45">↗️ 45° (우상)</button>
+                <button class="dir-btn" data-dir="90">⬆️ 90° (상)</button>
+                <button class="dir-btn" data-dir="135">↖️ 135° (좌상)</button>
+                <button class="dir-btn" data-dir="180">⬅️ 180° (좌)</button>
+                <button class="dir-btn" data-dir="225">↙️ 225° (좌하)</button>
+                <button class="dir-btn" data-dir="270">⬇️ 270° (하)</button>
+                <button class="dir-btn" data-dir="315">↘️ 315° (우하)</button>
+              </div>
+
+              <div class="editor-settings">
+                <label>BPM: <input type="number" id="custom-bpm" value="120" min="60" max="300"></label>
+                <button id="clear-tiles-btn" class="btn btn-danger">🗑️ 전체 초기화</button>
+                <button id="undo-tile-btn" class="btn btn-warning">↩️ 타일 취소</button>
+              </div>
+
+              <div class="tile-string-box">
+                <label for="tile-sequence">타일 방향 시퀀스 (각도 배열):</label>
+                <input type="text" id="tile-sequence" readonly placeholder="0, 0, 90, 90, 180...">
+              </div>
+            </div>
+
+            <div class="menu-actions">
+              <button id="play-custom-btn" class="btn btn-primary btn-large">▶️ 커스텀 맵 테스트 플레이</button>
+              <button id="close-editor-btn" class="btn btn-secondary btn-large">❌ 메인 메뉴로</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result / Clear / Game Over Screen -->
+        <div id="result-menu" class="overlay-panel hidden">
+          <div class="menu-box result-box">
+            <h2 id="result-title">🎉 STAGE CLEAR!</h2>
+            <div id="result-rank" class="result-rank">S</div>
+
+            <div class="result-details">
+              <div class="res-row"><span>최종 점수:</span><strong id="res-score">0</strong></div>
+              <div class="res-row"><span>정확도:</span><strong id="res-accuracy">100%</strong></div>
+              <div class="res-row"><span>최대 콤보:</span><strong id="res-maxcombo">0</strong></div>
+              <div class="res-row"><span>PERFECT 판정:</span><strong id="res-perfect">0</strong></div>
+              <div class="res-row"><span>GREAT 판정:</span><strong id="res-great">0</strong></div>
+              <div class="res-row"><span>GOOD / MISS 판정:</span><strong id="res-miss">0</strong></div>
+            </div>
+
+            <div class="menu-actions">
+              <button id="retry-btn" class="btn btn-primary btn-large">🔄 다시 도전</button>
+              <button id="next-stage-btn" class="btn btn-success btn-large">➡️ 다음 스테이지</button>
+              <button id="result-menu-btn" class="btn btn-secondary btn-large">📋 스테이지 목록</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

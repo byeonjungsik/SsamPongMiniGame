@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🎵 네온 비츠 (Neon Beats) - 4키 웹 리듬 액션 게임</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Canvas Confetti for High Score Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">🎵</span>
+        <h1>네온 비츠 (Neon Beats) 4Key Rhythm</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Main Viewport -->
+    <main class="main-content">
+      <!-- Song & Difficulty Selection Panel -->
+      <div id="selection-panel" class="panel selection-panel">
+        <h2 class="panel-title">🎧 곡 및 난이도 선택</h2>
+
+        <!-- Song Cards Grid -->
+        <div class="song-grid">
+          <div class="song-card active" data-song="cyber">
+            <div class="song-icon">⚡</div>
+            <div class="song-info">
+              <h3>Cyber Beats</h3>
+              <p>Fast Synthwave | BPM 130</p>
+            </div>
+            <span class="song-badge">인기 1위</span>
+          </div>
+
+          <div class="song-card" data-song="neon">
+            <div class="song-icon">🌌</div>
+            <div class="song-info">
+              <h3>Neon Dreams</h3>
+              <p>Melodic Electronic | BPM 110</p>
+            </div>
+            <span class="song-badge">감성 멜로디</span>
+          </div>
+
+          <div class="song-card" data-song="chuseok">
+            <div class="song-icon">🌕</div>
+            <div class="song-info">
+              <h3>Chuseok Chiptune</h3>
+              <p>Korean Tradition Remix | BPM 128</p>
+            </div>
+            <span class="song-badge">신남</span>
+          </div>
+        </div>
+
+        <!-- Custom MP3 Upload Area -->
+        <div class="custom-mp3-box">
+          <label for="mp3-upload" class="mp3-upload-label">
+            <span>📁 내 MP3 파일 업로드 (자동 노트 생성)</span>
+            <input type="file" id="mp3-upload" accept="audio/*">
+          </label>
+          <div id="mp3-name" class="mp3-name">선택된 파일 없음</div>
+        </div>
+
+        <!-- Difficulty Selection -->
+        <div class="difficulty-section">
+          <label>난이도 선택:</label>
+          <div class="diff-btn-group">
+            <button class="diff-btn" data-diff="easy">EASY (느림)</button>
+            <button class="diff-btn active" data-diff="normal">NORMAL (보통)</button>
+            <button class="diff-btn" data-diff="hard">HARD (빠름)</button>
+          </div>
+        </div>
+
+        <!-- Start Game Button -->
+        <button id="start-game-btn" class="btn btn-start btn-large">
+          ▶ 게임 시작하기 (KEY: D, F, J, K)
+        </button>
+      </div>
+
+      <!-- Live Game Screen (Hidden initially) -->
+      <div id="game-panel" class="panel game-panel hidden">
+        <!-- Game HUD -->
+        <div class="game-hud">
+          <div class="hud-box">
+            <span class="hud-label">SCORE</span>
+            <span id="score-text" class="hud-value">000000</span>
+          </div>
+
+          <div class="hud-box hp-box">
+            <span class="hud-label">HP</span>
+            <div class="hp-bar-bg">
+              <div id="hp-bar-fill" class="hp-bar-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <div class="hud-box">
+            <span class="hud-label">ACCURACY</span>
+            <span id="accuracy-text" class="hud-value">100.0%</span>
+          </div>
+        </div>
+
+        <!-- Canvas Rhythm Track Area -->
+        <div class="canvas-container">
+          <canvas id="rhythm-canvas" width="480" height="600"></canvas>
+
+          <!-- Combo & Judge Overlay -->
+          <div id="judge-overlay" class="judge-overlay">
+            <div id="judge-text" class="judge-text"></div>
+            <div id="combo-container" class="combo-container hidden">
+              <span id="combo-num" class="combo-num">0</span>
+              <span class="combo-label">COMBO</span>
+            </div>
+          </div>
+
+          <!-- Fever Mode Glow Overlay -->
+          <div id="fever-banner" class="fever-banner hidden">🔥 FEVER MODE 2X 🔥</div>
+        </div>
+
+        <!-- Mobile & Mouse Touch Key Buttons -->
+        <div class="key-touch-bar">
+          <button class="touch-key-btn" data-lane="0">D</button>
+          <button class="touch-key-btn" data-lane="1">F</button>
+          <button class="touch-key-btn" data-lane="2">J</button>
+          <button class="touch-key-btn" data-lane="3">K</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Game Over / Result Modal -->
+    <div id="result-modal" class="modal-overlay hidden">
+      <div class="modal-card result-card">
+        <div id="result-rank-badge" class="result-rank-badge">SSS</div>
+        <h2 id="result-title">STAGE CLEAR!</h2>
+        <p id="result-song-name" class="result-song-name">Cyber Beats - Normal</p>
+
+        <div class="result-stats-grid">
+          <div class="stat-box">
+            <span class="label">최종 점수</span>
+            <span id="res-score" class="val">985,000</span>
+          </div>
+          <div class="stat-box">
+            <span class="label">정확도</span>
+            <span id="res-acc" class="val">98.5%</span>
+          </div>
+          <div class="stat-box">
+            <span class="label">MAX COMBO</span>
+            <span id="res-combo" class="val">145</span>
+          </div>
+          <div class="stat-box">
+            <span class="label">PERFECT</span>
+            <span id="res-perfect" class="val green">120</span>
+          </div>
+          <div class="stat-box">
+            <span class="label">GREAT</span>
+            <span id="res-great" class="val blue">20</span>
+          </div>
+          <div class="stat-box">
+            <span class="label">GOOD / MISS</span>
+            <span id="res-miss" class="val red">5 / 0</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="retry-btn" class="btn btn-secondary">🔄 다시 하기</button>
+          <button id="song-select-btn" class="btn btn-primary">🎧 곡 선택으로</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

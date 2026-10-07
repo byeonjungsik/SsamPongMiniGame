@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🌐 URL 주소 이동 실행 프로그램 (URL Quick Launcher)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">🌐</span>
+        <h1>URL Quick Launcher</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Main URL Input Section -->
+    <main class="launcher-card">
+      <div class="input-header">
+        <h2>🔗 웹사이트 URL 주소 입력</h2>
+        <p class="sub-desc">이동하고 싶은 웹사이트 주소를 입력하거나 클립보드에서 붙여넣으세요.</p>
+      </div>
+
+      <div class="input-wrapper">
+        <div class="input-box">
+          <span class="input-icon">🔗</span>
+          <input type="text" id="url-input" placeholder="예: naver.com 또는 https://google.com" autocomplete="off" spellcheck="false">
+          <button id="clear-input-btn" class="clear-btn hidden" title="지우기">✕</button>
+        </div>
+
+        <div class="action-buttons">
+          <button id="paste-btn" class="btn btn-secondary">
+            📋 클립보드 붙여넣기
+          </button>
+          <button id="launch-btn" class="btn btn-primary">
+            🚀 사이트 이동 (Launch)
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Favicon & URL Preview Card -->
+      <div id="preview-card" class="preview-card hidden">
+        <img id="favicon-img" src="" alt="favicon" class="favicon-icon">
+        <div class="preview-info">
+          <span id="preview-domain" class="domain-title">example.com</span>
+          <span id="preview-full-url" class="full-url font-mono">https://example.com</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Quick Shortcuts / Bookmarks -->
+    <section class="bookmarks-section">
+      <div class="section-header">
+        <h3>⭐ 자주 가는 사이트 (Quick Shortcuts)</h3>
+        <button id="add-bookmark-btn" class="btn-text">+ 북마크 추가</button>
+      </div>
+      <div id="bookmarks-grid" class="bookmarks-grid">
+        <!-- Default Shortcuts -->
+      </div>
+    </section>
+
+    <!-- History Panel -->
+    <footer class="history-panel">
+      <div class="history-header">
+        <h3>📜 최근 이동한 사이트 기록</h3>
+        <button id="clear-history-btn" class="btn-text">기록 삭제</button>
+      </div>
+      <ul id="history-list" class="history-list">
+        <li class="empty-msg">아직 이동한 기록이 없습니다.</li>
+      </ul>
+    </footer>
+  </div>
+
+  <script src="launcher.js"></script>
+</body>
+</html>

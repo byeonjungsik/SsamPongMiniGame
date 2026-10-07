@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚔️ 검 강화 방치형 & 초등 5학년 교과 타자 게임 (Sword Forge)</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Canvas Confetti for Sword Evolution Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">⚔️</span>
+        <h1>검 강화 방치형 & 초등 5학년 교과 타자 게임</h1>
+      </div>
+    </header>
+
+    <!-- Top HUD Banner -->
+    <div class="hud-banner">
+      <div class="hud-item sword-name-box">
+        <span class="hud-label">현재 검 등급</span>
+        <span id="sword-name-text" class="hud-value sword-name">LV.1 [연습용 나무검]</span>
+      </div>
+
+      <div class="hud-item">
+        <span class="hud-label">공격력 (ATK)</span>
+        <span id="atk-text" class="hud-value num-gold">1</span>
+      </div>
+
+      <div class="hud-item">
+        <span class="hud-label">데미지 (DMG)</span>
+        <span id="dmg-text" class="hud-value num-red">1</span>
+      </div>
+
+      <div class="hud-item">
+        <span class="hud-label">보유 골드</span>
+        <span id="gold-text" class="hud-value num-amber">0 G</span>
+      </div>
+
+      <div class="hud-item timer-box">
+        <span class="hud-label">🔨 3초 자동 두드림</span>
+        <div class="timer-bar-bg">
+          <div id="timer-bar-fill" class="timer-bar-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Game Viewport Grid -->
+    <div class="game-grid">
+      <!-- Left Column: Blacksmith Forge & Anvil Viewport -->
+      <section class="card forge-card">
+        <div class="card-title">
+          <span>🔥 대장간 모루 (Anvil & Forge)</span>
+          <span class="forge-badge">3초에 1번 자동으로 두드림 (+1 ATK)</span>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="forge-canvas" width="540" height="250"></canvas>
+          <button id="btn-manual-hammer" class="btn btn-hammer">
+            🔨 수동 망치 두드리기 (+1 ATK/DMG)
+          </button>
+        </div>
+      </section>
+
+      <!-- Right Column: Monster Dungeon Battle Viewport -->
+      <section class="card monster-card">
+        <div class="card-title">
+          <span>👾 몬스터 던전 대결</span>
+          <span id="dungeon-stage" class="forge-badge cyan">STAGE 1</span>
+        </div>
+
+        <div class="monster-viewport">
+          <div id="monster-icon" class="monster-icon">👺</div>
+          <div class="monster-meta">
+            <h3 id="monster-name">고블린 파수꾼</h3>
+            <div class="hp-bar-container">
+              <div id="monster-hp-fill" class="hp-bar-fill" style="width: 100%;"></div>
+              <span id="monster-hp-text" class="hp-text">50 / 50 HP</span>
+            </div>
+          </div>
+          <div id="slash-effect" class="slash-effect hidden">💥 1 DMG</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Typing Upgrade Challenge Section -->
+    <section class="card typing-card">
+      <div class="typing-header">
+        <div class="typing-title-group">
+          <h2>⌨️ 초등 5학년 교과 타자 강화 (Curriculum Typing)</h2>
+          <span id="upgrade-target-text" class="upgrade-badge">다음 진화: LV.2 놋검 (목표: 10문장 완수)</span>
+        </div>
+
+        <div class="typing-progress-box">
+          <span id="sentence-count-text" class="progress-count">0 / 10 문장 완료</span>
+          <div class="progress-bar-bg">
+            <div id="sentence-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Educational Concept Note Banner -->
+      <div id="concept-tip-box" class="concept-tip-box">
+        <span class="tip-icon">💡</span>
+        <span id="concept-tip-text">5학년 교과 핵심 문장을 타핑하면 강화와 공부가 동시에 진행됩니다!</span>
+      </div>
+
+      <!-- Target Sentence Viewport -->
+      <div class="sentence-box">
+        <div id="target-sentence-display" class="sentence-text">
+          <!-- Text rendered with char highlight spans -->
+        </div>
+      </div>
+
+      <!-- Typing Input Field -->
+      <div class="typing-input-wrapper">
+        <input type="text" id="typing-input" placeholder="위 5학년 교과 문장을 똑같이 입력하고 Enter를 누르세요!" autocomplete="off" autofocus>
+        <span id="typing-stats" class="typing-stats">0 CPM | 100% Acc</span>
+      </div>
+    </section>
+
+    <!-- Forge Shop Upgrades Bar -->
+    <section class="card shop-card">
+      <h3 class="shop-title">🛠️ 대장간 강화 상점 (Forge Upgrades)</h3>
+      <div class="shop-grid">
+        <button id="buy-auto-speed" class="shop-item">
+          <span class="item-icon">⚡</span>
+          <div class="item-info">
+            <span class="item-name">자동 망치 속도 증가</span>
+            <span id="auto-speed-desc" class="item-desc">현재: 3.0초 간격</span>
+          </div>
+          <span id="auto-speed-cost" class="item-cost">50 G</span>
+        </button>
+
+        <button id="buy-crit-rate" class="shop-item">
+          <span class="item-icon">💥</span>
+          <div class="item-info">
+            <span class="item-name">크리티컬 망치질 확률</span>
+            <span id="crit-rate-desc" class="item-desc">현재: 5% (ATK 2배)</span>
+          </div>
+          <span id="crit-rate-cost" class="item-cost">100 G</span>
+        </button>
+
+        <button id="buy-gold-boost" class="shop-item">
+          <span class="item-icon">💰</span>
+          <div class="item-info">
+            <span class="item-name">골드 획득량 2배</span>
+            <span id="gold-boost-desc" class="item-desc">현재: x1.0 배율</span>
+          </div>
+          <span id="gold-boost-cost" class="item-cost">200 G</span>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Evolution Success Modal -->
+  <div id="evolution-modal" class="modal-overlay hidden">
+    <div class="modal-card evo-card">
+      <div class="evo-header">
+        <span class="evo-sparkle">✨</span>
+        <h2 id="evo-title">검 진화 성공!</h2>
+      </div>
+      <div id="evo-sword-icon" class="evo-icon">🗡️</div>
+      <h3 id="evo-sword-name">LV.2 [놋검]</h3>
+      <p id="evo-desc">5학년 교과 타자 목표 완수! 공격력이 2배 증가하고 무기의 자태가 화려해집니다!</p>
+
+      <div class="evo-stats">
+        <div class="stat-row"><span>공격력 (ATK)</span><strong id="evo-atk-text">+20 ATK</strong></div>
+        <div class="stat-row"><span>데미지 (DMG)</span><strong id="evo-dmg-text">+20 DMG</strong></div>
+      </div>
+
+      <button id="btn-close-evo" class="btn btn-restart btn-large">⚔️ 다음 5학년 교과 타자 시작!</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

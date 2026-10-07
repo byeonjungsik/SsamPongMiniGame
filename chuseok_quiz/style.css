@@ -1,0 +1,567 @@
+:root {
+  --bg-dark: #0b1021;
+  --panel-bg: rgba(22, 30, 56, 0.88);
+  --border-color: rgba(251, 191, 36, 0.3);
+  --moon-gold: #fbbf24;
+  --amber-accent: #f59e0b;
+  --hanok-red: #dc2626;
+  --pine-green: #16a34a;
+  --cyan-accent: #38bdf8;
+  --text-main: #f8fafc;
+  --text-muted: #cbd5e1;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 860px;
+  height: 94vh;
+  max-height: 760px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-group .icon {
+  font-size: 1.8rem;
+}
+
+.logo-group h1 {
+  font-size: 1.3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--moon-gold), #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-game-select {
+  width: 100%;
+  background: #12182e;
+  color: var(--moon-gold);
+  border: 1px solid var(--moon-gold);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Top Action Bar */
+.top-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  padding: 10px 16px;
+  border-radius: 14px;
+}
+
+.slide-progress {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.slide-progress strong {
+  color: var(--moon-gold);
+  font-size: 1.1rem;
+}
+
+/* Quick Scoreboard Panel (아빠, 엄마 클릭) */
+.quick-scoreboard-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(18, 24, 46, 0.9);
+  border: 1.5px solid rgba(251, 191, 36, 0.4);
+  border-radius: 14px;
+  padding: 8px 14px;
+  overflow-x: auto;
+}
+
+.quick-score-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--moon-gold);
+  white-space: nowrap;
+}
+
+.quick-scoreboard-list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.quick-score-btn {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.9));
+  border: 1.5px solid var(--moon-gold);
+  border-radius: 12px;
+  padding: 8px 16px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.quick-score-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: linear-gradient(135deg, #d97706, #fbbf24);
+  color: #0b1021;
+  box-shadow: 0 6px 18px rgba(251, 191, 36, 0.5);
+}
+
+.quick-score-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.quick-score-btn .name {
+  font-size: 1rem;
+}
+
+.quick-score-btn .score-badge {
+  background: rgba(251, 191, 36, 0.25);
+  border: 1px solid var(--moon-gold);
+  color: var(--moon-gold);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.quick-score-btn:hover .score-badge {
+  background: #0b1021;
+  color: var(--moon-gold);
+}
+
+/* Slide Card Viewport */
+.slide-card {
+  flex: 1;
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+  position: relative;
+}
+
+.slide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.badge-category {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid var(--cyan-accent);
+  color: var(--cyan-accent);
+}
+
+.badge-points {
+  background: rgba(251, 191, 36, 0.18);
+  border: 1px solid var(--moon-gold);
+  color: var(--moon-gold);
+  font-family: var(--font-mono);
+
+}
+
+.quiz-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  flex: 1;
+  justify-content: center;
+}
+
+.quiz-icon {
+  font-size: 3.5rem;
+}
+
+.quiz-content h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.5;
+  max-width: 680px;
+}
+
+.quiz-hint {
+  font-size: 0.9rem;
+  color: var(--moon-gold);
+  background: rgba(251, 191, 36, 0.1);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px dashed var(--moon-gold);
+}
+
+/* Answer Box */
+.answer-box {
+  background: rgba(22, 163, 74, 0.18);
+  border: 2px solid var(--pine-green);
+  border-radius: 16px;
+  padding: 16px 24px;
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: pop-in 0.3s ease;
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.answer-label {
+  font-size: 0.85rem;
+  color: #86efac;
+  font-weight: 700;
+}
+
+.answer-text {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #4ade80;
+  letter-spacing: 1px;
+}
+
+.answer-explanation {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Slide Footer & Navigation */
+.slide-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.slide-nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Buttons */
+.btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #d97706, #fbbf24);
+  color: #0b1021;
+  box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+}
+
+.btn-reveal {
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  color: white;
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #16a34a, #4ade80);
+  color: #052e16;
+}
+
+.btn-secondary {
+  background: #1e293b;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+.btn-winner {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: white;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+}
+
+.btn-large {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  justify-content: center;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Scoreboard Drawer */
+.scoreboard-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100%;
+  background: rgba(11, 16, 33, 0.95);
+  backdrop-filter: blur(20px);
+  border-left: 2px solid var(--border-color);
+  border-radius: 20px 0 0 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 50;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-header h3 {
+  font-size: 1.1rem;
+  color: var(--moon-gold);
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.add-participant-row {
+  display: flex;
+  gap: 8px;
+}
+
+.add-participant-row input {
+  flex: 1;
+  background: #161e38;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 8px 12px;
+  color: var(--text-main);
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.participant-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.participant-card {
+  background: #161e38;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.participant-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.participant-rank {
+  font-size: 1.1rem;
+}
+
+.participant-name {
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.participant-score {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--moon-gold);
+  font-weight: 800;
+}
+
+.point-btn-group {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-pt {
+  background: rgba(251, 191, 36, 0.18);
+  border: 1px solid var(--moon-gold);
+  color: var(--moon-gold);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-pt:hover {
+  background: var(--moon-gold);
+  color: #0b1021;
+}
+
+.empty-msg {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* Winner Modal & Podium */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.winner-card {
+  background: #12182e;
+  border: 2px solid var(--moon-gold);
+  border-radius: 24px;
+  padding: 28px;
+  width: 90%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+}
+
+.winner-crown {
+  font-size: 3rem;
+}
+
+.winner-card h2 {
+  font-size: 1.4rem;
+  color: var(--moon-gold);
+}
+
+.winner-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.podium-display {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 14px;
+  width: 100%;
+  margin: 16px 0;
+}
+
+.podium-box {
+  background: #161e38;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.podium-1st {
+  border-color: var(--moon-gold);
+  background: rgba(251, 191, 36, 0.15);
+  transform: scale(1.08);
+}
+
+.podium-medal {
+  font-size: 2rem;
+}
+
+.podium-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.podium-pts {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--moon-gold);
+  font-weight: 800;
+}

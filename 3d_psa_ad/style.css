@@ -1,0 +1,335 @@
+:root {
+  --bg-dark: #070a14;
+  --panel-bg: rgba(15, 23, 42, 0.85);
+  --border-color: rgba(34, 197, 94, 0.35);
+  --green-glow: #22c55e;
+  --cyan-accent: #38bdf8;
+  --amber-gold: #fbbf24;
+  --red-alert: #ef4444;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(34, 197, 94, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(56, 189, 248, 0.12) 0%, transparent 45%);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 960px;
+  height: 94vh;
+  max-height: 840px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-group .icon {
+  font-size: 1.8rem;
+}
+
+.logo-group h1 {
+  font-size: 1.3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--green-glow), var(--cyan-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-game-select {
+  width: 100%;
+  background: #0f172a;
+  color: var(--green-glow);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+
+/* Player Aspect Switcher */
+.player-aspect-bar {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.btn-aspect {
+  flex: 1;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+  padding: 8px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-aspect.active {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #052e16;
+  border-color: #22c55e;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+}
+
+/* Player Container (Shorts & HD Modes) */
+.player-container {
+  position: relative;
+  background: #000;
+  border: 2px solid var(--border-color);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.25);
+  transition: all 0.3s ease;
+}
+
+.player-container.shorts-mode {
+  width: 270px;
+  height: 480px;
+}
+
+.player-container.hd-mode {
+  width: 100%;
+  max-width: 720px;
+  height: 405px;
+}
+
+#psa-video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+
+/* Shorts UI Overlay Icons */
+.shorts-ui-overlay {
+  position: absolute;
+  right: 12px;
+  bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.shorts-action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+.shorts-action-item .icon {
+  font-size: 1.4rem;
+  background: rgba(0, 0, 0, 0.4);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+}
+
+.shorts-action-item .count {
+  font-size: 0.7rem;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+/* Caption Overlay */
+.caption-overlay {
+  position: absolute;
+  bottom: 16px;
+  left: 14px;
+  right: 60px;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.channel-tag {
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: #38bdf8;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 3px 8px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.caption-title {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--amber-gold);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+.caption-sub {
+  font-size: 0.75rem;
+  color: #f1f5f9;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* Control Panel */
+.control-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.download-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1.5px solid var(--green-glow);
+  padding: 8px 14px;
+  border-radius: 12px;
+}
+
+.download-btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-download {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #052e16;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 900;
+  padding: 8px 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-download.btn-secondary {
+  background: #1e293b;
+  color: white;
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}
+
+.btn-download:hover {
+  transform: translateY(-2px);
+}
+
+.file-info-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--green-glow);
+  background: rgba(15, 23, 42, 0.8);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.scene-jump-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.scene-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.btn-scene {
+  background: #161e38;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.btn-scene:hover {
+  background: var(--green-glow);
+  color: #070a14;
+}
+
+.app-footer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+}

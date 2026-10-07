@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🔤 인공지능 끝말잇기 게임 (Korean Word-Chain Game)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">🔤</span>
+        <h1>AI 끝말잇기 아케이드</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Score & Turn HUD -->
+    <section class="game-hud">
+      <div class="hud-card">
+        <span class="hud-label">점수</span>
+        <span id="score-val" class="hud-value">0</span>
+      </div>
+      <div class="hud-card highlight">
+        <span class="hud-label">현재 턴</span>
+        <span id="turn-indicator" class="hud-value turn-player">당신의 턴!</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">연속 콤보</span>
+        <span id="combo-val" class="hud-value">0 🔥</span>
+      </div>
+    </section>
+
+    <!-- Turn Timer Bar -->
+    <div class="timer-bar-container">
+      <div id="timer-bar" class="timer-bar"></div>
+    </div>
+
+    <!-- Word Relay Chat Bubble Chain Feed -->
+    <main class="chat-feed-card">
+      <div id="word-feed" class="word-feed">
+        <div class="system-bubble">
+          💡 게임이 시작되었습니다! 제시된 첫 단어로 끝말잇기를 이어나가세요. (두음법칙 자동 지원)
+        </div>
+      </div>
+    </main>
+
+    <!-- Word Input Form -->
+    <footer class="input-section">
+      <div class="next-char-hint" id="next-char-hint">
+        제시어: <span id="target-char" class="highlight-char">사과</span> (다음 첫 글자: <strong id="next-start-char">과</strong>)
+      </div>
+
+      <div class="input-row">
+        <input type="text" id="word-input" placeholder="단어를 입력하고 엔터를 누르세요..." autocomplete="off" spellcheck="false" maxlength="10">
+        <button id="submit-btn" class="btn btn-primary">전송 ▶</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Start / Game Over Modal -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+      <h2 id="modal-title">🔤 AI 끝말잇기 게임</h2>
+      <p id="modal-desc">AI와 펼치는 신나는 끝말잇기 대결! 난이도를 선택해 주세요.</p>
+
+      <div class="difficulty-group">
+        <label for="difficulty-select">AI 난이도:</label>
+        <select id="difficulty-select">
+          <option value="easy">🟢 쉬움 (일상 단어 위주)</option>
+          <option value="normal" selected>🟡 보통 (일반 사전 단어)</option>
+          <option value="hard">🔴 고수 (어휘왕 AI)</option>
+        </select>
+      </div>
+
+      <button id="start-game-btn" class="btn btn-primary btn-large">▶ 게임 시작하기</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

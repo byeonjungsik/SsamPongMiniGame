@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>📁 마인크래프트 폴더(%APPDATA%\.minecraft) 즉시 열기 앱</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">📁</span>
+        <h1>Minecraft Folder Opener</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Main Folder Opener Grid -->
+    <main class="opener-card">
+      <div class="opener-header">
+        <h2>📁 윈도우 마인크래프트 폴더 탐색기 즉시 열기</h2>
+        <p class="sub-desc">버튼을 누르면 윈도우 탐색기로 마인크래프트 경로를 1초 만에 직접 엽니다.</p>
+      </div>
+
+      <div class="folder-buttons-grid">
+        <!-- Main .minecraft Folder -->
+        <button class="folder-btn primary-folder" data-folder="">
+          <span class="folder-icon">📁</span>
+          <div class="folder-info">
+            <span class="folder-title">.minecraft 메인 폴더 열기</span>
+            <span class="folder-path font-mono">%APPDATA%\.minecraft</span>
+          </div>
+          <span class="action-tag">바로 열기 ▶</span>
+        </button>
+
+        <!-- Saves / World Maps Folder -->
+        <button class="folder-btn" data-folder="saves">
+          <span class="folder-icon">🗺️</span>
+          <div class="folder-info">
+            <span class="folder-title">saves (맵 / 세계) 폴더</span>
+            <span class="folder-path font-mono">%APPDATA%\.minecraft\saves</span>
+          </div>
+          <span class="action-tag">열기 ▶</span>
+        </button>
+
+        <!-- Mods Folder -->
+        <button class="folder-btn" data-folder="mods">
+          <span class="folder-icon">📦</span>
+          <div class="folder-info">
+            <span class="folder-title">mods (모드) 폴더</span>
+            <span class="folder-path font-mono">%APPDATA%\.minecraft\mods</span>
+          </div>
+          <span class="action-tag">열기 ▶</span>
+        </button>
+
+        <!-- Shaderpacks Folder -->
+        <button class="folder-btn" data-folder="shaderpacks">
+          <span class="folder-icon">🌈</span>
+          <div class="folder-info">
+            <span class="folder-title">shaderpacks (쉐이더) 폴더</span>
+            <span class="folder-path font-mono">%APPDATA%\.minecraft\shaderpacks</span>
+          </div>
+          <span class="action-tag">열기 ▶</span>
+        </button>
+
+        <!-- Resourcepacks Folder -->
+        <button class="folder-btn" data-folder="resourcepacks">
+          <span class="folder-icon">🎨</span>
+          <div class="folder-info">
+            <span class="folder-title">resourcepacks (리소스팩) 폴더</span>
+            <span class="folder-path font-mono">%APPDATA%\.minecraft\resourcepacks</span>
+          </div>
+          <span class="action-tag">열기 ▶</span>
+        </button>
+      </div>
+    </main>
+
+    <!-- Download One-Click Shortcut Bat & Command Copy Box -->
+    <section class="shortcut-section">
+      <button id="download-bat-btn" class="btn btn-primary btn-large">
+        💾 원클릭 '마인크래프트_폴더_열기.bat' 다운로드
+      </button>
+
+      <div class="command-box">
+        <span class="command-label">💡 윈도우 실행창 [Win + R] 입력 명령어:</span>
+        <div class="cmd-code-row">
+          <code id="win-cmd-text" class="font-mono">explorer %APPDATA%\.minecraft</code>
+          <button id="copy-cmd-btn" class="btn-text">📋 복사</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="opener.js"></script>
+</body>
+</html>

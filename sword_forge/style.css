@@ -1,0 +1,644 @@
+:root {
+  --bg-dark: #0a0708;
+  --panel-bg: rgba(23, 15, 17, 0.88);
+  --card-bg: rgba(36, 23, 26, 0.7);
+  --border-color: rgba(249, 115, 22, 0.35);
+  --forge-orange: #f97316;
+  --fire-red: #ef4444;
+  --amber-gold: #fbbf24;
+  --pine-green: #22c55e;
+  --cyan-accent: #38bdf8;
+  --purple-accent: #a855f7;
+  --text-main: #f8fafc;
+  --text-muted: #a8a29e;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(249, 115, 22, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(239, 68, 68, 0.15) 0%, transparent 45%);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px;
+  overflow-x: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 960px;
+  height: 94vh;
+  max-height: 840px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-group .icon {
+  font-size: 1.8rem;
+}
+
+.logo-group h1 {
+  font-size: 1.3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--forge-orange), var(--amber-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+
+.nav-game-select {
+  width: 100%;
+  background: #1c1315;
+  color: var(--forge-orange);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Top HUD Banner */
+.hud-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid var(--border-color);
+  border-radius: 14px;
+  padding: 10px 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hud-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.hud-value {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.sword-name {
+  color: var(--amber-gold);
+  font-size: 1.05rem;
+}
+
+.num-gold { color: var(--amber-gold); }
+.num-red { color: var(--fire-red); }
+.num-amber { color: var(--forge-orange); }
+
+.timer-box {
+  min-width: 150px;
+}
+
+.timer-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: #2a1a1c;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.timer-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f97316, #ef4444);
+  transition: width 0.1s linear;
+}
+
+/* Main Cards Base */
+.card {
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  border: 1.5px solid var(--border-color);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--forge-orange);
+  margin-bottom: 8px;
+}
+
+.forge-badge {
+  font-size: 0.75rem;
+  background: rgba(249, 115, 22, 0.15);
+  border: 1px solid var(--forge-orange);
+  color: var(--amber-gold);
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.forge-badge.cyan {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--cyan-accent);
+  color: var(--cyan-accent);
+}
+
+/* Game Grid Layout */
+.game-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 10px;
+}
+
+/* Anvil Canvas Wrapper */
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#forge-canvas {
+  width: 100%;
+  height: 170px;
+  background: #140d0e;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: inset 0 0 20px rgba(249, 115, 22, 0.2);
+}
+
+.btn-hammer {
+  width: 100%;
+  background: linear-gradient(135deg, #f97316, #ef4444);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+  transition: all 0.15s;
+}
+
+.btn-hammer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.6);
+}
+
+/* Monster Dungeon Viewport */
+.monster-viewport {
+  background: #140d0e;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 14px;
+  height: 218px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.monster-icon {
+  font-size: 3.5rem;
+  animation: monster-float 2s ease-in-out infinite alternate;
+}
+
+@keyframes monster-float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+.monster-meta {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.monster-meta h3 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.hp-bar-container {
+  width: 100%;
+  height: 16px;
+  background: #2a1a1c;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.hp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ef4444, #f97316);
+  transition: width 0.15s ease;
+}
+
+.hp-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.slash-effect {
+  position: absolute;
+  top: 30%;
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #ef4444;
+  text-shadow: 0 0 10px #ef4444;
+  animation: slash-pop 0.3s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes slash-pop {
+  0% { transform: scale(0.5) rotate(-10deg); opacity: 1; }
+  100% { transform: scale(1.3) rotate(10deg); opacity: 0; }
+}
+
+/* Typing Challenge Card */
+.typing-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.typing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.typing-title-group h2 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--amber-gold);
+}
+
+.upgrade-badge {
+  font-size: 0.78rem;
+  color: var(--forge-orange);
+  font-weight: 700;
+}
+
+.typing-progress-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.progress-count {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--amber-gold);
+}
+
+.progress-bar-bg {
+  width: 140px;
+  height: 10px;
+  background: #2a1a1c;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #fbbf24);
+  transition: width 0.2s ease;
+}
+
+/* 5th Grade Subject Selection Tabs */
+.subject-tab-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.subject-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.btn-subject {
+  background: #1c1315;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.btn-subject.active {
+  background: linear-gradient(135deg, #f97316, #fbbf24);
+  color: #0a0708;
+  border-color: #fbbf24;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+}
+
+/* Educational Concept Note Banner */
+.concept-tip-box {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px dashed var(--cyan-accent);
+  border-radius: 10px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--cyan-accent);
+  font-weight: 700;
+}
+
+.tip-icon { font-size: 1.1rem; }
+
+/* Sentence Box */
+.sentence-box {
+  background: #140d0e;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-align: center;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sentence-text {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  color: #a8a29e;
+}
+
+.char-correct {
+  color: #4ade80;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+}
+
+.char-wrong {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.3);
+  border-radius: 4px;
+}
+
+.char-pending {
+  color: #f8fafc;
+}
+
+/* Typing Input Field */
+.typing-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1c1315;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+
+#typing-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  outline: none;
+}
+
+.typing-stats {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--amber-gold);
+  white-space: nowrap;
+}
+
+/* Forge Shop Card */
+.shop-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--forge-orange);
+  margin-bottom: 8px;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.shop-item {
+  background: #1c1315;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.shop-item:hover {
+  border-color: var(--forge-orange);
+  background: rgba(249, 115, 22, 0.15);
+  transform: translateY(-2px);
+}
+
+.item-icon {
+  font-size: 1.5rem;
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item-name {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: white;
+}
+
+.item-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.item-cost {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: var(--amber-gold);
+  background: rgba(251, 191, 36, 0.15);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--amber-gold);
+}
+
+/* Modal Overlay & Evolution Card */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.evo-card {
+  background: #1c1315;
+  border: 2px solid var(--forge-orange);
+  border-radius: 24px;
+  padding: 28px;
+  width: 90%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+}
+
+.evo-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.evo-sparkle { font-size: 1.8rem; }
+.evo-header h2 { font-size: 1.5rem; color: var(--amber-gold); }
+
+.evo-icon {
+  font-size: 4rem;
+  filter: drop-shadow(0 0 20px var(--forge-orange));
+  animation: evo-glow 1.5s infinite alternate;
+}
+
+@keyframes evo-glow {
+  0% { transform: scale(1); filter: drop-shadow(0 0 15px var(--forge-orange)); }
+  100% { transform: scale(1.1); filter: drop-shadow(0 0 30px #ef4444); }
+}
+
+.evo-card h3 {
+  font-size: 1.4rem;
+  color: white;
+}
+
+.evo-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.evo-stats {
+  width: 100%;
+  background: #140d0e;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.stat-row strong {
+  font-family: var(--font-mono);
+  color: #4ade80;
+}
+
+.btn-restart {
+  background: linear-gradient(135deg, #f97316, #ef4444);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  width: 100%;
+}

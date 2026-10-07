@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🏰 중세 판타지 마인크래프트 맵 제작기 (공주·왕자 선택)</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- JSZip for compiling Minecraft World Save Zips -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">🏰</span>
+        <h1>Medieval Fantasy MC Map</h1>
+        <span class="version-badge">Java Edition 26.1.2 / 1.20+</span>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Role Selection Cards Section (공주 vs 왕자) -->
+    <section class="role-selection-section">
+      <div class="section-title">
+        <h2>👑 시작 캐릭터 역할을 선택하세요</h2>
+        <p>선택한 역할에 따라 인게임 전용 장비, 스킬 및 데이터팩 커맨드가 자동 적용됩니다.</p>
+      </div>
+
+      <div class="role-cards-grid">
+        <!-- Princess Role Card -->
+        <div class="role-card active" id="role-princess" data-role="princess">
+          <div class="role-header">
+            <span class="role-avatar">👑</span>
+            <div class="role-titles">
+              <h3>공주 (Princess)</h3>
+              <span class="char-name">아리아 공주 (Princess Aria)</span>
+            </div>
+          </div>
+          <div class="role-body">
+            <p class="role-desc">성스러운 마법 지팡이와 엘프의 왕관을 소유한 정령 마법의 후계자.</p>
+            <ul class="role-items">
+              <li>🪄 <strong>스타일:</strong> 원거리 엘프 정령 마법 & 순간이동</li>
+              <li>👑 <strong>기본 무기:</strong> 성스러운 빛의 마법 지팡이 (Sharpness V)</li>
+              <li>🛡️ <strong>방어구:</strong> 엘프 다이아몬드 왕관 & 인챈트 드레스</li>
+              <li>📜 <strong>전용 퀘스트:</strong> 고대 마법 숲의 정령 봉인 해제</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Prince Role Card -->
+        <div class="role-card" id="role-prince" data-role="prince">
+          <div class="role-header">
+            <span class="role-avatar">⚔️</span>
+            <div class="role-titles">
+              <h3>왕자 (Prince)</h3>
+              <span class="char-name">아서 왕자 (Prince Arthur)</span>
+            </div>
+          </div>
+          <div class="role-body">
+            <p class="role-desc">국왕의 대검 엑스칼리버와 용의 방패를 든 왕국 기사단의 선봉장.</p>
+            <ul class="role-items">
+              <li>⚔️ <strong>스타일:</strong> 근접 검술 & 강력한 방어 검술</li>
+              <li>🗡️ <strong>기본 무기:</strong> 엑스칼리버 대검 (Fire Aspect II, Sharpness V)</li>
+              <li>🛡️ <strong>방어구:</strong> 국왕 풀 네더라이트 기사 갑옷 & 드래곤 방패</li>
+              <li>📜 <strong>전용 퀘스트:</strong> 드래곤 산맥의 고대 레드 드래곤 토벌</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kingdom Locations Preview Guide -->
+    <section class="kingdom-locations-section">
+      <h3>🗺️ 에델가르드 왕국 (Kingdom of Aethelgard) 탐험 구역</h3>
+      <div class="locations-grid">
+        <div class="location-item">
+          <span class="loc-icon">🏰</span>
+          <span class="loc-name">에델가르드 왕성</span>
+          <span class="loc-desc">스폰 지점 및 왕좌실</span>
+        </div>
+        <div class="location-item">
+          <span class="loc-icon">🐉</span>
+          <span class="loc-name">드래곤 산맥</span>
+          <span class="loc-desc">레드 드래곤 보스 둥지</span>
+        </div>
+        <div class="location-item">
+          <span class="loc-icon">🌲</span>
+          <span class="loc-name">마법의 숲 & 던전</span>
+          <span class="loc-desc">고대 유물 상자</span>
+        </div>
+        <div class="location-item">
+          <span class="loc-icon">🏘️</span>
+          <span class="loc-name">중세 영지 마을</span>
+          <span class="loc-desc">대장간 & 주민 거래소</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Map Generator Download Action Section -->
+    <section class="download-section">
+      <div class="config-summary">
+        <span>선택된 역할: <strong id="selected-role-text" class="highlight-gold">👑 공주 (Princess - 아리아 공주)</strong></span>
+        <span>호환 버전: <strong class="highlight-cyan">Minecraft Java 26.1.2 / 1.20+</strong></span>
+      </div>
+
+      <button id="download-map-btn" class="btn btn-primary btn-large">
+        🏰 중세 판타지 마크 맵 (.zip) 다운로드
+      </button>
+
+      <div class="path-guide">
+        <p>💡 적용 방법: 다운받은 <code>Medieval_Fantasy_Kingdom.zip</code> 파일의 압축을 풀어 <code>%APPDATA%\.minecraft\saves\</code> 폴더에 넣고 마인크래프트를 실행하세요!</p>
+      </div>
+    </section>
+  </div>
+
+  <script src="map_builder.js"></script>
+</body>
+</html>

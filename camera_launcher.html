@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>안드로이드 모바일 카메라 URL 스캐너 & 앱 실행기</title>
+  <link rel="stylesheet" href="camera_style.css">
+  <!-- jsQR Library for High-speed Mobile QR & URL Detection -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+</head>
+<body>
+  <div class="mobile-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="icon">📷</span>
+        <h1>Camera URL Launcher</h1>
+      </div>
+      <button id="cam-toggle-btn" class="icon-btn" title="카메라 전환">
+        🔄
+      </button>
+    </header>
+
+    <!-- Main Camera Viewfinder Area -->
+    <main class="viewfinder-container">
+      <video id="webcam-video" playsinline autoplay muted></video>
+      <canvas id="scan-canvas" class="hidden"></canvas>
+
+      <!-- Viewfinder Overlay Target Ring -->
+      <div class="scan-target-box">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+        <div class="laser-line"></div>
+      </div>
+
+      <div id="camera-status" class="status-badge">
+        카메라 준비 중...
+      </div>
+    </main>
+
+    <!-- Detection Result & Action Panel -->
+    <section class="result-panel">
+      <div class="panel-header">
+        <span class="title">인식된 URL / 링크</span>
+        <label class="auto-open-toggle">
+          <input type="checkbox" id="auto-open-cb" checked>
+          <span>인식 즉시 자동 열기</span>
+        </label>
+      </div>
+
+      <div class="url-display-box">
+        <div id="url-text" class="url-text placeholder">카메라로 QR 코드나 URL을 비춰주세요</div>
+      </div>
+
+      <div class="action-buttons">
+        <button id="open-url-btn" class="btn btn-primary" disabled>
+          🚀 연결 프로그램으로 열기
+        </button>
+        <button id="copy-url-btn" class="btn btn-secondary" disabled>
+          📋 URL 복사
+        </button>
+      </div>
+    </section>
+
+    <!-- Scanning History -->
+    <section class="history-panel">
+      <div class="history-header">
+        <span>최근 스캔 기록</span>
+        <button id="clear-history-btn" class="text-btn">기록 삭제</button>
+      </div>
+      <ul id="history-list" class="history-list">
+        <li class="empty-msg">인식된 스캔 기록이 없습니다.</li>
+      </ul>
+    </section>
+  </div>
+
+  <script src="camera_app.js"></script>
+</body>
+</html>

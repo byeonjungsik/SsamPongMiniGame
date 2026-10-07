@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>⛏️ 마인크래프트 쉐이더·모드·맵 원클릭 자동 적용기</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- JSZip for deep zip inspecting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">⛏️</span>
+        <h1>Minecraft Auto-Installer</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Dropzone Area -->
+    <main class="dropzone-card" id="drop-zone">
+      <div class="drop-icon">📦</div>
+      <h2>이곳에 파일(.zip, .jar, .mcworld)을 끌어다 놓으세요!</h2>
+      <p class="drop-sub">쉐이더, 모드, 맵 파일을 드롭하면 자동으로 종류를 감지하여 마인크래프트 폴더로 배치해 드립니다.</p>
+      
+      <div class="file-picker-row">
+        <label for="file-input" class="btn btn-outline">
+          📁 컴퓨터에서 파일 선택하기
+        </label>
+        <input type="file" id="file-input" multiple accept=".zip,.jar,.mcworld,.rar" class="hidden">
+      </div>
+    </main>
+
+    <!-- Detected Files List Section -->
+    <section class="files-section">
+      <div class="section-header">
+        <h3>📋 감지된 마인크래프트 파일 목록 (<span id="file-count">0</span>개)</h3>
+        <button id="clear-all-btn" class="btn-text">전체 지우기</button>
+      </div>
+
+      <div id="file-list" class="file-list">
+        <div class="empty-msg">아직 추가된 파일이 없습니다. 쉐이더, 모드, 맵 파일을 위 박스에 드롭하세요!</div>
+      </div>
+    </section>
+
+    <!-- Action Section -->
+    <section class="action-section">
+      <button id="download-installer-btn" class="btn btn-primary" disabled>
+        🚀 마인크래프트 원클릭 자동 적용 (.bat 실행)
+      </button>
+
+      <div class="info-box">
+        <span class="info-title">💡 마인크래프트 적용 기본 경로:</span>
+        <code class="font-mono">%APPDATA%\.minecraft</code>
+        <div class="path-details">
+          <span>📦 모드: <code>.minecraft\mods</code></span> | 
+          <span>🌈 쉐이더: <code>.minecraft\shaderpacks</code></span> | 
+          <span>🗺️ 맵: <code>.minecraft\saves</code></span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="installer.js"></script>
+</body>
+</html>

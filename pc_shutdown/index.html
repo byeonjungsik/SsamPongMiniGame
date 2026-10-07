@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>💻 Windows 컴퓨터 끄기 & 자동 종료 타이머 앱</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">💻</span>
+        <h1>PC Shutdown Timer</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Digital Clock Display Card -->
+    <main class="clock-card">
+      <div class="status-badge" id="shutdown-status-text">대기 중 (컴퓨터 끄기 준비)</div>
+      
+      <div class="digital-clock" id="clock-display">00:00:00</div>
+      
+      <p class="clock-subtext" id="clock-subtext">원하시는 시간을 선택하거나 직접 입력하여 컴퓨터 끄기를 설정하세요.</p>
+    </main>
+
+    <!-- Quick Timer Preset Buttons -->
+    <section class="preset-section">
+      <h3>⚡ 빠른 끄기 예약 시간 선택</h3>
+      <div class="preset-grid">
+        <button class="preset-btn" data-sec="10">⚡ 10초 후</button>
+        <button class="preset-btn" data-sec="60">⏳ 1분 후</button>
+        <button class="preset-btn" data-sec="300">⌛ 5분 후</button>
+        <button class="preset-btn" data-sec="1800">🌙 30분 후</button>
+        <button class="preset-btn" data-sec="3600">🛌 1시간 후</button>
+      </div>
+    </section>
+
+    <!-- Custom Timer & Action Controls -->
+    <section class="control-section">
+      <div class="custom-timer-row">
+        <label for="custom-time-input">직접 입력:</label>
+        <input type="number" id="custom-time-input" min="1" max="86400" value="5" placeholder="시간 입력">
+        <select id="time-unit-select">
+          <option value="sec">초 (Sec)</option>
+          <option value="min" selected>분 (Min)</option>
+          <option value="hour">시간 (Hour)</option>
+        </select>
+      </div>
+
+      <div class="main-action-buttons">
+        <button id="start-timer-btn" class="btn btn-timer">
+          ⏱️ 몇 초/몇 분 후에 끌지 설정 & 시작
+        </button>
+        <button id="shutdown-now-btn" class="btn btn-danger">
+          🛑 즉시 컴퓨터 끄기 (0초)
+        </button>
+        <button id="cancel-shutdown-btn" class="btn btn-secondary">
+          🔄 컴퓨터 끄기 예약 취소
+        </button>
+      </div>
+    </section>
+
+    <!-- Command Helper & Bat Generator -->
+    <footer class="command-section">
+      <div class="command-header">
+        <h3>💻 Windows CMD 명령어 & 원클릭 실행파일</h3>
+      </div>
+      <div class="cmd-box">
+        <span id="cmd-preview-text" class="font-mono">shutdown /s /t 300</span>
+        <button id="copy-cmd-btn" class="btn-text">📋 명령어 복사</button>
+      </div>
+      <button id="download-bat-btn" class="btn btn-outline">
+        💾 원클릭 'PC종료.bat' 실행파일 다운로드
+      </button>
+    </footer>
+  </div>
+
+  <!-- Interactive Confirm Modal Dialog (Ask: 끄겠냐 안 끄겠냐) -->
+  <div id="confirm-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-icon">💻</div>
+      <h2>컴퓨터를 끄겠습니까?</h2>
+      <p class="modal-desc">원하시는 종료 방식을 선택해 주세요.</p>
+
+      <div class="modal-buttons">
+        <button id="modal-shutdown-now" class="btn btn-danger">
+          🛑 즉시 끄기 (0초)
+        </button>
+        <button id="modal-set-timer" class="btn btn-timer">
+          ⏱️ 몇 초/몇 분 후에 끄기 (타이머 설정)
+        </button>
+        <button id="modal-cancel" class="btn btn-secondary">
+          ❌ 끄지 않기 / 취소 (창 유지)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="shutdown.js"></script>
+</body>
+</html>

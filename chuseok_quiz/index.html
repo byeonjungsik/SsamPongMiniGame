@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🌕 추석 기념 퀴즈 PPT & 실시간 스코어보드</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Canvas Confetti for Winner Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">🌕</span>
+        <h1>한가위 추석 퀴즈 PPT</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Top Action Bar -->
+    <div class="top-action-bar">
+      <div class="slide-progress">
+        <span>슬라이드: <strong id="slide-num">1</strong> / <span id="total-slides">12</span></span>
+      </div>
+
+      <button id="toggle-scoreboard-btn" class="btn btn-gold">
+        📊 전체 스코어보드 (<span id="participant-count-badge">2</span>명)
+      </button>
+    </div>
+
+    <!-- Quick Scoreboard Bar for Instant Click (아빠 / 엄마) -->
+    <div class="quick-scoreboard-panel">
+      <div class="quick-score-label">⚡ 빠른 점수 추가:</div>
+      <div id="quick-scoreboard-list" class="quick-scoreboard-list">
+        <!-- Rendered dynamically: e.g. [ 👨‍👩‍👦 아빠: 0점 (+10) ] [ 👩‍👩‍👦 엄마: 0점 (+10) ] -->
+      </div>
+    </div>
+
+    <!-- Main PPT Quiz Slide Viewport -->
+    <main class="slide-card">
+      <div class="slide-header">
+        <span id="category-badge" class="badge badge-category">🌾 추석 풍속 & 문화</span>
+        <span id="points-badge" class="badge badge-points">+10점</span>
+      </div>
+
+      <div class="quiz-content">
+        <div id="quiz-icon" class="quiz-icon">🥟</div>
+        <h2 id="quiz-question">추석에 만들어 먹는 대표적인 반달 모양의 떡은 무엇일까요?</h2>
+        <div id="quiz-hint" class="quiz-hint">💡 힌트: 솔잎을 깔고 시루에 쪄서 만듭니다.</div>
+
+        <!-- Answer Box (Hidden by Default) -->
+        <div id="answer-box" class="answer-box hidden">
+          <span class="answer-label">✅ 정답:</span>
+          <span id="answer-text" class="answer-text">송편</span>
+          <p id="answer-explanation" class="answer-explanation">송편은 반달 모양으로 만드는데, 앞으로 더 차오를 차달(성장)을 기원하는 의미입니다.</p>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <button id="reveal-answer-btn" class="btn btn-reveal">
+          👁️ 정답 공개하기
+        </button>
+
+        <div class="slide-nav-buttons">
+          <button id="prev-slide-btn" class="btn btn-secondary">◀ 이전</button>
+          <button id="next-slide-btn" class="btn btn-primary">다음 슬라이드 ▶</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Live Participant Scoreboard Drawer Side Panel -->
+    <aside id="scoreboard-drawer" class="scoreboard-drawer hidden">
+      <div class="drawer-header">
+        <h3>📊 실시간 참가자 점수판</h3>
+        <button id="close-drawer-btn" class="btn-icon">✕</button>
+      </div>
+
+      <!-- Add Participant Form -->
+      <div class="add-participant-row">
+        <input type="text" id="participant-name-input" placeholder="참가자 이름 입력 (예: 철수, 영희)" autocomplete="off">
+        <button id="add-participant-btn" class="btn btn-secondary">+ 추가</button>
+      </div>
+
+      <!-- Live Leaderboard Participant List -->
+      <div id="participant-list" class="participant-list">
+        <div class="empty-msg">아직 참가자가 없습니다. 이름을 추가하세요!</div>
+      </div>
+
+      <button id="announce-winner-btn" class="btn btn-winner btn-large">
+        🏆 최종 우승자 시상식 & 우승자 발표!
+      </button>
+    </aside>
+
+    <!-- Final Winner Celebration Podium Modal -->
+    <div id="winner-modal" class="modal-overlay hidden">
+      <div class="modal-card winner-card">
+        <div class="winner-crown">👑</div>
+        <h2>🌕 한가위 추석 퀴즈 최종 승자 시상식</h2>
+        <p class="winner-sub">가장 많은 퀴즈를 맞춘 주인공을 발표합니다!</p>
+
+        <div id="podium-display" class="podium-display">
+          <!-- 1st, 2nd, 3rd Place Cards -->
+        </div>
+
+        <button id="close-winner-modal-btn" class="btn btn-primary btn-large">
+          🎉 퀴즈 다시 시작하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="quiz.js"></script>
+</body>
+</html>

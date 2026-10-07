@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🐍 네온 스네이크 아케이드 (Neon Snake Game)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header UI HUD -->
+    <header class="game-hud">
+      <div class="score-card">
+        <span class="label">SCORE</span>
+        <span id="current-score" class="value">0</span>
+      </div>
+      <div class="title-card">
+        <h1>🐍 NEON SNAKE</h1>
+      </div>
+      <div class="score-card highlight">
+        <span class="label">HIGH SCORE</span>
+        <span id="high-score" class="value">0</span>
+      </div>
+    </header>
+
+    <!-- Navigation Game Switcher Bar -->
+    <div class="nav-bar-wrapper">
+      <select class="nav-game-select" onchange="if(this.value) window.location.href=this.value;">
+        <option value="">🎮 다른 게임 선택...</option>
+        <option value="../index.html">🏠 아케이드 포털 허브</option>
+        <option value="../physics_game/index.html">🏀 최단 경로 물리 게임</option>
+        <option value="../3d_pool/index.html">🏊 3D 수영장 시뮬레이터</option>
+        <option value="../3d_toilet/index.html">🚽 3D 도자기 변기 & 설사</option>
+        <option value="index.html" selected>🐍 아케이드 스네이크 게임</option>
+        <option value="../camera_app/index.html">📷 카메라 URL 스캐너</option>
+      </select>
+    </div>
+
+    <!-- Main Canvas Viewport Area -->
+    <div class="canvas-wrapper">
+      <canvas id="game-canvas" width="600" height="600"></canvas>
+
+      <!-- Active Power-up Badge -->
+      <div id="powerup-badge" class="powerup-badge hidden">
+        <span id="powerup-icon">🛡️</span>
+        <span id="powerup-name">방어막 가동 중</span>
+      </div>
+
+      <!-- Start / Game Over Overlay Modal -->
+      <div id="game-modal" class="game-modal">
+        <div class="modal-card">
+          <h2 id="modal-title">🐍 NEON SNAKE</h2>
+          <p id="modal-msg">방향키 또는 스와이프로 뱀을 조종하세요!</p>
+          
+          <div class="mode-select-group">
+            <label class="mode-label">
+              <span>벽 모드:</span>
+              <select id="wall-mode-select">
+                <option value="classic">🧱 클래식 (벽 충돌)</option>
+                <option value="portal" selected>🌀 워프 (벽 관통)</option>
+              </select>
+            </label>
+
+            <label class="mode-label">
+              <span>난이도 속도:</span>
+              <select id="speed-select">
+                <option value="120">EASY (쉬움)</option>
+                <option value="90" selected>NORMAL (보통)</option>
+                <option value="65">HARD (빠름)</option>
+                <option value="45">INSANE (무한속도)</option>
+              </select>
+            </label>
+          </div>
+
+          <button id="start-btn" class="start-btn">▶ GAME START</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Touch D-Pad Overlay -->
+    <div class="dpad-container">
+      <button class="dpad-btn dpad-up" id="btn-up">▲</button>
+      <div class="dpad-row">
+        <button class="dpad-btn dpad-left" id="btn-left">◀</button>
+        <button class="dpad-btn dpad-down" id="btn-down">▼</button>
+        <button class="dpad-btn dpad-right" id="btn-right">▶</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

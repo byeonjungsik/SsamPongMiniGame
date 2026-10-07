@@ -1,0 +1,244 @@
+:root {
+  --bg-dark: #090f0b;
+  --panel-bg: rgba(18, 30, 22, 0.88);
+  --border-color: rgba(74, 222, 128, 0.28);
+  --mc-green: #4ade80;
+  --mc-gold: #fbbf24;
+  --mc-cyan: #38bdf8;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 16px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-group .icon {
+  font-size: 1.8rem;
+}
+
+.logo-group h1 {
+  font-size: 1.3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--mc-green), var(--mc-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-game-select {
+  width: 100%;
+  background: #0d1711;
+  color: var(--mc-green);
+  border: 1px solid var(--mc-green);
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+}
+
+.nav-game-select:hover {
+  background: #14241a;
+}
+
+/* Opener Card */
+.opener-card {
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.opener-header h2 {
+  font-size: 1.15rem;
+  color: var(--mc-green);
+}
+
+.sub-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.folder-buttons-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.folder-btn {
+  background: #0d1711;
+  border: 1.5px solid var(--border-color);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  text-align: left;
+}
+
+.folder-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--mc-green);
+  background: rgba(74, 222, 128, 0.12);
+  box-shadow: 0 4px 15px rgba(74, 222, 128, 0.2);
+}
+
+.primary-folder {
+  border-color: var(--mc-gold);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.primary-folder:hover {
+  border-color: var(--mc-gold);
+  background: rgba(251, 191, 36, 0.2);
+  box-shadow: 0 4px 18px rgba(251, 191, 36, 0.3);
+}
+
+.folder-icon {
+  font-size: 2rem;
+}
+
+.folder-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.folder-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.folder-path {
+  font-size: 0.78rem;
+  color: var(--mc-green);
+}
+
+.action-tag {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--mc-gold);
+  margin-left: auto;
+}
+
+/* Shortcut Section */
+.shortcut-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #16a34a, #4ade80);
+  color: #052e16;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(74, 222, 128, 0.5);
+}
+
+.command-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.command-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.cmd-code-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0d1711;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+code {
+  font-size: 0.88rem;
+  color: var(--mc-green);
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--mc-gold);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-text:hover {
+  text-decoration: underline;
+}

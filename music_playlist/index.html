@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎧 모던 뮤직 플레이리스트 (YouTube & MP3 플리)</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- YouTube IFrame Player API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">🎧</span>
+        <h1>MY MODERN PLAYLIST</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Track Add Form Card -->
+    <section class="card input-card">
+      <h2 class="section-title">✨ 새로운 곡 등록하기 (유튜브 URL 또는 MP3 주소 지원)</h2>
+      <div class="input-form-grid">
+        <div class="input-group">
+          <label for="track-url-input">음원 / 유튜브 URL (Audio / YouTube Link)</label>
+          <input type="url" id="track-url-input" placeholder="예: https://www.youtube.com/watch?v=... 또는 https://.../music.mp3" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+          <label for="track-name-input">곡 이름 (Title)</label>
+          <input type="text" id="track-name-input" placeholder="유튜브 주소 입력 시 제목이 자동 감지됩니다!" autocomplete="off">
+        </div>
+
+        <div class="input-group emoji-group">
+          <label>아이콘 (Tag)</label>
+          <select id="track-emoji-select" class="emoji-select">
+            <option value="🎧">🎧 헤드폰</option>
+            <option value="🔴">🔴 유튜브</option>
+            <option value="🎵">🎵 음표</option>
+            <option value="☕">☕ 카페 / 힐링</option>
+            <option value="🌙">🌙 새벽 / 밤</option>
+            <option value="🚗">🚗 드라이브</option>
+            <option value="🔥">🔥 신나는 비트</option>
+            <option value="🎹">🎹 피아노</option>
+            <option value="🌊">🌊 바다 / 감성</option>
+          </select>
+        </div>
+
+        <button id="btn-add-track" class="btn btn-add">
+          <span>+ 플리에 추가</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Main Playlist View Container -->
+    <main class="card playlist-card">
+      <div class="playlist-header">
+        <div class="playlist-info">
+          <h2>🎶 내 플레이리스트 (<span id="total-tracks-count">0</span>곡)</h2>
+        </div>
+
+        <div class="playlist-actions">
+          <input type="text" id="search-input" placeholder="🔍 곡 이름 검색..." autocomplete="off">
+          <button id="btn-load-demo" class="btn btn-demo">⚡ 샘플 곡 불러오기</button>
+          <button id="btn-clear-all" class="btn btn-clear">🗑️ 전체 삭제</button>
+        </div>
+      </div>
+
+      <!-- Track List Items Container -->
+      <div id="track-list" class="track-list">
+        <div class="empty-state">
+          <span class="empty-icon">🎵</span>
+          <p>아직 플리에 추가된 곡이 없습니다.</p>
+          <span class="empty-sub">상단에서 유튜브 URL 또는 MP3 링크를 입력하여 나만의 플레이리스트를 만들어 보세요!</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Audio Player Controller Bar -->
+    <footer class="bottom-player-bar">
+      <!-- Hidden Native Audio & Hidden YouTube IFrame Container -->
+      <audio id="audio-element" preload="metadata"></audio>
+      <div id="yt-player-container" class="yt-player-container">
+        <div id="yt-player"></div>
+      </div>
+
+      <!-- Track Meta Info (Left) -->
+      <div class="player-left">
+        <div id="album-cover" class="album-cover">
+          <span id="album-emoji">🎵</span>
+        </div>
+        <div class="track-meta">
+          <div id="now-playing-title" class="now-title">재생 중인 곡 없음</div>
+          <div id="now-playing-sub" class="now-sub">곡을 선택해 재생하세요</div>
+        </div>
+      </div>
+
+      <!-- Playback Center Controls -->
+      <div class="player-center">
+        <div class="control-buttons">
+          <button id="btn-shuffle" class="btn-ctrl" title="무작위 재생 (Shuffle)">🔀</button>
+          <button id="btn-prev" class="btn-ctrl" title="이전 곡 (Previous)">⏮️</button>
+          <button id="btn-play-pause" class="btn-ctrl btn-play" title="재생 (Play)">▶️</button>
+          <button id="btn-next" class="btn-ctrl" title="다음 곡 (Next)">⏭️</button>
+          <button id="btn-repeat" class="btn-ctrl" title="반복 재생 (Repeat)">🔁</button>
+        </div>
+
+        <div class="progress-bar-container">
+          <span id="curr-time" class="time-text">0:00</span>
+          <div id="seek-bar-bg" class="seek-bar-bg">
+            <div id="seek-bar-fill" class="seek-bar-fill"></div>
+          </div>
+          <span id="dur-time" class="time-text">0:00</span>
+        </div>
+      </div>
+
+      <!-- Visualizer & Volume (Right) -->
+      <div class="player-right">
+        <canvas id="visualizer-canvas" width="120" height="35"></canvas>
+        <div class="volume-container">
+          <span id="vol-icon" class="vol-icon">🔊</span>
+          <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8">
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

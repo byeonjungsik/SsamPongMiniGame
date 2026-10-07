@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>💩 설사 서바이벌 선택형 스토리 게임 (Diarrhea Choice Survival)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container" id="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">💩</span>
+        <h1>설사 서바이벌: 괄약근을 지켜라!</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <!-- Gender Selection Screen (Shows on Start) -->
+    <section id="gender-screen" class="gender-screen">
+      <div class="gender-card">
+        <h2>👤 주인공 성별을 선택하세요</h2>
+        <p class="gender-sub">성별에 따라 주인공 캐릭터 대사와 특수 상황 선택지가 달라집니다!</p>
+
+        <div class="gender-options">
+          <button class="gender-btn" data-gender="male">
+            <span class="avatar-icon">👨</span>
+            <span class="gender-title">남자 (김설사)</span>
+            <span class="gender-desc">"불닭과 우유는 최악의 조합이었다..."</span>
+          </button>
+
+          <button class="gender-btn" data-gender="female">
+            <span class="avatar-icon">👩</span>
+            <span class="gender-title">여자 (이지림)</span>
+            <span class="gender-desc">"도도한 표정을 유지하며 버텨낸다!"</span>
+          </button>
+
+          <button class="gender-btn" data-gender="neutral">
+            <span class="avatar-icon">🤖</span>
+            <span class="gender-title">중성 (설사봇-9000)</span>
+            <span class="gender-desc">"유체 수압 과부하! 세척 포트를 찾아라!"</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Game Viewport Screen -->
+    <section id="game-screen" class="game-screen hidden">
+      <!-- Status Bar HUD -->
+      <div class="status-hud">
+        <div class="char-profile">
+          <span id="char-avatar" class="char-avatar">👨</span>
+          <div class="char-meta">
+            <span id="char-name" class="char-name">김설사</span>
+            <span id="char-location" class="char-location">🚇 지하철 2호선 차내</span>
+          </div>
+        </div>
+
+        <div class="gauges-group">
+          <div class="gauge-box">
+            <div class="gauge-label">
+              <span>괄약근 내구도</span>
+              <span id="hp-text" class="font-mono">100%</span>
+            </div>
+            <div class="gauge-bar-bg">
+              <div id="hp-bar" class="gauge-bar hp-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <div class="gauge-box">
+            <div class="gauge-label">
+              <span>장 내부 유체 수압</span>
+              <span id="pressure-text" class="font-mono">80%</span>
+            </div>
+            <div class="gauge-bar-bg">
+              <div id="pressure-bar" class="gauge-bar pressure-fill" style="width: 80%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Story Card Box -->
+      <main class="story-card">
+        <div class="story-header-box">
+          <span id="situation-icon" class="situation-icon">🌩️</span>
+          <h3 id="story-title">쿠르릉! 장내 대폭발의 징조</h3>
+        </div>
+
+        <div id="story-body" class="story-body">
+          매운 불닭볶음면에 유통기한 지난 우유를 마신 당신... 만원 지하철 한복판에서 배가 요동치기 시작합니다!
+        </div>
+
+        <!-- Choice Buttons (하나 또는 하나를 선택!) -->
+        <div class="choice-container">
+          <button id="choice-a-btn" class="choice-btn choice-a">
+            <span class="choice-tag">선택 A</span>
+            <span id="choice-a-text" class="choice-text">지하철에서 내려서 공중 화장실로 맹렬히 달린다!</span>
+          </button>
+
+          <button id="choice-b-btn" class="choice-btn choice-b">
+            <span class="choice-tag">선택 B</span>
+            <span id="choice-b-text" class="choice-text">괄약근에 모든 신경을 집중하고 한 정거장 더 참는다!</span>
+          </button>
+        </div>
+      </main>
+    </section>
+
+    <!-- Game Ending Modal -->
+    <div id="ending-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div id="ending-icon" class="modal-icon">🏆</div>
+        <h2 id="ending-title">시원한 구원! (HAPPY END)</h2>
+        <p id="ending-desc" class="modal-desc">무사히 변기에 앉아 폭풍 같은 물설사를 쏟아내고 평화를 찾았습니다.</p>
+
+        <div class="ending-stats">
+          <div class="stat-item">
+            <span>남은 괄약근 HP:</span>
+            <span id="final-hp" class="font-mono">75%</span>
+          </div>
+        </div>
+
+        <button id="restart-btn" class="btn btn-primary btn-large">🔄 다시 도전하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="story.js"></script>
+</body>
+</html>

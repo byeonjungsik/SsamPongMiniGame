@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🎨 마인크래프트 커스텀 리소스팩 제작기 (Minecraft Resourcepack Maker)</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- JSZip for creating Minecraft Resourcepack Zip files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="icon">🎨</span>
+        <h1>Minecraft Resourcepack Maker</h1>
+      </div>
+
+      <!-- Navigation Game Switcher -->
+      
+    </header>
+
+    <div class="editor-layout">
+      <!-- Left: Pixel Canvas Editor -->
+      <main class="canvas-card">
+        <div class="target-select-row">
+          <label for="texture-target">편집할 블록/아이템:</label>
+          <select id="texture-target">
+            <option value="grass">🟩 잔디 블록 상단 (Grass Top)</option>
+            <option value="dirt">🤎 흙 블록 (Dirt)</option>
+            <option value="diamond_ore">💎 다이아몬드 원석 (Diamond Ore)</option>
+            <option value="diamond_sword">🗡️ 다이아몬드 검 (Diamond Sword)</option>
+            <option value="tnt">💥 TNT 폭탄 (TNT Side)</option>
+            <option value="golden_apple">🍎 황금 사과 (Golden Apple)</option>
+            <option value="pack_icon">🖼️ 팩 아이콘 (pack.png)</option>
+          </select>
+        </div>
+
+        <div class="pixel-canvas-wrapper">
+          <canvas id="pixel-canvas" width="16" height="16"></canvas>
+        </div>
+
+        <!-- Painting Toolbar -->
+        <div class="toolbar-row">
+          <button id="tool-pencil" class="tool-btn active" title="연필">✏️ 연필</button>
+          <button id="tool-eraser" class="tool-btn" title="지우개">🧹 지우개</button>
+          <button id="tool-pipette" class="tool-btn" title="스포이트">🧪 스포이트</button>
+          <button id="reset-canvas-btn" class="btn-text" title="초기화">🔄 기본 템플릿 복원</button>
+        </div>
+
+        <div class="color-picker-row">
+          <label for="color-picker">색상 선택:</label>
+          <input type="color" id="color-picker" value="#22c55e">
+          <div class="quick-palette">
+            <button class="palette-swatch" style="background:#22c55e;" data-color="#22c55e"></button>
+            <button class="palette-swatch" style="background:#854d0e;" data-color="#854d0e"></button>
+            <button class="palette-swatch" style="background:#38bdf8;" data-color="#38bdf8"></button>
+            <button class="palette-swatch" style="background:#ef4444;" data-color="#ef4444"></button>
+            <button class="palette-swatch" style="background:#fbbf24;" data-color="#fbbf24"></button>
+            <button class="palette-swatch" style="background:#ffffff;" data-color="#ffffff"></button>
+            <button class="palette-swatch" style="background:#000000;" data-color="#000000"></button>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right: Resourcepack Configuration Panel -->
+      <aside class="config-card">
+        <h3>📦 리소스팩 설정 (pack.mcmeta)</h3>
+
+        <div class="form-group">
+          <label for="pack-name">리소스팩 이름:</label>
+          <input type="text" id="pack-name" value="쌈뽕 커스텀 리소스팩" placeholder="팩 이름 입력">
+        </div>
+
+        <div class="form-group">
+          <label for="pack-desc">리소스팩 설명:</label>
+          <input type="text" id="pack-desc" value="나만의 커스텀 마인크래프트 리소스팩" placeholder="설명 입력">
+        </div>
+
+        <div class="form-group">
+          <label for="pack-version">마인크래프트 타겟 버전:</label>
+          <select id="pack-version">
+            <option value="15" selected>마인크래프트 1.20+ (pack_format 15)</option>
+            <option value="9">마인크래프트 1.19 (pack_format 9)</option>
+            <option value="6">마인크래프트 1.16.x (pack_format 6)</option>
+            <option value="1">마인크래프트 1.8.9 PvP (pack_format 1)</option>
+          </select>
+        </div>
+
+        <div class="texture-preview-grid">
+          <h4>🎨 적용 준비된 텍스처 현황:</h4>
+          <div class="preview-thumbnails">
+            <div class="thumb-box"><canvas id="thumb-grass" width="32" height="32"></canvas><span>잔디</span></div>
+            <div class="thumb-box"><canvas id="thumb-dirt" width="32" height="32"></canvas><span>흙</span></div>
+            <div class="thumb-box"><canvas id="thumb-diamond_ore" width="32" height="32"></canvas><span>다이아원석</span></div>
+            <div class="thumb-box"><canvas id="thumb-diamond_sword" width="32" height="32"></canvas><span>다이아검</span></div>
+            <div class="thumb-box"><canvas id="thumb-tnt" width="32" height="32"></canvas><span>TNT</span></div>
+            <div class="thumb-box"><canvas id="thumb-golden_apple" width="32" height="32"></canvas><span>황금사과</span></div>
+          </div>
+        </div>
+
+        <button id="download-pack-btn" class="btn btn-primary">
+          📦 마인크래프트 리소스팩 (.zip) 다운로드
+        </button>
+
+        <div class="info-footer">
+          <p>💡 다운받은 <code>.zip</code> 파일을 <code>%APPDATA%\.minecraft\resourcepacks</code> 폴더에 넣으면 게임 옵션에서 즉시 적용됩니다!</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="creator.js"></script>
+</body>
+</html>
