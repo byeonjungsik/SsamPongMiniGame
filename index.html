@@ -2,14 +2,300 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0;url=sword_forge/index.html">
-  <title>검 강화 방치형 & 초등 5학년 교과 타자 게임</title>
-  <script>
-    window.location.replace("sword_forge/index.html");
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 쌈뽕 미니게임 천국 (SsamPong Mini Games)</title>
+  <link rel="stylesheet" href="hub_style.css">
 </head>
-<body style="background-color: #0b0f19; color: #fff; font-family: sans-serif; text-align: center; padding-top: 100px;">
-  <h2>⚔️ 검 강화 타자 게임으로 바로 이동 중입니다...</h2>
-  <p><a href="sword_forge/index.html" style="color: #38bdf8;">자동으로 이동하지 않을 경우 여기를 클릭하세요.</a></p>
+<body>
+  <div class="hub-container">
+    <header class="hub-header">
+      <div class="hub-badge">SSAMPONG MINI GAME HUB</div>
+      <h1>🎮 쌈뽕 미니게임 천국</h1>
+      <p class="subtitle">다양한 미니게임과 유용한 웹 도구를 자유롭게 즐겨보세요!</p>
+    </header>
+
+    <!-- Search & Filter Controls -->
+    <div class="controls-bar">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="game-search" class="search-input" placeholder="게임 이름이나 키워드를 검색하세요... (예: 검, 타자, 리듬, 틱택토)" autocomplete="off">
+      </div>
+
+      <div class="category-tabs">
+        <button class="cat-btn active" data-cat="all">전체보기 (All)</button>
+        <button class="cat-btn" data-cat="action">🎮 액션 & 아케이드</button>
+        <button class="cat-btn" data-cat="brain">🧠 두뇌 & 타자 / 퀴즈</button>
+        <button class="cat-btn" data-cat="rhythm">🎵 음악 & 리듬</button>
+        <button class="cat-btn" data-cat="utility">🛠️ 마크 & 유틸리티</button>
+      </div>
+    </div>
+
+    <!-- Game Card Grid -->
+    <div class="game-grid" id="game-grid">
+      <!-- 1. Sword Forge Typing -->
+      <a href="sword_forge/index.html" class="game-card theme-sword" data-cat="brain action" data-title="검 강화 방치형 초등 5학년 교과 타자 게임 sword forge 모루">
+        <div class="card-top">
+          <span class="card-badge">TYPING & IDLE</span>
+          <span class="card-tag">🔥 인기</span>
+        </div>
+        <div class="card-icon">⚔️</div>
+        <h2>검 강화 & 5학년 교과 타자</h2>
+        <p>3초마다 모루에서 검을 두드리며 초등 5학년 핵심 교과 문장을 타자하여 검을 진화시키는 방치형 타자 게임!</p>
+        <span class="launch-btn">게임 플레이 ▶</span>
+      </a>
+
+      <!-- 2. Tic-Tac-Toe -->
+      <a href="tictactoe/index.html" class="game-card theme-tic" data-cat="brain" data-title="틱택토 tictactoe AI 인공지능 2인용 친구">
+        <div class="card-top">
+          <span class="card-badge">BOARD GAME</span>
+          <span class="card-tag">⭐ NEW</span>
+        </div>
+        <div class="card-icon">⭕</div>
+        <h2>네온 틱택토 (Tic-Tac-Toe)</h2>
+        <p>무적 알고리즘 Minimax AI와의 승부 또는 친구와 같은 화면에서 즐기는 2인용 네온 보드게임!</p>
+        <span class="launch-btn">게임 플레이 ▶</span>
+      </a>
+
+      <!-- 3. ADOFAI (얼불춤) -->
+      <a href="adofai/index.html" class="game-card theme-rhythm" data-cat="rhythm action" data-title="얼불춤 adofai 불과얼음의춤 회전 피벗 리듬 게임">
+        <div class="card-top">
+          <span class="card-badge">RHYTHM GAME</span>
+        </div>
+        <div class="card-icon">🔴</div>
+        <h2>얼불춤 (A Dance of Fire and Ice)</h2>
+        <p>두 개의 행성이 맞물려 회전하는 궤도를 박자에 맞춰 스페이스바로 탭하는 본격 피벗 리듬 액션!</p>
+        <span class="launch-btn">게임 플레이 ▶</span>
+      </a>
+
+      <!-- 4. 4-Key Rhythm Beats -->
+      <a href="rhythm_game/index.html" class="game-card theme-rhythm" data-cat="rhythm" data-title="4키 네온 리듬게임 neon beats D F J K 건반">
+        <div class="card-top">
+          <span class="card-badge">RHYTHM ACTION</span>
+        </div>
+        <div class="card-icon">🎹</div>
+        <h2>네온 비트 4키 건반 리듬게임</h2>
+        <p>D, F, J, K 건반 라인으로 떨어지는 네온 노트를 타이밍에 맞춰 콤보를 이어가는 정통 건반 리듬게임!</p>
+        <span class="launch-btn">게임 플레이 ▶</span>
+      </a>
+
+      <!-- 5. Modern Music Playlist -->
+      <a href="music_playlist/index.html" class="game-card" data-cat="rhythm utility" data-title="음악 플레이리스트 music playlist 유튜브 mp3 노래">
+        <div class="card-top">
+          <span class="card-badge">MUSIC APP</span>
+        </div>
+        <div class="card-icon">🎵</div>
+        <h2>모던 뮤직 플레이리스트</h2>
+        <p>유튜브 URL 및 MP3 파일을 자유롭게 등록하고 이름을 지정해 감상하는 깔끔한 음악 플레이어!</p>
+        <span class="launch-btn">앱 실행 ▶</span>
+      </a>
+
+      <!-- 6. Chuseok Quiz & Scoreboard -->
+      <a href="chuseok_quiz/index.html" class="game-card" data-cat="brain" data-title="추석 퀴즈 PPT 스코어보드 점수판 한가위">
+        <div class="card-top">
+          <span class="card-badge">QUIZ & PPT</span>
+        </div>
+        <div class="card-icon">🌕</div>
+        <h2>추석 퀴즈 PPT & 스코어보드</h2>
+        <p>풍속·속담·초성 퀴즈 PPT 프레젠테이션과 가족·친구 이름별 실시간 점수 누적 스코어보드 & 시상대!</p>
+        <span class="launch-btn">앱 실행 ▶</span>
+      </a>
+
+      <!-- 7. Word Chain AI (끝말잇기) -->
+      <a href="word_chain/index.html" class="game-card" data-cat="brain" data-title="끝말잇기 word chain AI 인공지능 단어 두음법칙">
+        <div class="card-top">
+          <span class="card-badge">WORD GAME</span>
+        </div>
+        <div class="card-icon">🔤</div>
+        <h2>AI 인공지능 끝말잇기</h2>
+        <p>한글 두음법칙 자동 적용, 15초 제한 시간 카운트다운과 AI 단어 대결을 펼치는 끝말잇기 게임!</p>
+        <span class="launch-btn">게임 플레이 ▶</span>
+      </a>
+
+      <!-- 8. Diarrhea Story Game -->
+      <a href="poop_story/index.html" class="game-card theme-story" data-cat="action" data-title="설사 서바이벌 poop story 선택형 스토리 게임">
+        <div class="card-top">
+          <span class="card-badge">STORY GAME</span>
+        </div>
+        <div class="card-icon">💩</div>
+        <h2>설사 서바이벌 선택형 스토리</h2>
+        <p>급박한 장 쿠르릉 위기 상황에서 A vs B 선택지를 고르며 무사히 변기까지 도달하는 서바이벌 게임!</p>
+        <span class="launch-btn">게임 플레이 ▶</span>
+      </a>
+
+      <!-- 9. Neon Snake -->
+      <a href="snake_game/index.html" class="game-card" data-cat="action" data-title="스네이크 snake 뱀 게임 네온 아케이드">
+        <div class="card-top">
+          <span class="card-badge">ARCADE CLASSIC</span>
+        </div>
+        <div class="card-icon">🐍</div>
+        <h2>네온 아케이드 스네이크</h2>
+        <p>먹이를 먹을 때마다 점점 길어지고 빨라지는 클래식 뱀 게임을 사이버 네온 그래픽으로 즐겨보세요!</p>
+        <span class="launch-btn">게임 플레이 ▶</span>
+      </a>
+
+      <!-- 10. 2D Physics Game -->
+      <a href="physics_game/index.html" class="game-card" data-cat="action brain" data-title="최단 강하 곡선 물리 게임 physics 공 궤적">
+        <div class="card-top">
+          <span class="card-badge">2D PHYSICS</span>
+        </div>
+        <div class="card-icon">🏀</div>
+        <h2>최단 강하 곡선 물리 게임</h2>
+        <p>자유낙하, 마찰력, 탄성 충돌 곡선을 직접 그리고 조절해 공을 목표 지점에 빠르게 도달시키는 물리 게임!</p>
+        <span class="launch-btn">게임 플레이 ▶</span>
+      </a>
+
+      <!-- 11. 3D PSA Video -->
+      <a href="3d_psa_ad/index.html" class="game-card" data-cat="action utility" data-title="3D 공익광고 영상 3d psa shorts mp4 비디오">
+        <div class="card-top">
+          <span class="card-badge">3D VIDEO</span>
+        </div>
+        <div class="card-icon">🎬</div>
+        <h2>3D 공익광고 비디오 뷰어</h2>
+        <p>9:16 쇼츠 및 16:9 가로 고화질 3D 공익광고 비디오 실시간 렌더링 뷰어 및 다운로더!</p>
+        <span class="launch-btn">비디오 보기 ▶</span>
+      </a>
+
+      <!-- 12. 3D Swimming Pool -->
+      <a href="3d_pool/index.html" class="game-card" data-cat="action" data-title="3D 수영장 유체 시뮬레이터 pool navier stokes 물결">
+        <div class="card-top">
+          <span class="card-badge">3D FLUID</span>
+        </div>
+        <div class="card-icon">🏊</div>
+        <h2>3D 수영장 유체 시뮬레이터</h2>
+        <p>나비에-스토크스 유체 역학 방정식을 적용해 실시간 파동과 빛 굴절이 반응하는 3D 수영장 시뮬레이션!</p>
+        <span class="launch-btn">시뮬레이션 ▶</span>
+      </a>
+
+      <!-- 13. 3D Porcelain Toilet -->
+      <a href="3d_toilet/index.html" class="game-card theme-story" data-cat="action" data-title="3D 도자기 변기 toilet 수압 시뮬레이터">
+        <div class="card-top">
+          <span class="card-badge">3D SIMULATION</span>
+        </div>
+        <div class="card-icon">🚽</div>
+        <h2>3D 도자기 변기 수압 시뮬레이터</h2>
+        <p>디테일한 3D 도자기 변기 모델링과 실감 나는 수압 물 내림 효과를 감상할 수 있는 시뮬레이터!</p>
+        <span class="launch-btn">시뮬레이션 ▶</span>
+      </a>
+
+      <!-- 14. Minecraft Resourcepack Maker -->
+      <a href="mc_resourcepack/index.html" class="game-card theme-mc" data-cat="utility" data-title="마인크래프트 리소스팩 에디터 mc resourcepack 픽셀 도트">
+        <div class="card-top">
+          <span class="card-badge">MINECRAFT TOOL</span>
+        </div>
+        <div class="card-icon">🎨</div>
+        <h2>마크 리소스팩 제작기</h2>
+        <p>16x16 픽셀 도트 에디터로 텍스처를 직접 그리고 마크 정식 리소스팩(.zip)을 원클릭으로 생성 다운로드!</p>
+        <span class="launch-btn">도구 실행 ▶</span>
+      </a>
+
+      <!-- 15. Medieval Minecraft Map -->
+      <a href="mc_medieval_map/index.html" class="game-card theme-mc" data-cat="utility" data-title="중세 판타지 마크 맵 mc medieval map 왕국 공주 왕자">
+        <div class="card-top">
+          <span class="card-badge">MINECRAFT MAP</span>
+        </div>
+        <div class="card-icon">🏰</div>
+        <h2>중세 판타지 마크 맵 (공주·왕자)</h2>
+        <p>자바 에디션 1.20+ 호환, 시작 시 역할 선택 및 전용 무기·데이터팩 자동 탑재 원클릭 다운로드 맵!</p>
+        <span class="launch-btn">맵 생성기 ▶</span>
+      </a>
+
+      <!-- 16. Minecraft Auto-Installer -->
+      <a href="mc_installer/index.html" class="game-card theme-mc" data-cat="utility" data-title="마인크래프트 자동 설치기 mc installer 모드 쉐이더">
+        <div class="card-top">
+          <span class="card-badge">MINECRAFT TOOL</span>
+        </div>
+        <div class="card-icon">⛏️</div>
+        <h2>마크 모드·쉐이더 자동 적용기</h2>
+        <p>파일을 드롭하면 모드/쉐이더/맵 종류를 자동 판별해 %APPDATA%\.minecraft 로 원클릭 자동 적용!</p>
+        <span class="launch-btn">도구 실행 ▶</span>
+      </a>
+
+      <!-- 17. Minecraft Folder Opener -->
+      <a href="mc_folder_opener/index.html" class="game-card theme-mc" data-cat="utility" data-title="마인크래프트 폴더 열기 mc folder opener appdata">
+        <div class="card-top">
+          <span class="card-badge">MINECRAFT TOOL</span>
+        </div>
+        <div class="card-icon">📁</div>
+        <h2>마인크래프트 폴더 열기</h2>
+        <p>실행 시 윈도우 파일 탐색기로 %APPDATA%\.minecraft 메인 및 맵/모드 폴더를 즉시 열어주는 도구!</p>
+        <span class="launch-btn">도구 실행 ▶</span>
+      </a>
+
+      <!-- 18. PC Shutdown Timer -->
+      <a href="pc_shutdown/index.html" class="game-card" data-cat="utility" data-title="컴퓨터 끄기 pc shutdown 타이머 윈도우 종료">
+        <div class="card-top">
+          <span class="card-badge">SYSTEM APP</span>
+        </div>
+        <div class="card-icon">💻</div>
+        <h2>컴퓨터 끄기 타이머 앱</h2>
+        <p>즉시 끄기 및 원하는 시간(분/초) 후 자동 종료 예약 타이머 설정 & 배치 스크립트 원클릭 다운로드!</p>
+        <span class="launch-btn">앱 실행 ▶</span>
+      </a>
+
+      <!-- 19. URL Launcher -->
+      <a href="url_launcher/index.html" class="game-card" data-cat="utility" data-title="URL 런처 launcher 이동 사이트 프로토콜">
+        <div class="card-top">
+          <span class="card-badge">UTILITY</span>
+        </div>
+        <div class="card-icon">🌐</div>
+        <h2>URL 이동 프로그램 (런처)</h2>
+        <p>https 누락 자동 보정 및 원하는 주소로 1초 만에 깔끔하게 새 창으로 이동하는 쾌속 런처!</p>
+        <span class="launch-btn">앱 실행 ▶</span>
+      </a>
+
+      <!-- 20. Camera & QR Scanner -->
+      <a href="camera_app/index.html" class="game-card" data-cat="utility" data-title="카메라 camera QR 스캐너 URL 실시간 웹캠">
+        <div class="card-top">
+          <span class="card-badge">CAMERA TOOL</span>
+        </div>
+        <div class="card-icon">📷</div>
+        <h2>카메라 & QR 스캐너</h2>
+        <p>웹캠 실시간 화면을 통해 QR 코드 및 URL을 인식하여 링크를 바로 확인하는 웹 카메라 스캐너!</p>
+        <span class="launch-btn">도구 실행 ▶</span>
+      </a>
+    </div>
+
+    <footer class="hub-footer">
+      <span>🚀 SsamPong Mini Game Collection &copy; 2026. Made with Passion.</span>
+    </footer>
+  </div>
+
+  <script>
+    // Search and Category Filter Logic
+    const searchInput = document.getElementById('game-search');
+    const catButtons = document.querySelectorAll('.cat-btn');
+    const cards = document.querySelectorAll('.game-card');
+
+    let currentCategory = 'all';
+
+    function filterCards() {
+      const query = searchInput.value.trim().toLowerCase();
+
+      cards.forEach(card => {
+        const cardCats = card.dataset.cat || '';
+        const cardTitle = card.dataset.title.toLowerCase();
+
+        const matchCat = currentCategory === 'all' || cardCats.includes(currentCategory);
+        const matchSearch = query === '' || cardTitle.includes(query);
+
+        if (matchCat && matchSearch) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', filterCards);
+
+    catButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.cat;
+        filterCards();
+      });
+    });
+  </script>
 </body>
 </html>

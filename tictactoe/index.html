@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⭕❌ 틱택토 (Tic-Tac-Toe)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <header class="game-header">
+      <a href="../" class="back-btn">⬅️ 게임 목록으로</a>
+      <h1>⭕❌ 네온 틱택토 (Tic-Tac-Toe)</h1>
+      <p class="subtitle">AI 대결(무적 인공지능) 또는 친구와 2인용으로 즐기세요!</p>
+    </header>
+
+    <div class="mode-select">
+      <button id="btn-ai" class="mode-btn active" onclick="setMode('ai')">🤖 AI 대전 (무적 모드)</button>
+      <button id="btn-2p" class="mode-btn" onclick="setMode('2p')">👥 2인 대전 (친구와 함께)</button>
+    </div>
+
+    <div class="status-bar">
+      <span id="turn-indicator">현재 차례: <strong class="color-x">X (플레이어)</strong></span>
+    </div>
+
+    <div class="score-board">
+      <div class="score-card x-card">
+        <span class="label">X (선공)</span>
+        <span id="score-x" class="val">0</span>
+      </div>
+      <div class="score-card draw-card">
+        <span class="label">무승부</span>
+        <span id="score-draw" class="val">0</span>
+      </div>
+      <div class="score-card o-card">
+        <span class="label">O (후공)</span>
+        <span id="score-o" class="val">0</span>
+      </div>
+    </div>
+
+    <div class="board" id="board">
+      <div class="cell" data-idx="0"></div>
+      <div class="cell" data-idx="1"></div>
+      <div class="cell" data-idx="2"></div>
+      <div class="cell" data-idx="3"></div>
+      <div class="cell" data-idx="4"></div>
+      <div class="cell" data-idx="5"></div>
+      <div class="cell" data-idx="6"></div>
+      <div class="cell" data-idx="7"></div>
+      <div class="cell" data-idx="8"></div>
+    </div>
+
+    <div class="control-bar">
+      <button id="btn-reset" class="btn reset-btn" onclick="resetBoard()">🔄 판 초기화</button>
+      <button id="btn-score-reset" class="btn sub-btn" onclick="resetScores()">📊 전적 초기화</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
