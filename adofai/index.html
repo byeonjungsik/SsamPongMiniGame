@@ -13,12 +13,10 @@
     <!-- Header -->
     <header class="app-header">
       <div class="logo-group">
+        <a href="../" class="back-to-hub">🏠 게임 목록</a>
         <span class="icon">🔥❄️</span>
         <h1>얼불춤 (A Dance of Fire and Ice)</h1>
       </div>
-
-      <!-- Navigation Game Switcher -->
-      
     </header>
 
     <!-- Main Game Viewport -->
@@ -99,6 +97,38 @@
                 <p>극악의 변속 & 복합 비트 곡선 | BPM 190</p>
                 <div class="stage-high-score">최고 기록: <span id="hs-3">0점 (0.0%)</span></div>
               </div>
+
+              <div class="stage-card" data-stage="4">
+                <div class="stage-badge hard">HARD</div>
+                <div class="stage-icon">🚀</div>
+                <h3>STAGE 5. 쌈뽕 질주 (SsamPong Rush)</h3>
+                <p>신나는 지그재그 리듬 & 연속 꺾임 질주 트랙 | BPM 150</p>
+                <div class="stage-high-score">최고 기록: <span id="hs-4">0점 (0.0%)</span></div>
+              </div>
+
+              <div class="stage-card" data-stage="5">
+                <div class="stage-badge expert">EXPERT</div>
+                <div class="stage-icon">🌌</div>
+                <h3>STAGE 6. 코스믹 갤럭시 (Cosmic Galaxy)</h3>
+                <p>45° 사선 비행 & 롤러코스터 루프 트랙 | BPM 175</p>
+                <div class="stage-high-score">최고 기록: <span id="hs-5">0점 (0.0%)</span></div>
+              </div>
+
+              <div class="stage-card" data-stage="6">
+                <div class="stage-badge chaos">CHAOS</div>
+                <div class="stage-icon">🌪️</div>
+                <h3>STAGE 7. 다크 볼텍스 (Dark Vortex)</h3>
+                <p>초극악 360° 소용돌이와 폭풍 연타 트랙 | BPM 200</p>
+                <div class="stage-high-score">최고 기록: <span id="hs-6">0점 (0.0%)</span></div>
+              </div>
+
+              <div class="stage-card" data-stage="7">
+                <div class="stage-badge god">GOD</div>
+                <div class="stage-icon">✨</div>
+                <h3>STAGE 8. 갓 오브 파이어앤아이스</h3>
+                <p>얼불춤 마스터를 위한 전설의 초고속 피벗 트랙 | BPM 220</p>
+                <div class="stage-high-score">최고 기록: <span id="hs-7">0점 (0.0%)</span></div>
+              </div>
             </div>
 
             <!-- Game Options Bar -->
@@ -133,10 +163,22 @@
           <div class="menu-box editor-box">
             <div class="menu-header">
               <h2>🎨 커스텀 타일 맵 에디터</h2>
-              <p>방향 버튼을 눌러 나만의 얼불춤 트랙을 생성하고 테스트해 보세요!</p>
+              <p>방향 버튼을 누르거나 추천 맵 프리셋을 불러와 나만의 얼불춤 트랙을 즐겨보세요!</p>
             </div>
 
             <div class="editor-controls">
+              <!-- Preset Templates -->
+              <div class="preset-container">
+                <div class="preset-title">📦 추천 맵 프리셋 원클릭 불러오기:</div>
+                <div class="preset-grid">
+                  <button class="preset-btn" data-preset="sprint">⚡ 초스피드 일직선 질주</button>
+                  <button class="preset-btn" data-preset="zigzag">🧗 계단식 지그재그</button>
+                  <button class="preset-btn" data-preset="spiral">🌀 회오리 소용돌이</button>
+                  <button class="preset-btn" data-preset="roller">🎢 롤러코스터 루프</button>
+                  <button class="preset-btn" data-preset="star">⭐ 오각별 스윙</button>
+                </div>
+              </div>
+
               <div class="dir-buttons-grid">
                 <button class="dir-btn" data-dir="0">➡️ 0° (우)</button>
                 <button class="dir-btn" data-dir="45">↗️ 45° (우상)</button>
@@ -149,14 +191,17 @@
               </div>
 
               <div class="editor-settings">
-                <label>BPM: <input type="number" id="custom-bpm" value="120" min="60" max="300"></label>
+                <label>BPM: <input type="number" id="custom-bpm" value="130" min="60" max="300"></label>
                 <button id="clear-tiles-btn" class="btn btn-danger">🗑️ 전체 초기화</button>
                 <button id="undo-tile-btn" class="btn btn-warning">↩️ 타일 취소</button>
               </div>
 
               <div class="tile-string-box">
-                <label for="tile-sequence">타일 방향 시퀀스 (각도 배열):</label>
-                <input type="text" id="tile-sequence" readonly placeholder="0, 0, 90, 90, 180...">
+                <label for="tile-sequence">타일 방향 시퀀스 (직접 수정/붙여넣기 가능):</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="tile-sequence" placeholder="0, 0, 90, 90, 180..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,240,255,0.3); background: #0c1124; color: #fff;">
+                  <button id="apply-sequence-btn" class="btn btn-secondary" style="padding: 8px 16px;">적용</button>
+                </div>
               </div>
             </div>
 

@@ -362,6 +362,69 @@ body {
 .stage-badge.normal { background: rgba(0, 240, 255, 0.2); color: #00f0ff; border: 1px solid #00f0ff; }
 .stage-badge.hard { background: rgba(255, 170, 0, 0.2); color: #ffaa00; border: 1px solid #ffaa00; }
 .stage-badge.insane { background: rgba(255, 50, 100, 0.2); color: #ff3264; border: 1px solid #ff3264; }
+.stage-badge.expert { background: rgba(192, 132, 252, 0.2); color: #c084fc; border: 1px solid #c084fc; }
+.stage-badge.chaos { background: rgba(244, 63, 94, 0.25); color: #fb7185; border: 1px solid #f43f5e; }
+.stage-badge.god { background: rgba(251, 191, 36, 0.25); color: #fbbf24; border: 1px solid #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.4); }
+
+.back-to-hub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 6px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-right: 12px;
+  transition: all 0.2s ease;
+}
+
+.back-to-hub:hover {
+  background: rgba(56, 189, 248, 0.25);
+  transform: translateX(-2px);
+}
+
+.preset-container {
+  margin: 14px 0;
+  background: rgba(10, 15, 30, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.preset-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.preset-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preset-btn {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #f8fafc;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.preset-btn:hover {
+  background: #38bdf8;
+  color: #0b0f19;
+  font-weight: 800;
+}
 
 .stage-icon {
   font-size: 2.2rem;

@@ -54,8 +54,86 @@
         45, 0, 315, 270, 225, 180, 180, 90, 90, 0, 45, 90, 135, 180, 270, 0,
         0, 90, 180, 270, 0, 0, 0, 0
       ]
+    },
+    {
+      id: 4,
+      name: "STAGE 5. 쌈뽕 질주 (SsamPong Rush)",
+      badge: "HARD",
+      bpm: 150,
+      description: "신나는 지그재그 리듬 & 연속 꺾임 질주 트랙",
+      tiles: [
+        0, 0, 90, 0, 90, 0, 270, 0, 270, 0, 90, 90, 180, 270, 0, 0,
+        90, 180, 180, 270, 0, 0, 90, 0, 90, 180, 270, 270, 0, 0, 90, 0,
+        0, 0, 0, 0
+      ]
+    },
+    {
+      id: 5,
+      name: "STAGE 6. 코스믹 갤럭시 (Cosmic Galaxy)",
+      badge: "EXPERT",
+      bpm: 175,
+      description: "45° 사선 비행 & 롤러코스터 루프 트랙",
+      tiles: [
+        0, 45, 90, 45, 0, 315, 270, 315, 0, 45, 90, 135, 180, 225, 270, 315,
+        0, 0, 45, 90, 45, 0, 270, 180, 135, 90, 45, 0, 315, 270, 270, 0,
+        45, 90, 135, 180, 0, 0, 0, 0, 0, 0
+      ]
+    },
+    {
+      id: 6,
+      name: "STAGE 7. 다크 볼텍스 (Dark Vortex)",
+      badge: "CHAOS",
+      bpm: 200,
+      description: "초극악 360° 소용돌이와 폭풍 연타 트랙",
+      tiles: [
+        0, 45, 90, 135, 180, 225, 270, 315, 0, 90, 180, 270, 0, 45, 90, 135,
+        180, 270, 0, 0, 270, 180, 90, 0, 45, 90, 135, 180, 225, 270, 315, 0,
+        0, 90, 180, 270, 0, 45, 90, 180, 270, 0, 0, 0, 0, 0
+      ]
+    },
+    {
+      id: 7,
+      name: "STAGE 8. 갓 오브 파이어앤아이스",
+      badge: "GOD",
+      bpm: 220,
+      description: "얼불춤 마스터를 위한 전설의 초고속 피벗 트랙",
+      tiles: [
+        0, 0, 90, 180, 270, 0, 45, 90, 135, 180, 225, 270, 315, 0, 0, 270,
+        180, 90, 0, 45, 90, 135, 180, 0, 270, 180, 90, 0, 45, 90, 0, 270,
+        180, 90, 0, 45, 135, 225, 315, 0, 90, 180, 270, 0, 45, 90, 180, 0,
+        0, 0, 0, 0
+      ]
     }
   ];
+
+  // Map Presets for Level Editor
+  const MAP_PRESETS = {
+    sprint: {
+      name: "초스피드 일직선 질주",
+      bpm: 160,
+      tiles: [0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 180, 180, 180, 180, 180, 180, 270, 270, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    zigzag: {
+      name: "계단식 지그재그",
+      bpm: 140,
+      tiles: [0, 90, 0, 90, 0, 90, 0, 270, 0, 270, 0, 270, 0, 90, 0, 90, 0, 270, 0, 270, 0, 0, 0]
+    },
+    spiral: {
+      name: "회오리 소용돌이",
+      bpm: 155,
+      tiles: [0, 45, 90, 135, 180, 225, 270, 315, 0, 45, 90, 135, 180, 225, 270, 315, 0, 0, 0, 0]
+    },
+    roller: {
+      name: "롤러코스터 루프",
+      bpm: 170,
+      tiles: [0, 0, 45, 90, 135, 180, 225, 270, 315, 0, 45, 0, 315, 270, 225, 180, 135, 90, 45, 0, 0, 0]
+    },
+    star: {
+      name: "오각별 스윙",
+      bpm: 180,
+      tiles: [0, 72, 144, 216, 288, 0, 72, 144, 216, 288, 0, 0, 72, 144, 216, 288, 0, 0, 0]
+    }
+  };
 
   // --- AUDIO SYNTHESIZER ENGINE (Web Audio API) ---
   class AudioEngine {
@@ -375,6 +453,37 @@
         this.customTiles.pop();
         this.updateEditorUI();
       });
+
+      // Preset Map Buttons
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const presetKey = btn.dataset.preset;
+          const preset = MAP_PRESETS[presetKey];
+          if (preset) {
+            this.customTiles = [...preset.tiles];
+            document.getElementById('custom-bpm').value = preset.bpm;
+            this.updateEditorUI();
+          }
+        });
+      });
+
+      // Apply Manual Tile Sequence Button
+      const applySeqBtn = document.getElementById('apply-sequence-btn');
+      if (applySeqBtn) {
+        applySeqBtn.addEventListener('click', () => {
+          const inputVal = document.getElementById('tile-sequence').value;
+          const parsed = inputVal
+            .split(',')
+            .map(s => parseInt(s.trim()))
+            .filter(n => !isNaN(n));
+          if (parsed.length === 0) {
+            alert('올바른 각도 숫자(예: 0, 90, 180, 270)를 입력해 주세요!');
+            return;
+          }
+          this.customTiles = parsed;
+          this.updateEditorUI();
+        });
+      }
 
       document.getElementById('play-custom-btn').addEventListener('click', () => {
         if (this.customTiles.length === 0) {
