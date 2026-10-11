@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let combo = 0;
   let maxCombo = 0;
   let hp = 100;
+  let framePerfectCount = 0;
   let perfectCount = 0;
   let greatCount = 0;
   let goodCount = 0;
@@ -155,7 +156,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
 
-    if (quality === 'perfect') {
+    if (quality === 'frame-perfect') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1320, now);
+      osc.frequency.exponentialRampToValueAtTime(2640, now + 0.1);
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+    } else if (quality === 'perfect') {
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(880, now);
       osc.frequency.exponentialRampToValueAtTime(1760, now + 0.08);
@@ -279,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
     combo = 0;
     maxCombo = 0;
     hp = 100;
+    framePerfectCount = 0;
     perfectCount = 0;
     greatCount = 0;
     goodCount = 0;
@@ -382,7 +390,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let judge = null;
     let pts = 0;
 
-    if (absDiff <= 45) {
+    if (absDiff <= 17) {
+      judge = 'FRAME-PERFECT';
+      pts = 1500;
+      framePerfectCount++;
+      perfectCount++;
+    } else if (absDiff <= 45) {
       judge = 'PERFECT';
       pts = 1000;
       perfectCount++;
@@ -405,18 +418,23 @@ document.addEventListener('DOMContentLoaded', () => {
       const feverMult = isFever ? 2 : 1;
 
       score += pts * feverMult;
-      hp = Math.min(100, hp + 3);
+      hp = Math.min(100, hp + (judge === 'FRAME-PERFECT' ? 5 : 3));
 
       playHitSound(judge.toLowerCase());
       showJudgement(judge);
-      createParticles(laneIdx, HIT_Y);
+      createParticles(laneIdx, HIT_Y, judge === 'FRAME-PERFECT');
       updateHUD();
     }
   }
 
   function showJudgement(type) {
-    judgeText.textContent = type;
-    judgeText.className = `judge-text ${type.toLowerCase()}`;
+    if (type === 'FRAME-PERFECT') {
+      judgeText.textContent = '⭐ FRAME-PERFECT ⭐';
+      judgeText.className = 'judge-text frame-perfect';
+    } else {
+      judgeText.textContent = type;
+      judgeText.className = `judge-text ${type.toLowerCase()}`;
+    }
 
     comboNum.textContent = combo;
     if (combo >= 2) {
@@ -540,16 +558,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Particle Explosions
-  function createParticles(laneIdx, y) {
+  function createParticles(laneIdx, y, isFramePerfect) {
     const x = TRACK_X_OFFSET + laneIdx * LANE_WIDTH + LANE_WIDTH / 2;
-    const color = LANES[laneIdx].color;
+    const baseColor = LANES[laneIdx].color;
+    const count = isFramePerfect ? 30 : 15;
+    const rainbowColors = ['#ffe600', '#ff007f', '#00f0ff', '#ffffff', '#a855f7'];
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < count; i++) {
+      const color = isFramePerfect ? rainbowColors[Math.floor(Math.random() * rainbowColors.length)] : baseColor;
+      const speed = isFramePerfect ? 12 : 8;
       particles.push({
         x: x,
         y: y,
-        vx: (Math.random() - 0.5) * 8,
-        vy: (Math.random() - 0.5) * 8 - 2,
+        vx: (Math.random() - 0.5) * speed,
+        vy: (Math.random() - 0.5) * speed - (isFramePerfect ? 4 : 2),
         life: 1.0,
         color: color
       });
@@ -620,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resScore.textContent = score.toLocaleString();
     resAcc.textContent = `${accVal}%`;
     resCombo.textContent = maxCombo;
-    resPerfect.textContent = perfectCount;
+    resPerfect.innerHTML = `${perfectCount} <small style="color:#ffd700; font-size:0.85rem; font-weight:800; text-shadow: 0 0 10px rgba(255,215,0,0.6);">(FP: ${framePerfectCount})</small>`;
     resGreat.textContent = greatCount;
     resMiss.textContent = `${goodCount} / ${missCount}`;
 

@@ -648,7 +648,13 @@
       let scoreAdd = 0;
       let accWeight = 0;
 
-      if (diffDeg <= 18) {
+      if (diffDeg <= 7) {
+        judgement = 'FRAME-PERFECT';
+        scoreAdd = 500;
+        accWeight = 1.0;
+        this.counts.framePerfect = (this.counts.framePerfect || 0) + 1;
+        this.counts.perfect++;
+      } else if (diffDeg <= 18) {
         judgement = 'PERFECT';
         scoreAdd = 300;
         accWeight = 1.0;
@@ -799,7 +805,8 @@
       document.getElementById('res-score').innerText = this.score.toLocaleString();
       document.getElementById('res-accuracy').innerText = `${acc.toFixed(1)}%`;
       document.getElementById('res-maxcombo').innerText = this.maxCombo;
-      document.getElementById('res-perfect').innerText = this.counts.perfect;
+      const fp = this.counts.framePerfect || 0;
+      document.getElementById('res-perfect').innerHTML = `${this.counts.perfect} <small style="color:#ffd700; font-size:0.85rem; font-weight:800; text-shadow:0 0 10px rgba(255,215,0,0.6);">(FP: ${fp})</small>`;
       document.getElementById('res-great').innerText = this.counts.great;
       document.getElementById('res-miss').innerText = this.counts.good + this.counts.miss;
     }
