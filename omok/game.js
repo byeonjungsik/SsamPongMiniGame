@@ -30,6 +30,15 @@
   const modalTitle = document.getElementById('modal-title');
   const modalDesc = document.getElementById('modal-desc');
 
+  // Win Rate Elements
+  const wrPlayerLabel = document.getElementById('wr-player-label');
+  const wrPlayerPct = document.getElementById('wr-player-pct');
+  const wrAiLabel = document.getElementById('wr-ai-label');
+  const wrAiPct = document.getElementById('wr-ai-pct');
+  const wrStatusText = document.getElementById('wr-status-text');
+  const wrHumanBar = document.getElementById('wr-human-bar');
+  const wrAiBar = document.getElementById('wr-ai-bar');
+
   // Game States
   let board = Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(EMPTY));
   let moveHistory = []; // Array of { r, c, player }
@@ -393,6 +402,151 @@
 
     stoneIcon.textContent = currentPlayer === BLACK ? '⚫' : '⚪';
     turnText.innerHTML = `현재 차례: <strong>${colorName} ${tag}</strong>`;
+    updateWinRateDisplay();
+  }
+
+  // --- REAL-TIME AI WIN RATE CALCULATION ---
+  function calculateWinRate() {
+    // If game is over with a winner
+    if (gameOver && winningLine) {
+      const winner = moveHistory.length > 0 ? moveHistory[moveHistory.length - 1].player : EMPTY;
+      if (gameMode === 'ai') {
+        const aiWon = (winner === aiColor);
+        return {
+          humanRate: aiWon ? 0.0 : 100.0,
+          aiRate: aiWon ? 100.0 : 0.0,
+          status: aiWon ? '🔥 AI 승리 확정!' : '🏆 플레이어 승리!'
+        };
+      } else {
+        const blackWon = (winner === BLACK);
+        return {
+          humanRate: blackWon ? 100.0 : 0.0,
+          aiRate: blackWon ? 0.0 : 100.0,
+          status: blackWon ? '⚫ 흑돌 승리!' : '⚪ 백돌 승리!'
+        };
+      }
+    }
+
+    if (moveHistory.length === 0) {
+      return {
+        humanRate: 50.0,
+        aiRate: 50.0,
+        status: '⚖️ 팽팽한 호각세 (50 : 50)'
+      };
+    }
+
+    // Evaluate all 572 five-in-a-row lines on 15x15 board
+    let scoreBlack = 0;
+    let scoreWhite = 0;
+
+    const patternWeights = [0, 15, 120, 1000, 15000, 500000];
+
+    function evaluateWindow(cells) {
+      let bCount = 0;
+      let wCount = 0;
+      for (let i = 0; i < 5; i++) {
+        if (cells[i] === BLACK) bCount++;
+        else if (cells[i] === WHITE) wCount++;
+      }
+      if (bCount > 0 && wCount > 0) return; // Blocked line
+      if (bCount > 0) scoreBlack += patternWeights[bCount];
+      if (wCount > 0) scoreWhite += patternWeights[wCount];
+    }
+
+    // Horizontal
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c <= BOARD_SIZE - 5; c++) {
+        evaluateWindow([board[r][c], board[r][c+1], board[r][c+2], board[r][c+3], board[r][c+4]]);
+      }
+    }
+
+    // Vertical
+    for (let r = 0; r <= BOARD_SIZE - 5; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        evaluateWindow([board[r][c], board[r+1][c], board[r+2][c], board[r+3][c], board[r+4][c]]);
+      }
+    }
+
+    // Diagonal \
+    for (let r = 0; r <= BOARD_SIZE - 5; r++) {
+      for (let c = 0; c <= BOARD_SIZE - 5; c++) {
+        evaluateWindow([board[r][c], board[r+1][c+1], board[r+2][c+2], board[r+3][c+3], board[r+4][c+4]]);
+      }
+    }
+
+    // Diagonal /
+    for (let r = 4; r < BOARD_SIZE; r++) {
+      for (let c = 0; c <= BOARD_SIZE - 5; c++) {
+        evaluateWindow([board[r][c], board[r-1][c+1], board[r-2][c+2], board[r-3][c+3], board[r-4][c+4]]);
+      }
+    }
+
+    // Initiative (current turn tempo) bonus
+    if (currentPlayer === BLACK) scoreBlack *= 1.15;
+    else scoreWhite *= 1.15;
+
+    let targetDiff = 0;
+    if (gameMode === 'ai') {
+      const aiScore = aiColor === BLACK ? scoreBlack : scoreWhite;
+      const humanScore = humanColor === BLACK ? scoreBlack : scoreWhite;
+      targetDiff = aiScore - humanScore;
+    } else {
+      // White vs Black in 2P mode
+      targetDiff = scoreWhite - scoreBlack;
+    }
+
+    // Sigmoid curve mapping
+    let aiProb = 1 / (1 + Math.pow(10, -targetDiff / 1500));
+    let aiPct = Math.min(99.0, Math.max(1.0, aiProb * 100));
+    let humanPct = 100.0 - aiPct;
+
+    // AI Status commentary
+    let status = '';
+    if (gameMode === 'ai') {
+      if (aiPct >= 85) status = '🔥 AI 승기 확정권! (치명적 수)';
+      else if (aiPct >= 70) status = '⚡ AI 압도적 우세 (연속 공세)';
+      else if (aiPct >= 58) status = '📈 AI 유리 (포석 우위 점유)';
+      else if (aiPct >= 43) status = '⚖️ 팽팽한 호각세 (치열한 수싸움)';
+      else if (aiPct >= 30) status = '🛡️ 플레이어 유리 (AI 수비 집중)';
+      else if (aiPct >= 15) status = '💥 플레이어 결정적 승세!';
+      else status = '👑 플레이어 승리 목전!';
+    } else {
+      const bPct = humanPct;
+      if (bPct >= 70) status = '⚫ 흑돌 압도적 우세!';
+      else if (bPct >= 56) status = '⚫ 흑돌 유리';
+      else if (bPct >= 44) status = '⚖️ 팽팽한 호각세';
+      else if (bPct >= 30) status = '⚪ 백돌 유리';
+      else status = '⚪ 백돌 압도적 우세!';
+    }
+
+    return {
+      humanRate: parseFloat(humanPct.toFixed(1)),
+      aiRate: parseFloat(aiPct.toFixed(1)),
+      status: status
+    };
+  }
+
+  function updateWinRateDisplay() {
+    if (!wrPlayerPct || !wrAiPct || !wrHumanBar || !wrAiBar) return;
+    const wr = calculateWinRate();
+
+    if (gameMode === 'ai') {
+      wrPlayerLabel.textContent = '👤 플레이어';
+      wrAiLabel.textContent = '🤖 AI 승률';
+      wrPlayerPct.textContent = `${wr.humanRate.toFixed(1)}%`;
+      wrAiPct.textContent = `${wr.aiRate.toFixed(1)}%`;
+      wrHumanBar.style.width = `${wr.humanRate}%`;
+      wrAiBar.style.width = `${wr.aiRate}%`;
+      wrStatusText.textContent = `${wr.status} (${wr.humanRate.toFixed(0)} : ${wr.aiRate.toFixed(0)})`;
+    } else {
+      wrPlayerLabel.textContent = '⚫ 흑돌 승률';
+      wrAiLabel.textContent = '⚪ 백돌 승률';
+      wrPlayerPct.textContent = `${wr.humanRate.toFixed(1)}%`;
+      wrAiPct.textContent = `${wr.aiRate.toFixed(1)}%`;
+      wrHumanBar.style.width = `${wr.humanRate}%`;
+      wrAiBar.style.width = `${wr.aiRate}%`;
+      wrStatusText.textContent = `${wr.status} (${wr.humanRate.toFixed(0)} : ${wr.aiRate.toFixed(0)})`;
+    }
   }
 
   // --- AI ENGINES: EASY, NORMAL, HARD ---

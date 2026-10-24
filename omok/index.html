@@ -70,6 +70,25 @@
       </div>
     </div>
 
+    <!-- Real-time AI Win Rate Bar (한 수마다 실시간 승률 분석) -->
+    <div class="winrate-panel" id="winrate-panel">
+      <div class="winrate-header">
+        <div class="winrate-side human-side">
+          <span class="side-label" id="wr-player-label">👤 플레이어</span>
+          <strong class="side-pct" id="wr-player-pct">50.0%</strong>
+        </div>
+        <div class="winrate-status" id="wr-status-text">⚖️ 팽팽한 호각세 (50 : 50)</div>
+        <div class="winrate-side ai-side">
+          <strong class="side-pct" id="wr-ai-pct">50.0%</strong>
+          <span class="side-label" id="wr-ai-label">🤖 AI 승률</span>
+        </div>
+      </div>
+      <div class="winrate-bar-container">
+        <div class="winrate-fill human-fill" id="wr-human-bar" style="width: 50%;"></div>
+        <div class="winrate-fill ai-fill" id="wr-ai-bar" style="width: 50%;"></div>
+      </div>
+    </div>
+
     <!-- Omok Board Canvas -->
     <div class="board-wrapper">
       <canvas id="omok-canvas" width="600" height="600"></canvas>
