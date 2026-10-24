@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>⭐ 전설의 숫자 67 찬양 연구소 (Number 67 Praise Simulator)</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <a href="../" class="back-btn">🏠 게임 목록</a>
+      <div class="badge-tag">🤣 유머 & 클리커</div>
+      <h1>⭐ 전설의 숫자 67 찬양 연구소 ⭐</h1>
+      <p class="subtitle">우주에서 가장 완벽하고 오묘한 숫자 '67'을 열렬히 칭송하는 장난감 클리커 게임!</p>
+    </header>
+
+    <!-- Praise Counter HUD -->
+    <div class="hud-box">
+      <div class="hud-item main-stat">
+        <span class="label">총 67 숭배 횟수</span>
+        <span class="counter-val" id="praise-counter">0</span>
+      </div>
+      <div class="hud-item sub-stat">
+        <span class="label">현재 칭호</span>
+        <span class="rank-val" id="rank-title">🌱 67 초심자</span>
+      </div>
+      <div class="hud-item sub-stat">
+        <span class="label">초당 자동 찬양</span>
+        <span class="rate-val" id="auto-rate">0 /초</span>
+      </div>
+    </div>
+
+    <!-- Main 67 Worship Altar (Interactive Clicker) -->
+    <div class="altar-section">
+      <div class="praise-sphere" id="sphere-67">
+        <div class="sphere-glow"></div>
+        <div class="sphere-inner">
+          <span class="number-67">67</span>
+          <span class="sphere-sub">클릭하여 숭배!</span>
+        </div>
+      </div>
+      <button class="btn btn-praise" id="btn-praise">🙏 위대한 67 칭송하기 (+1)</button>
+    </div>
+
+    <!-- Absurd 67 Trivia / Praise Commentary Box -->
+    <div class="trivia-box">
+      <div class="trivia-header">
+        <span class="icon">📜</span>
+        <strong>학계가 인정한(?) 67의 위대한 진실</strong>
+      </div>
+      <p class="trivia-content" id="trivia-text">
+        "67을 누를 때마다 세상 어딘가에서 행운이 67% 증가할지도 모릅니다."
+      </p>
+    </div>
+
+    <!-- Upgrade Store -->
+    <div class="store-section">
+      <h3>🛠️ 67 숭배력 증폭 연구소 (상점)</h3>
+      <div class="upgrades-grid">
+        <button class="upgrade-card" id="up-click">
+          <div class="up-icon">📣</div>
+          <div class="up-info">
+            <span class="up-title">67 확성기</span>
+            <span class="up-desc">클릭당 숭배력 +1</span>
+          </div>
+          <span class="up-cost" id="cost-click">10 숭배</span>
+        </button>
+
+        <button class="upgrade-card" id="up-auto1">
+          <div class="up-icon">🤖</div>
+          <div class="up-info">
+            <span class="up-title">자동 67 염송 로봇</span>
+            <span class="up-desc">초당 자동으로 +1 숭배</span>
+          </div>
+          <span class="up-cost" id="cost-auto1">50 숭배</span>
+        </button>
+
+        <button class="upgrade-card" id="up-auto2">
+          <div class="up-icon">📐</div>
+          <div class="up-info">
+            <span class="up-title">피타고라스의 67 정밀 수학</span>
+            <span class="up-desc">초당 자동으로 +7 숭배</span>
+          </div>
+          <span class="up-cost" id="cost-auto2">200 숭배</span>
+        </button>
+
+        <button class="upgrade-card" id="up-fever">
+          <div class="up-icon">⚡</div>
+          <div class="up-info">
+            <span class="up-title">67배 우주의 기운</span>
+            <span class="up-desc">초당 자동으로 +67 숭배</span>
+          </div>
+          <span class="up-cost" id="cost-fever">670 숭배</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
