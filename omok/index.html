@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>⚫⚪ 네온 오목 (Gomoku) - 난이도별 AI & 2인 대전</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="game-container">
+    <header class="game-header">
+      <a href="../" class="back-btn">🏠 게임 목록</a>
+      <h1>⚫⚪ 쌈뽕 오목 (Gomoku)</h1>
+      <p class="subtitle">15×15 정통 오목! 쉬움·중간·어려움 AI 대결과 2인 대전을 즐겨보세요.</p>
+    </header>
+
+    <!-- Game Settings Bar -->
+    <div class="control-panel">
+      <!-- Mode Selection -->
+      <div class="setting-group">
+        <label class="setting-label">🎮 게임 모드</label>
+        <div class="btn-group">
+          <button id="mode-ai" class="tab-btn active" onclick="setMode('ai')">🤖 AI 대결</button>
+          <button id="mode-2p" class="tab-btn" onclick="setMode('2p')">👥 2인 대전</button>
+        </div>
+      </div>
+
+      <!-- AI Difficulty Selection (Only visible in AI mode) -->
+      <div class="setting-group" id="diff-group">
+        <label class="setting-label">🎯 AI 난이도</label>
+        <div class="btn-group">
+          <button id="diff-easy" class="diff-btn" onclick="setDifficulty('easy')">🌱 쉬움</button>
+          <button id="diff-normal" class="diff-btn active" onclick="setDifficulty('normal')">⚡ 중간</button>
+          <button id="diff-hard" class="diff-btn hard" onclick="setDifficulty('hard')">🔥 어려움</button>
+        </div>
+      </div>
+
+      <!-- Player Color Selection (Only in AI mode) -->
+      <div class="setting-group" id="color-group">
+        <label class="setting-label">⚪⚫ 돌 선택 (선공/후공)</label>
+        <div class="btn-group">
+          <button id="color-black" class="color-btn active" onclick="setPlayerColor(1)">⚫ 흑돌 (선공)</button>
+          <button id="color-white" class="color-btn" onclick="setPlayerColor(2)">⚪ 백돌 (후공)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HUD Status & Score -->
+    <div class="hud-bar">
+      <div class="turn-box">
+        <span class="stone-badge" id="current-stone-icon">⚫</span>
+        <span id="turn-text">현재 차례: <strong>흑돌 (플레이어)</strong></span>
+      </div>
+
+      <div class="score-display">
+        <div class="score-item win">
+          <span class="label">승리</span>
+          <span id="score-win" class="val">0</span>
+        </div>
+        <div class="score-item loss">
+          <span class="label">패배</span>
+          <span id="score-loss" class="val">0</span>
+        </div>
+        <div class="score-item draw">
+          <span class="label">무승부</span>
+          <span id="score-draw" class="val">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Omok Board Canvas -->
+    <div class="board-wrapper">
+      <canvas id="omok-canvas" width="600" height="600"></canvas>
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="actions-bar">
+      <button id="btn-undo" class="btn btn-action" onclick="undoMove()">↩️ 무르기</button>
+      <button id="btn-restart" class="btn btn-primary" onclick="restartGame()">🔄 새 게임</button>
+      <button id="btn-reset-score" class="btn btn-sub" onclick="resetScores()">📊 전적 초기화</button>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-icon" id="modal-icon">🏆</div>
+        <h2 id="modal-title">승리하셨습니다!</h2>
+        <p id="modal-desc">축하합니다! 5개의 돌을 먼저 완성했습니다.</p>
+        <div class="modal-actions">
+          <button class="btn btn-primary btn-large" onclick="restartGame()">⚔️ 한 판 더 하기</button>
+          <a href="../" class="btn btn-sub btn-large">🏠 게임 목록</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
