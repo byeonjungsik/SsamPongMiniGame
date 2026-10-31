@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🧮 쌈뽕 스마트 계산기 (Smart Neon Calculator)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="calculator-app">
+    <!-- Top Bar -->
+    <header class="app-header">
+      <a href="../" class="back-btn">🏠 게임 목록</a>
+      <div class="header-title">
+        <span class="calc-icon">🧮</span>
+        <h1>쌈뽕 스마트 계산기</h1>
+      </div>
+      <div class="header-tools">
+        <button id="btn-sound-toggle" class="tool-btn active" title="클릭 효과음 켜기/끄기">🔊</button>
+        <button id="btn-history-toggle" class="tool-btn" title="계산 기록 보기">📜</button>
+      </div>
+    </header>
+
+    <div class="calc-main-wrapper">
+      <!-- Calculator Body -->
+      <main class="calc-container">
+        <!-- Display Screen -->
+        <div class="display-screen" id="display-screen">
+          <div class="expression-line" id="expression-line">&nbsp;</div>
+          <div class="result-line-container">
+            <div class="result-line" id="result-line">0</div>
+            <button id="btn-copy" class="copy-btn" title="결과 복사">📋</button>
+          </div>
+          <div class="copy-toast" id="copy-toast">복사 완료!</div>
+        </div>
+
+        <!-- Mode Toggle (Standard vs Scientific) -->
+        <div class="mode-switch-bar">
+          <button id="mode-std-btn" class="mode-btn active">기본 계산기</button>
+          <button id="mode-sci-btn" class="mode-btn">🔬 공학용 함수</button>
+        </div>
+
+        <!-- Scientific Function Panel (Collapsible) -->
+        <div class="scientific-panel hidden" id="scientific-panel">
+          <button class="key key-sci" data-action="paren-open">(</button>
+          <button class="key key-sci" data-action="paren-close">)</button>
+          <button class="key key-sci" data-action="square">x²</button>
+          <button class="key key-sci" data-action="cube">x³</button>
+          <button class="key key-sci" data-action="sqrt">√x</button>
+          
+          <button class="key key-sci" data-action="sin">sin</button>
+          <button class="key key-sci" data-action="cos">cos</button>
+          <button class="key key-sci" data-action="tan">tan</button>
+          <button class="key key-sci" data-action="log">log</button>
+          <button class="key key-sci" data-action="ln">ln</button>
+
+          <button class="key key-sci" data-action="pi">π</button>
+          <button class="key key-sci" data-action="e">e</button>
+          <button class="key key-sci" data-action="reciprocal">1/x</button>
+          <button class="key key-sci" data-action="factorial">n!</button>
+          <button class="key key-sci" data-action="power">x^y</button>
+        </div>
+
+        <!-- Keypad Grid -->
+        <div class="keypad-grid">
+          <!-- Row 1 -->
+          <button class="key key-fn" data-action="clear" id="key-clear">AC</button>
+          <button class="key key-fn" data-action="backspace">⌫</button>
+          <button class="key key-fn" data-action="percent">%</button>
+          <button class="key key-op" data-action="operator" data-val="÷">÷</button>
+
+          <!-- Row 2 -->
+          <button class="key key-num" data-num="7">7</button>
+          <button class="key key-num" data-num="8">8</button>
+          <button class="key key-num" data-num="9">9</button>
+          <button class="key key-op" data-action="operator" data-val="×">×</button>
+
+          <!-- Row 3 -->
+          <button class="key key-num" data-num="4">4</button>
+          <button class="key key-num" data-num="5">5</button>
+          <button class="key key-num" data-num="6">6</button>
+          <button class="key key-op" data-action="operator" data-val="-">−</button>
+
+          <!-- Row 4 -->
+          <button class="key key-num" data-num="1">1</button>
+          <button class="key key-num" data-num="2">2</button>
+          <button class="key key-num" data-num="3">3</button>
+          <button class="key key-op" data-action="operator" data-val="+">+</button>
+
+          <!-- Row 5 -->
+          <button class="key key-fn" data-action="negate">±</button>
+          <button class="key key-num" data-num="0">0</button>
+          <button class="key key-num" data-num=".">.</button>
+          <button class="key key-equals" data-action="calculate">=</button>
+        </div>
+      </main>
+
+      <!-- History Drawer Panel -->
+      <aside class="history-panel hidden" id="history-panel">
+        <div class="history-header">
+          <h3>📜 계산 기록</h3>
+          <div class="history-actions">
+            <button id="btn-clear-history" class="btn-clear-hist" title="기록 모두 삭제">비우기</button>
+            <button id="btn-close-history" class="btn-close-hist">✕</button>
+          </div>
+        </div>
+        <div class="history-list" id="history-list">
+          <div class="empty-history">아직 계산 기록이 없습니다.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
