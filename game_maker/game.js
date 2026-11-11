@@ -38,15 +38,61 @@
   const btnClearMap = document.getElementById('btn-clear-map');
   const selectCharSkin = document.getElementById('select-char-skin');
   const selectTheme = document.getElementById('select-theme');
+
+  // Game Mode & Format Controls (Sidebar)
+  const selectGameMode = document.getElementById('select-game-mode');
+  const groupTimeLimit = document.getElementById('group-time-limit');
+  const sliderTimeLimit = document.getElementById('slider-time-limit');
+  const valTimeLimit = document.getElementById('val-time-limit');
+  const groupAutoScroll = document.getElementById('group-auto-scroll');
+  const sliderAutoScroll = document.getElementById('slider-auto-scroll');
+  const valAutoScroll = document.getElementById('val-auto-scroll');
+
+  // Speed & Physics Controls (Sidebar)
+  const btnQuickSettingsPop = document.getElementById('btn-quick-settings-pop');
+  const sliderGameSpeed = document.getElementById('slider-game-speed');
+  const valGameSpeed = document.getElementById('val-game-speed');
+  const sliderMoveSpeed = document.getElementById('slider-move-speed');
+  const valMoveSpeed = document.getElementById('val-move-speed');
+  const sliderJumpPower = document.getElementById('slider-jump-power');
+  const valJumpPower = document.getElementById('val-jump-power');
   const sliderGravity = document.getElementById('slider-gravity');
   const gravVal = document.getElementById('grav-val');
 
+  // Settings Modal Controls
+  const btnSettingsOpen = document.getElementById('btn-settings-open');
+  const settingsModal = document.getElementById('settings-modal');
+  const btnCloseSettings = document.getElementById('btn-close-settings');
+  const btnSaveSettings = document.getElementById('btn-save-settings');
+  const presetButtons = document.querySelectorAll('.preset-btn');
+  const modalSelectGameMode = document.getElementById('modal-select-game-mode');
+  const modalGroupTimeLimit = document.getElementById('modal-group-time-limit');
+  const modalSliderTimeLimit = document.getElementById('modal-slider-time-limit');
+  const modalValTimeLimit = document.getElementById('modal-val-time-limit');
+  const modalGroupAutoScroll = document.getElementById('modal-group-auto-scroll');
+  const modalSliderAutoScroll = document.getElementById('modal-slider-auto-scroll');
+  const modalValAutoScroll = document.getElementById('modal-val-auto-scroll');
+  const modalSliderGameSpeed = document.getElementById('modal-slider-game-speed');
+  const modalValGameSpeed = document.getElementById('modal-val-game-speed');
+  const modalSliderMoveSpeed = document.getElementById('modal-slider-move-speed');
+  const modalValMoveSpeed = document.getElementById('modal-val-move-speed');
+  const modalSliderJumpPower = document.getElementById('modal-slider-jump-power');
+  const modalValJumpPower = document.getElementById('modal-val-jump-power');
+  const modalSliderGravity = document.getElementById('modal-slider-gravity');
+  const modalGravVal = document.getElementById('modal-grav-val');
+
   // In-Game HUD
   const gameHud = document.getElementById('game-hud');
+  const hudFormatBox = document.getElementById('hud-format-box');
+  const hudFormatIcon = document.getElementById('hud-format-icon');
+  const hudFormatDesc = document.getElementById('hud-format-desc');
   const hudCoins = document.getElementById('hud-coins');
   const hudScore = document.getElementById('hud-score');
   const hudLives = document.getElementById('hud-lives');
   const hudTimer = document.getElementById('hud-timer');
+  const hudSpeedVal = document.getElementById('hud-speed-val');
+  const btnHudSpeedDown = document.getElementById('btn-hud-speed-down');
+  const btnHudSpeedUp = document.getElementById('btn-hud-speed-up');
   const btnHudRestart = document.getElementById('btn-hud-restart');
   const btnHudEdit = document.getElementById('btn-hud-edit');
   const editorGuideBanner = document.getElementById('editor-guide-banner');
@@ -132,6 +178,15 @@
     },
     stomp: () => playTone(180, 'square', 0.12, 0.3, 60),
     hit: () => playTone(120, 'sawtooth', 0.25, 0.35, 40),
+    tick: () => playTone(880, 'sine', 0.04, 0.15),
+    lock: () => {
+      playTone(150, 'square', 0.08, 0.2);
+      setTimeout(() => playTone(120, 'square', 0.08, 0.2), 60);
+    },
+    unlock: () => {
+      playTone(600, 'triangle', 0.1, 0.25);
+      setTimeout(() => playTone(900, 'triangle', 0.15, 0.25), 80);
+    },
     clear: () => {
       [523, 659, 784, 1046, 1318].forEach((f, i) => {
         setTimeout(() => playTone(f, 'sine', 0.3, 0.3), i * 100);
@@ -144,7 +199,16 @@
   let currentTool = 'ground'; // 'ground', 'jump_pad', 'spike', 'ice', 'brick', 'player', 'goal', 'coin', 'gem', 'patrol', 'flyer', 'chaser', 'eraser'
   let charSkin = 'hero';
   let mapTheme = 'neon';
-  let gravityMultiplier = 1.0;
+
+  // Detailed Game Format & Speed/Physics Configuration
+  let gameMode = 'standard'; // 'standard' | 'coin_all' | 'enemy_wipeout' | 'time_attack' | 'hardcore' | 'auto_scroll'
+  let timeLimit = 30; // seconds for time_attack
+  let autoScrollSpeed = 2.0; // speed for auto_scroll
+  let gameSpeed = 1.0; // overall game speed multiplier (0.5x - 2.0x)
+  let moveSpeed = 5.2; // player horizontal move speed (3.0 - 10.0)
+  let jumpPower = 12.5; // base jump force (8.0 - 20.0)
+  let gravityMultiplier = 1.0; // gravity multiplier (0.3x - 2.0x)
+  let lastTimeTickSecond = -1; // for time attack beep
 
   // Grid Data [row][col]
   let mapGrid = Array.from({ length: GRID_ROWS }, () => Array(GRID_COLS).fill(TILE.EMPTY));
@@ -192,29 +256,71 @@
       author: '선우(쌈뽕)',
       desc: '기본 점프와 슈퍼 점프대를 마스터하고 깃발에 도달하는 튜토리얼 맵!',
       theme: 'neon',
+      mode: 'standard',
+      gameSpeed: 1.0,
+      moveSpeed: 5.2,
+      jumpPower: 12.5,
       gravity: 1.0,
       skin: 'hero',
       generator: buildTutorialMap
     },
     {
       id: 'featured_2',
-      title: '🚀 슈퍼 점프 익스트림',
-      author: '점프장인',
-      desc: '스프링 점프 블록을 연속으로 밟고 하늘을 날아오르는 고공 점프 맵!',
-      theme: 'dungeon',
-      gravity: 1.0,
-      skin: 'ninja',
-      generator: buildSuperJumpMap
+      title: '🪙 황금 코인 올 컬렉트 챌린지',
+      author: '코인헌터',
+      desc: '맵의 모든 황금 코인(6개)을 수집해야 깃발의 자물쇠가 풀리는 수집 모드!',
+      theme: 'candy',
+      mode: 'coin_all',
+      gameSpeed: 1.0,
+      moveSpeed: 5.5,
+      jumpPower: 13.0,
+      gravity: 0.9,
+      skin: 'cat',
+      generator: buildCoinCollectMap
     },
     {
       id: 'featured_3',
-      title: '👾 몬스터 던전 대탈출',
-      author: '던전마스터',
-      desc: '순찰 슬라임과 비행 박쥐들을 밟고 돌파하며 탈출하는 액션 런!',
+      title: '⏱️ 30초 스피드런 익스트림',
+      author: '스피드데몬',
+      desc: '1.25x 초광속 배속! 30초 제한시간 안에 고속 질주로 깃발에 도달하세요!',
       theme: 'volcano',
+      mode: 'time_attack',
+      timeLimit: 30,
+      gameSpeed: 1.25,
+      moveSpeed: 7.5,
+      jumpPower: 13.5,
       gravity: 1.1,
       skin: 'cyborg',
+      generator: buildSpeedrunMap
+    },
+    {
+      id: 'featured_4',
+      title: '👾 몬스터 토벌 대작전',
+      author: '던전마스터',
+      desc: '순찰 슬라임과 비행 박쥐들을 밟아서 전부 처치해야 탈출문이 열립니다!',
+      theme: 'dungeon',
+      mode: 'enemy_wipeout',
+      gameSpeed: 1.0,
+      moveSpeed: 5.2,
+      jumpPower: 12.5,
+      gravity: 1.0,
+      skin: 'hero',
       generator: buildMonsterDungeonMap
+    },
+    {
+      id: 'featured_5',
+      title: '🚀 긴박한 강제 오토스크롤 런',
+      author: '점프장인',
+      desc: '카메라가 강제로 전진합니다! 화면 밖으로 밀려나지 말고 스프링을 밟으세요!',
+      theme: 'neon',
+      mode: 'auto_scroll',
+      autoScrollSpeed: 2.2,
+      gameSpeed: 1.0,
+      moveSpeed: 6.0,
+      jumpPower: 13.0,
+      gravity: 1.0,
+      skin: 'ninja',
+      generator: buildSuperJumpMap
     }
   ];
 
@@ -267,6 +373,70 @@
       playerSpawn: { col: 3, row: 13 },
       enemySpawns: [
         { type: 'patrol', col: 44, row: 13 }
+      ]
+    };
+  }
+
+  function buildCoinCollectMap() {
+    const grid = Array.from({ length: GRID_ROWS }, () => Array(GRID_COLS).fill(TILE.EMPTY));
+    for (let c = 0; c < 12; c++) grid[14][c] = TILE.GROUND;
+    grid[13][5] = TILE.COIN;
+    grid[13][8] = TILE.COIN;
+
+    // Step 1
+    for (let c = 14; c < 22; c++) grid[11][c] = TILE.GROUND;
+    grid[10][16] = TILE.COIN;
+    grid[10][19] = TILE.COIN;
+
+    // Super Jump Pad to high ledge
+    grid[14][24] = TILE.JUMP_PAD;
+    for (let c = 26; c < 36; c++) grid[6][c] = TILE.GROUND;
+    grid[5][28] = TILE.COIN;
+    grid[5][33] = TILE.COIN;
+    grid[5][31] = TILE.GEM;
+
+    // Ice runway
+    for (let c = 38; c < 48; c++) grid[13][c] = TILE.ICE;
+
+    // Goal zone
+    for (let c = 50; c < 64; c++) grid[14][c] = TILE.GROUND;
+    grid[13][58] = TILE.GOAL;
+
+    return {
+      grid,
+      playerSpawn: { col: 2, row: 13 },
+      enemySpawns: [
+        { type: 'patrol', col: 18, row: 10 },
+        { type: 'flyer', col: 32, row: 5 }
+      ]
+    };
+  }
+
+  function buildSpeedrunMap() {
+    const grid = Array.from({ length: GRID_ROWS }, () => Array(GRID_COLS).fill(TILE.EMPTY));
+    for (let c = 0; c < 14; c++) grid[14][c] = TILE.GROUND;
+    grid[14][15] = TILE.JUMP_PAD;
+
+    // Fast ice highway
+    for (let c = 17; c < 30; c++) grid[8][c] = TILE.ICE;
+    grid[8][32] = TILE.JUMP_PAD;
+
+    // High bridge
+    for (let c = 34; c < 46; c++) grid[4][c] = TILE.GROUND;
+    grid[3][38] = TILE.COIN;
+    grid[3][42] = TILE.GEM;
+
+    // Slide downward
+    for (let c = 48; c < 58; c++) grid[10][c] = TILE.ICE;
+    for (let c = 60; c < 72; c++) grid[14][c] = TILE.GROUND;
+    grid[13][66] = TILE.GOAL;
+
+    return {
+      grid,
+      playerSpawn: { col: 2, row: 13 },
+      enemySpawns: [
+        { type: 'patrol', col: 24, row: 7 },
+        { type: 'chaser', col: 64, row: 13 }
       ]
     };
   }
@@ -362,10 +532,256 @@
     mapTheme = e.target.value;
   });
 
+  // --- Game Mode & Speed/Physics UI Wiring ---
+  function syncSettingsToUI() {
+    selectGameMode.value = gameMode;
+    if (modalSelectGameMode) modalSelectGameMode.value = gameMode;
+    toggleSubgroups(gameMode);
+
+    sliderTimeLimit.value = timeLimit;
+    if (modalSliderTimeLimit) modalSliderTimeLimit.value = timeLimit;
+    valTimeLimit.textContent = `${timeLimit}초`;
+    if (modalValTimeLimit) modalValTimeLimit.textContent = `${timeLimit}초`;
+
+    sliderAutoScroll.value = autoScrollSpeed;
+    if (modalSliderAutoScroll) modalSliderAutoScroll.value = autoScrollSpeed;
+    valAutoScroll.textContent = `${autoScrollSpeed.toFixed(1)}x`;
+    if (modalValAutoScroll) modalValAutoScroll.textContent = `${autoScrollSpeed.toFixed(1)}x`;
+
+    sliderGameSpeed.value = gameSpeed;
+    if (modalSliderGameSpeed) modalSliderGameSpeed.value = gameSpeed;
+    valGameSpeed.textContent = `${gameSpeed.toFixed(1)}x`;
+    if (modalValGameSpeed) modalValGameSpeed.textContent = `${gameSpeed.toFixed(1)}x`;
+    if (hudSpeedVal) hudSpeedVal.textContent = `${gameSpeed.toFixed(1)}x`;
+
+    sliderMoveSpeed.value = moveSpeed;
+    if (modalSliderMoveSpeed) modalSliderMoveSpeed.value = moveSpeed;
+    valMoveSpeed.textContent = moveSpeed.toFixed(1);
+    if (modalValMoveSpeed) modalValMoveSpeed.textContent = moveSpeed.toFixed(1);
+
+    sliderJumpPower.value = jumpPower;
+    if (modalSliderJumpPower) modalSliderJumpPower.value = jumpPower;
+    valJumpPower.textContent = jumpPower.toFixed(1);
+    if (modalValJumpPower) modalValJumpPower.textContent = jumpPower.toFixed(1);
+
+    sliderGravity.value = gravityMultiplier;
+    if (modalSliderGravity) modalSliderGravity.value = gravityMultiplier;
+    gravVal.textContent = `${gravityMultiplier.toFixed(1)}x`;
+    if (modalGravVal) modalGravVal.textContent = `${gravityMultiplier.toFixed(1)}x`;
+  }
+
+  function toggleSubgroups(mode) {
+    if (mode === 'time_attack') {
+      groupTimeLimit.classList.remove('hidden');
+      if (modalGroupTimeLimit) modalGroupTimeLimit.classList.remove('hidden');
+    } else {
+      groupTimeLimit.classList.add('hidden');
+      if (modalGroupTimeLimit) modalGroupTimeLimit.classList.add('hidden');
+    }
+
+    if (mode === 'auto_scroll') {
+      groupAutoScroll.classList.remove('hidden');
+      if (modalGroupAutoScroll) modalGroupAutoScroll.classList.remove('hidden');
+    } else {
+      groupAutoScroll.classList.add('hidden');
+      if (modalGroupAutoScroll) modalGroupAutoScroll.classList.add('hidden');
+    }
+  }
+
+  // Sidebar listeners
+  selectGameMode.addEventListener('change', (e) => {
+    gameMode = e.target.value;
+    toggleSubgroups(gameMode);
+    if (modalSelectGameMode) modalSelectGameMode.value = gameMode;
+    showToast(`게임 형식이 [${getGameModeName(gameMode)}] (으)로 변경되었습니다!`);
+  });
+
+  sliderTimeLimit.addEventListener('input', (e) => {
+    timeLimit = parseInt(e.target.value, 10);
+    valTimeLimit.textContent = `${timeLimit}초`;
+    if (modalSliderTimeLimit) modalSliderTimeLimit.value = timeLimit;
+    if (modalValTimeLimit) modalValTimeLimit.textContent = `${timeLimit}초`;
+  });
+
+  sliderAutoScroll.addEventListener('input', (e) => {
+    autoScrollSpeed = parseFloat(e.target.value);
+    valAutoScroll.textContent = `${autoScrollSpeed.toFixed(1)}x`;
+    if (modalSliderAutoScroll) modalSliderAutoScroll.value = autoScrollSpeed;
+    if (modalValAutoScroll) modalValAutoScroll.textContent = `${autoScrollSpeed.toFixed(1)}x`;
+  });
+
+  sliderGameSpeed.addEventListener('input', (e) => {
+    gameSpeed = parseFloat(e.target.value);
+    valGameSpeed.textContent = `${gameSpeed.toFixed(1)}x`;
+    if (modalSliderGameSpeed) modalSliderGameSpeed.value = gameSpeed;
+    if (modalValGameSpeed) modalValGameSpeed.textContent = `${gameSpeed.toFixed(1)}x`;
+    if (hudSpeedVal) hudSpeedVal.textContent = `${gameSpeed.toFixed(1)}x`;
+  });
+
+  sliderMoveSpeed.addEventListener('input', (e) => {
+    moveSpeed = parseFloat(e.target.value);
+    valMoveSpeed.textContent = moveSpeed.toFixed(1);
+    if (modalSliderMoveSpeed) modalSliderMoveSpeed.value = moveSpeed;
+    if (modalValMoveSpeed) modalValMoveSpeed.textContent = moveSpeed.toFixed(1);
+    if (player) player.speed = moveSpeed * (charSkin === 'cyborg' ? 1.25 : 1.0);
+  });
+
+  sliderJumpPower.addEventListener('input', (e) => {
+    jumpPower = parseFloat(e.target.value);
+    valJumpPower.textContent = jumpPower.toFixed(1);
+    if (modalSliderJumpPower) modalSliderJumpPower.value = jumpPower;
+    if (modalValJumpPower) modalValJumpPower.textContent = jumpPower.toFixed(1);
+    if (player) player.jumpForce = -jumpPower;
+  });
+
   sliderGravity.addEventListener('input', (e) => {
     gravityMultiplier = parseFloat(e.target.value);
     gravVal.textContent = `${gravityMultiplier.toFixed(1)}x`;
+    if (modalSliderGravity) modalSliderGravity.value = gravityMultiplier;
+    if (modalGravVal) modalGravVal.textContent = `${gravityMultiplier.toFixed(1)}x`;
   });
+
+  // Settings Modal Handlers
+  function openSettingsModal() {
+    settingsModal.classList.remove('hidden');
+    syncSettingsToUI();
+  }
+
+  btnSettingsOpen.addEventListener('click', openSettingsModal);
+  btnQuickSettingsPop.addEventListener('click', openSettingsModal);
+  btnCloseSettings.addEventListener('click', () => settingsModal.classList.add('hidden'));
+
+  modalSelectGameMode.addEventListener('change', (e) => {
+    gameMode = e.target.value;
+    selectGameMode.value = gameMode;
+    toggleSubgroups(gameMode);
+  });
+
+  modalSliderTimeLimit.addEventListener('input', (e) => {
+    timeLimit = parseInt(e.target.value, 10);
+    modalValTimeLimit.textContent = `${timeLimit}초`;
+    sliderTimeLimit.value = timeLimit;
+    valTimeLimit.textContent = `${timeLimit}초`;
+  });
+
+  modalSliderAutoScroll.addEventListener('input', (e) => {
+    autoScrollSpeed = parseFloat(e.target.value);
+    modalValAutoScroll.textContent = `${autoScrollSpeed.toFixed(1)}x`;
+    sliderAutoScroll.value = autoScrollSpeed;
+    valAutoScroll.textContent = `${autoScrollSpeed.toFixed(1)}x`;
+  });
+
+  modalSliderGameSpeed.addEventListener('input', (e) => {
+    gameSpeed = parseFloat(e.target.value);
+    modalValGameSpeed.textContent = `${gameSpeed.toFixed(1)}x`;
+    sliderGameSpeed.value = gameSpeed;
+    valGameSpeed.textContent = `${gameSpeed.toFixed(1)}x`;
+    if (hudSpeedVal) hudSpeedVal.textContent = `${gameSpeed.toFixed(1)}x`;
+  });
+
+  modalSliderMoveSpeed.addEventListener('input', (e) => {
+    moveSpeed = parseFloat(e.target.value);
+    modalValMoveSpeed.textContent = moveSpeed.toFixed(1);
+    sliderMoveSpeed.value = moveSpeed;
+    valMoveSpeed.textContent = moveSpeed.toFixed(1);
+    if (player) player.speed = moveSpeed * (charSkin === 'cyborg' ? 1.25 : 1.0);
+  });
+
+  modalSliderJumpPower.addEventListener('input', (e) => {
+    jumpPower = parseFloat(e.target.value);
+    modalValJumpPower.textContent = jumpPower.toFixed(1);
+    sliderJumpPower.value = jumpPower;
+    valJumpPower.textContent = jumpPower.toFixed(1);
+    if (player) player.jumpForce = -jumpPower;
+  });
+
+  modalSliderGravity.addEventListener('input', (e) => {
+    gravityMultiplier = parseFloat(e.target.value);
+    modalGravVal.textContent = `${gravityMultiplier.toFixed(1)}x`;
+    sliderGravity.value = gravityMultiplier;
+    gravVal.textContent = `${gravityMultiplier.toFixed(1)}x`;
+  });
+
+  btnSaveSettings.addEventListener('click', () => {
+    settingsModal.classList.add('hidden');
+    syncSettingsToUI();
+    showToast('⚙️ 게임 규칙 & 속도 설정이 적용되었습니다!');
+  });
+
+  presetButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      applyPreset(btn.dataset.preset);
+    });
+  });
+
+  // HUD Dynamic Speed Buttons
+  btnHudSpeedDown.addEventListener('click', () => {
+    gameSpeed = Math.max(0.5, Math.round((gameSpeed - 0.1) * 10) / 10);
+    syncSettingsToUI();
+    showToast(`⚡ 게임 배속: ${gameSpeed.toFixed(1)}x`);
+  });
+
+  btnHudSpeedUp.addEventListener('click', () => {
+    gameSpeed = Math.min(2.0, Math.round((gameSpeed + 0.1) * 10) / 10);
+    syncSettingsToUI();
+    showToast(`⚡ 게임 배속: ${gameSpeed.toFixed(1)}x`);
+  });
+
+  function getGameModeName(m) {
+    if (m === 'coin_all') return '🪙 코인 올 컬렉트';
+    if (m === 'enemy_wipeout') return '👾 몬스터 토벌';
+    if (m === 'time_attack') return '⏱️ 타임어택 탈출';
+    if (m === 'hardcore') return '💀 1-Life 하드코어';
+    if (m === 'auto_scroll') return '🚀 오토 스크롤 런';
+    return '🚩 일반 도달';
+  }
+
+  function applyPreset(name) {
+    if (name === 'classic') {
+      gameMode = 'standard';
+      gameSpeed = 1.0;
+      moveSpeed = 5.2;
+      jumpPower = 12.5;
+      gravityMultiplier = 1.0;
+      charSkin = 'hero';
+      showToast('🍄 클래식 마리오 프리셋 적용!');
+    } else if (name === 'speedrun') {
+      gameMode = 'time_attack';
+      timeLimit = 30;
+      gameSpeed = 1.25;
+      moveSpeed = 7.5;
+      jumpPower = 13.5;
+      gravityMultiplier = 1.1;
+      charSkin = 'cyborg';
+      showToast('⚡ 초광속 스피드러너 프리셋 적용!');
+    } else if (name === 'moon') {
+      gameMode = 'standard';
+      gameSpeed = 1.0;
+      moveSpeed = 5.0;
+      jumpPower = 16.5;
+      gravityMultiplier = 0.4;
+      charSkin = 'cat';
+      showToast('🌙 달나라 무중력 점프 프리셋 적용!');
+    } else if (name === 'hardcore') {
+      gameMode = 'hardcore';
+      gameSpeed = 1.1;
+      moveSpeed = 5.5;
+      jumpPower = 12.0;
+      gravityMultiplier = 1.3;
+      charSkin = 'ninja';
+      showToast('🔥 불지옥 하드코어 프리셋 적용!');
+    } else if (name === 'autoscroll') {
+      gameMode = 'auto_scroll';
+      autoScrollSpeed = 2.2;
+      gameSpeed = 1.0;
+      moveSpeed = 6.0;
+      jumpPower = 13.0;
+      gravityMultiplier = 1.0;
+      charSkin = 'ninja';
+      showToast('🚀 긴박한 오토스크롤 프리셋 적용!');
+    }
+    syncSettingsToUI();
+  }
 
   btnClearMap.addEventListener('click', () => {
     if (confirm('정말로 맵을 완전히 비우시겠습니까?')) {
@@ -580,12 +996,20 @@
     isStageCleared = false;
     collectedCoins = 0;
     currentScore = 0;
-    lives = 3;
+    lives = (gameMode === 'hardcore') ? 1 : 3;
     playStartTime = Date.now();
+    lastTimeTickSecond = -1;
+
+    if (gameMode === 'auto_scroll') {
+      cameraX = 0;
+    }
 
     // Spawn Player
     const pX = playerSpawn.col * TILE_SIZE + 4;
     const pY = playerSpawn.row * TILE_SIZE;
+
+    const baseSpeed = moveSpeed;
+    const effectiveSpeed = baseSpeed * (charSkin === 'cyborg' ? 1.25 : 1.0);
 
     player = {
       x: pX,
@@ -594,8 +1018,8 @@
       height: 38,
       vx: 0,
       vy: 0,
-      speed: charSkin === 'cyborg' ? 6.5 : 5.2,
-      jumpForce: -12.5,
+      speed: effectiveSpeed,
+      jumpForce: -jumpPower,
       grounded: false,
       jumpsLeft: charSkin === 'ninja' ? 2 : 1,
       maxJumps: charSkin === 'ninja' ? 2 : 1,
@@ -648,12 +1072,72 @@
     hudCoins.textContent = collectedCoins;
     hudScore.textContent = currentScore;
     hudLives.textContent = lives;
+    if (hudSpeedVal) hudSpeedVal.textContent = `${gameSpeed.toFixed(1)}x`;
+
+    // Dynamic Format & Objective Description
+    let fmtIcon = '🚩';
+    let fmtText = '골인 깃발에 도달하세요';
+
+    if (gameMode === 'standard') {
+      fmtIcon = '🚩';
+      fmtText = '골인 깃발에 도달하세요';
+    } else if (gameMode === 'coin_all') {
+      fmtIcon = '🪙';
+      const totalCoins = activeCoins.length;
+      const remainingCoins = totalCoins - collectedCoins;
+      if (remainingCoins <= 0) {
+        fmtText = `코인 올수집 완료! 깃발로 가세요 (🔓)`;
+      } else {
+        fmtText = `코인 수집: ${collectedCoins}/${totalCoins} (남은: ${remainingCoins}개 🔒)`;
+      }
+    } else if (gameMode === 'enemy_wipeout') {
+      fmtIcon = '👾';
+      const aliveEnemies = activeEnemies.filter(e => e.alive).length;
+      if (aliveEnemies <= 0) {
+        fmtText = '몬스터 전멸 완료! 깃발로 가세요 (🔓)';
+      } else {
+        fmtText = `몬스터 토벌: 남은 ${aliveEnemies}마리 (🔒)`;
+      }
+    } else if (gameMode === 'time_attack') {
+      fmtIcon = '⏱️';
+      fmtText = `타임어택: 제한시간 내 탈출!`;
+    } else if (gameMode === 'hardcore') {
+      fmtIcon = '💀';
+      fmtText = `원 라이프 하드코어: 실수 금지!`;
+    } else if (gameMode === 'auto_scroll') {
+      fmtIcon = '🚀';
+      fmtText = `강제 스크롤: 뒤처지지 마세요!`;
+    }
+
+    if (hudFormatIcon) hudFormatIcon.textContent = fmtIcon;
+    if (hudFormatDesc) hudFormatDesc.textContent = fmtText;
 
     if (isPlayMode && !isGameOver && !isStageCleared) {
-      const elapsedSec = Math.floor((Date.now() - playStartTime) / 1000);
-      const mm = String(Math.floor(elapsedSec / 60)).padStart(2, '0');
-      const ss = String(elapsedSec % 60).padStart(2, '0');
-      hudTimer.textContent = `${mm}:${ss}`;
+      if (gameMode === 'time_attack') {
+        const elapsedSec = (Date.now() - playStartTime) / 1000;
+        const remainingSec = Math.max(0, timeLimit - elapsedSec);
+        const mm = String(Math.floor(remainingSec / 60)).padStart(2, '0');
+        const ss = String(Math.floor(remainingSec % 60)).padStart(2, '0');
+        const ms = String(Math.floor((remainingSec * 10) % 10));
+        hudTimer.textContent = `${mm}:${ss}.${ms}`;
+
+        const curIntSec = Math.floor(remainingSec);
+        if (remainingSec <= 10) {
+          hudTimer.parentElement.classList.add('time-warning');
+          if (curIntSec !== lastTimeTickSecond && curIntSec >= 0) {
+            lastTimeTickSecond = curIntSec;
+            SOUNDS.tick();
+          }
+        } else {
+          hudTimer.parentElement.classList.remove('time-warning');
+        }
+      } else {
+        hudTimer.parentElement.classList.remove('time-warning');
+        const elapsedSec = Math.floor((Date.now() - playStartTime) / 1000);
+        const mm = String(Math.floor(elapsedSec / 60)).padStart(2, '0');
+        const ss = String(elapsedSec % 60).padStart(2, '0');
+        hudTimer.textContent = `${mm}:${ss}`;
+      }
     }
   }
 
@@ -675,7 +1159,17 @@
   function updatePhysics() {
     if (!isPlayMode || isGameOver || isStageCleared || !player) return;
 
+    const dt = gameSpeed;
     const gravity = 0.55 * gravityMultiplier;
+
+    // Time Attack Limit Check
+    if (gameMode === 'time_attack') {
+      const elapsedSec = (Date.now() - playStartTime) / 1000;
+      if (elapsedSec >= timeLimit) {
+        handlePlayerDeath('제한 시간 초과!');
+        return;
+      }
+    }
 
     // 1. Horizontal Input & Movement
     let targetVx = 0;
@@ -693,12 +1187,12 @@
     const tileBelow = checkTileAt(bottomCol, bottomRow);
 
     if (tileBelow === TILE.ICE) {
-      player.vx += (targetVx - player.vx) * 0.08; // Slippery acceleration
+      player.vx += (targetVx - player.vx) * 0.08 * dt; // Slippery acceleration
     } else {
       player.vx = targetVx;
     }
 
-    player.x += player.vx;
+    player.x += player.vx * dt;
 
     // Horizontal Tile Collisions
     const minC = Math.floor(player.x / TILE_SIZE);
@@ -720,9 +1214,9 @@
     }
 
     // 2. Vertical Movement & Gravity
-    player.vy += gravity;
-    if (player.vy > 16) player.vy = 16;
-    player.y += player.vy;
+    player.vy += gravity * dt;
+    if (player.vy > 18) player.vy = 18;
+    player.y += player.vy * dt;
     player.grounded = false;
 
     // Vertical Tile Collisions
@@ -805,10 +1299,30 @@
       }
     });
 
-    // 6. Goal Flag Check
+    // 6. Goal Flag Check & Mode Conditions
     const centerC = Math.floor((player.x + player.width / 2) / TILE_SIZE);
     const centerR = Math.floor((player.y + player.height / 2) / TILE_SIZE);
     if (checkTileAt(centerC, centerR) === TILE.GOAL) {
+      if (gameMode === 'coin_all') {
+        const uncollected = activeCoins.filter(c => !c.collected).length;
+        if (uncollected > 0) {
+          SOUNDS.lock();
+          showToast(`🔒 코인을 모두 모아야 깃발이 열립니다! (남은 코인: ${uncollected}개)`);
+          player.x -= (player.facing === 'right' ? 10 : -10);
+          player.vx = -player.vx;
+          return;
+        }
+      } else if (gameMode === 'enemy_wipeout') {
+        const aliveCount = activeEnemies.filter(e => e.alive).length;
+        if (aliveCount > 0) {
+          SOUNDS.lock();
+          showToast(`🔒 모든 몬스터를 처치해야 깃발이 열립니다! (남은 적: ${aliveCount}마리)`);
+          player.x -= (player.facing === 'right' ? 10 : -10);
+          player.vx = -player.vx;
+          return;
+        }
+      }
+
       handleStageClear();
       return;
     }
@@ -818,7 +1332,7 @@
       if (!e.alive) return;
 
       if (e.type === 'patrol') {
-        e.x += e.vx;
+        e.x += e.vx * dt;
         // Turn around on block collision or hole
         const nextCol = Math.floor((e.x + (e.vx > 0 ? e.width + 2 : -2)) / TILE_SIZE);
         const curRow = Math.floor((e.y + e.height / 2) / TILE_SIZE);
@@ -828,13 +1342,13 @@
           e.vx = -e.vx;
         }
       } else if (e.type === 'flyer') {
-        e.y += e.vy;
+        e.y += e.vy * dt;
         if (Math.abs(e.y - e.startY) > 60) e.vy = -e.vy;
       } else if (e.type === 'chaser') {
         // Track player horizontally if close
         const dist = player.x - e.x;
         if (Math.abs(dist) < 280) {
-          e.x += Math.sign(dist) * 1.8;
+          e.x += Math.sign(dist) * 1.8 * dt;
         }
       }
 
@@ -854,10 +1368,21 @@
       }
     });
 
-    // 8. Camera Smooth Tracking on Player
-    const targetCamX = player.x - canvas.width * 0.4;
-    cameraX += (targetCamX - cameraX) * 0.12;
-    cameraX = Math.max(0, Math.min(MAP_WIDTH - canvas.width, cameraX));
+    // 8. Camera Tracking & Auto-Scroll
+    if (gameMode === 'auto_scroll') {
+      cameraX += autoScrollSpeed * 1.4 * dt;
+      cameraX = Math.min(MAP_WIDTH - canvas.width, cameraX);
+
+      // Check if player fell behind left edge of camera
+      if (player.x < cameraX - 10) {
+        handlePlayerDeath('스크롤 밖으로 밀려났습니다!');
+        return;
+      }
+    } else {
+      const targetCamX = player.x - canvas.width * 0.4;
+      cameraX += (targetCamX - cameraX) * (0.12 * dt);
+      cameraX = Math.max(0, Math.min(MAP_WIDTH - canvas.width, cameraX));
+    }
 
     // Invulnerability timer
     if (player.invulnerableTimer > 0) player.invulnerableTimer--;
@@ -1096,13 +1621,39 @@
           ctx.lineTo(x + 12, y + 4);
           ctx.stroke();
 
-          ctx.fillStyle = '#22c55e';
-          ctx.beginPath();
-          ctx.moveTo(x + 12, y + 4);
-          ctx.lineTo(x + 36, y + 14);
-          ctx.lineTo(x + 12, y + 24);
-          ctx.closePath();
-          ctx.fill();
+          let isLocked = false;
+          if (isPlayMode) {
+            if (gameMode === 'coin_all' && activeCoins.some(coin => !coin.collected)) isLocked = true;
+            if (gameMode === 'enemy_wipeout' && activeEnemies.some(enemy => enemy.alive)) isLocked = true;
+          }
+
+          if (isLocked) {
+            ctx.fillStyle = '#64748b';
+            ctx.beginPath();
+            ctx.moveTo(x + 12, y + 4);
+            ctx.lineTo(x + 36, y + 14);
+            ctx.lineTo(x + 12, y + 24);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.font = '16px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('🔒', x + 24, y + 18);
+          } else {
+            ctx.fillStyle = '#22c55e';
+            ctx.beginPath();
+            ctx.moveTo(x + 12, y + 4);
+            ctx.lineTo(x + 36, y + 14);
+            ctx.lineTo(x + 12, y + 24);
+            ctx.closePath();
+            ctx.fill();
+
+            if (isPlayMode && (gameMode === 'coin_all' || gameMode === 'enemy_wipeout')) {
+              ctx.font = '14px sans-serif';
+              ctx.textAlign = 'center';
+              ctx.fillText('✨', x + 24, y + 16);
+            }
+          }
         }
       }
     }
@@ -1254,6 +1805,12 @@
       author,
       desc,
       theme: mapTheme,
+      mode: gameMode,
+      timeLimit,
+      autoScrollSpeed,
+      gameSpeed,
+      moveSpeed,
+      jumpPower,
       gravity: gravityMultiplier,
       skin: charSkin,
       playerSpawn,
@@ -1288,6 +1845,12 @@
       title: pubTitleInput.value.trim() || 'custom_map',
       author: pubAuthorInput.value.trim() || 'author',
       theme: mapTheme,
+      mode: gameMode,
+      timeLimit,
+      autoScrollSpeed,
+      gameSpeed,
+      moveSpeed,
+      jumpPower,
       gravity: gravityMultiplier,
       skin: charSkin,
       playerSpawn,
@@ -1338,10 +1901,15 @@
     mapsToShow.forEach(mapItem => {
       const card = document.createElement('div');
       card.className = 'map-card';
+      const modeName = getGameModeName(mapItem.mode || 'standard');
+      const speedVal = (mapItem.gameSpeed || 1.0).toFixed(1);
+
       card.innerHTML = `
         <span class="map-card-badge">${mapItem.isFeatured ? '⭐ 공식 추천' : '👤 유저 창작'}</span>
         <h4 class="map-card-title">${escapeHtml(mapItem.title)}</h4>
-        <div class="map-card-meta">제작: <strong>${escapeHtml(mapItem.author)}</strong> | 테마: ${mapItem.theme}</div>
+        <div class="map-card-meta">
+          제작: <strong>${escapeHtml(mapItem.author)}</strong> | 모드: <span style="color:#38bdf8;font-weight:bold;">${modeName}</span> | 배속: ${speedVal}x
+        </div>
         <p class="map-card-desc">${escapeHtml(mapItem.desc || '신나는 모험 맵')}</p>
         <div class="map-card-actions">
           <button class="map-btn-play">▶️ 플레이</button>
@@ -1384,13 +1952,18 @@
     mapTheme = mapItem.theme || 'neon';
     selectTheme.value = mapTheme;
 
+    gameMode = mapItem.mode || 'standard';
+    timeLimit = mapItem.timeLimit || 30;
+    autoScrollSpeed = mapItem.autoScrollSpeed || 2.0;
+    gameSpeed = mapItem.gameSpeed || 1.0;
+    moveSpeed = mapItem.moveSpeed || 5.2;
+    jumpPower = mapItem.jumpPower || 12.5;
     gravityMultiplier = mapItem.gravity || 1.0;
-    sliderGravity.value = gravityMultiplier;
-    gravVal.textContent = `${gravityMultiplier.toFixed(1)}x`;
 
     charSkin = mapItem.skin || 'hero';
     selectCharSkin.value = charSkin;
 
+    syncSettingsToUI();
     cameraX = 0;
     showToast(`'${mapItem.title}' 맵을 불러왔습니다!`);
   }

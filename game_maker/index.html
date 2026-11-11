@@ -29,6 +29,7 @@
       </div>
 
       <div class="header-right">
+        <button id="btn-settings-open" class="btn-action btn-blue" title="게임 모드, 속도, 물리 세부 조절">⚙️ 규칙 & 속도</button>
         <button id="btn-gallery-open" class="btn-action btn-gold">🏆 공개 게임 탐색</button>
         <button id="btn-publish-open" class="btn-action btn-green">🚀 게임 제출 & 공유</button>
       </div>
@@ -118,8 +119,64 @@
           </div>
         </div>
 
+        <!-- Game Mode & Format Category -->
         <div class="palette-category">
-          <span class="cat-title">🎨 캐릭터 스킨 & 능력</span>
+          <span class="cat-title">🎮 게임 형식 & 승리 조건</span>
+          <select id="select-game-mode" class="skin-select">
+            <option value="standard">🚩 일반 도달 (깃발에 닿기)</option>
+            <option value="coin_all">🪙 코인 올 컬렉트 (모든 코인 수집)</option>
+            <option value="enemy_wipeout">👾 몬스터 토벌 (모든 적 처치)</option>
+            <option value="time_attack">⏱️ 타임어택 (제한 시간 내 탈출)</option>
+            <option value="hardcore">💀 1-Life 하드코어 (목숨 1개)</option>
+            <option value="auto_scroll">🚀 오토 스크롤 (강제 전진 러너)</option>
+          </select>
+
+          <!-- Dynamic parameter for Time Attack -->
+          <div class="setting-subgroup hidden" id="group-time-limit">
+            <div class="slider-row">
+              <label>⏱️ 제한 시간: <span id="val-time-limit" class="val-pill">30초</span></label>
+              <input type="range" id="slider-time-limit" min="10" max="90" step="5" value="30">
+            </div>
+          </div>
+
+          <!-- Dynamic parameter for Auto-Scroll -->
+          <div class="setting-subgroup hidden" id="group-auto-scroll">
+            <div class="slider-row">
+              <label>🚀 스크롤 속도: <span id="val-auto-scroll" class="val-pill">2.0x</span></label>
+              <input type="range" id="slider-auto-scroll" min="1.0" max="4.5" step="0.5" value="2.0">
+            </div>
+          </div>
+        </div>
+
+        <!-- Speed & Physics Tuning Category -->
+        <div class="palette-category">
+          <div class="cat-title-row">
+            <span class="cat-title">⚡ 속도 & 물리 정밀 조절</span>
+            <button id="btn-quick-settings-pop" class="btn-micro" title="정밀 설정 팝업 열기">⚙️ 상세</button>
+          </div>
+
+          <div class="physics-controls-box">
+            <div class="slider-row">
+              <label>전체 게임 배속: <span id="val-game-speed" class="val-pill">1.0x</span></label>
+              <input type="range" id="slider-game-speed" min="0.5" max="2.0" step="0.1" value="1.0">
+            </div>
+            <div class="slider-row">
+              <label>플레이어 속도: <span id="val-move-speed" class="val-pill">5.2</span></label>
+              <input type="range" id="slider-move-speed" min="3.0" max="10.0" step="0.5" value="5.2">
+            </div>
+            <div class="slider-row">
+              <label>기본 점프력: <span id="val-jump-power" class="val-pill">12.5</span></label>
+              <input type="range" id="slider-jump-power" min="8.0" max="20.0" step="0.5" value="12.5">
+            </div>
+            <div class="slider-row">
+              <label>중력 세기: <span id="grav-val" class="val-pill">1.0x</span></label>
+              <input type="range" id="slider-gravity" min="0.3" max="2.0" step="0.1" value="1.0">
+            </div>
+          </div>
+        </div>
+
+        <div class="palette-category">
+          <span class="cat-title">🎨 캐릭터 스킨 & 특수 능력</span>
           <select id="select-char-skin" class="skin-select">
             <option value="hero">🏃 쌈뽕 기사 (표준 밸런스)</option>
             <option value="ninja">🥷 섀도우 닌자 (더블 점프)</option>
@@ -129,19 +186,13 @@
         </div>
 
         <div class="palette-category">
-          <span class="cat-title">🌌 맵 테마 & 중력</span>
-          <div class="theme-controls">
-            <select id="select-theme" class="theme-select">
-              <option value="neon">🏙️ 사이버 네온</option>
-              <option value="dungeon">🏰 중세 지하 던전</option>
-              <option value="volcano">🌋 화산 용암 지대</option>
-              <option value="candy">🍭 캔디 원더랜드</option>
-            </select>
-            <div class="gravity-box">
-              <label>중력: <span id="grav-val">1.0x</span></label>
-              <input type="range" id="slider-gravity" min="0.5" max="1.8" step="0.1" value="1.0">
-            </div>
-          </div>
+          <span class="cat-title">🌌 맵 테마 배경</span>
+          <select id="select-theme" class="theme-select">
+            <option value="neon">🏙️ 사이버 네온</option>
+            <option value="dungeon">🏰 중세 지하 던전</option>
+            <option value="volcano">🌋 화산 용암 지대</option>
+            <option value="candy">🍭 캔디 원더랜드</option>
+          </select>
         </div>
       </aside>
 
@@ -153,6 +204,12 @@
 
           <!-- In-Game HUD Overlay (Visible in Play Mode) -->
           <div class="game-hud hidden" id="game-hud">
+            <!-- Format Objective Pill -->
+            <div class="hud-item format-box" id="hud-format-box">
+              <span class="hud-icon" id="hud-format-icon">🚩</span>
+              <span id="hud-format-desc">골인 깃발에 도달하세요</span>
+            </div>
+
             <div class="hud-item coin-box">
               <span class="hud-icon">🪙</span>
               <span id="hud-coins">0</span>
@@ -169,6 +226,17 @@
               <span class="hud-icon">⏱️</span>
               <span id="hud-timer">00:00</span>
             </div>
+
+            <!-- Dynamic Speed Quick Control -->
+            <div class="hud-item speed-hud-box">
+              <span class="hud-icon">⚡</span>
+              <span id="hud-speed-val">1.0x</span>
+              <div class="speed-btn-group">
+                <button id="btn-hud-speed-down" class="hud-mini-btn" title="속도 늦추기">-</button>
+                <button id="btn-hud-speed-up" class="hud-mini-btn" title="속도 올리기">+</button>
+              </div>
+            </div>
+
             <button id="btn-hud-restart" class="hud-btn" title="처음부터 다시 시도 (R)">🔄 리셋</button>
             <button id="btn-hud-edit" class="hud-btn" title="편집 모드로 복귀 (ESC)">🛠️ 편집</button>
           </div>
@@ -267,6 +335,86 @@
           <button id="btn-clear-replay" class="btn-primary">🔄 다시 플레이</button>
           <button id="btn-clear-edit" class="btn-sub">🛠️ 맵 수정하기</button>
           <button id="btn-clear-gallery" class="btn-gold">🏆 다른 게임 하기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 4: Detailed Game Format & Speed/Physics Control Panel -->
+    <div class="modal-overlay hidden" id="settings-modal">
+      <div class="modal-card settings-card">
+        <div class="modal-header">
+          <h2>⚙️ 게임 형식 & 속도·물리 정밀 제어판</h2>
+          <button class="modal-close" id="btn-close-settings">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">게임 모드, 시간 제한, 진행 배속 및 플레이어 물리 특성을 자유자재로 설정하세요!</p>
+
+          <!-- Quick Presets -->
+          <div class="presets-section">
+            <span class="preset-title">⚡ 추천 플레이 스타일 프리셋 (원클릭 적용):</span>
+            <div class="preset-btn-grid">
+              <button class="preset-btn" data-preset="classic">🍄 클래식 마리오 (표준 밸런스)</button>
+              <button class="preset-btn" data-preset="speedrun">⚡ 초광속 스피드러너 (1.3x 질주)</button>
+              <button class="preset-btn" data-preset="moon">🌙 달나라 무중력 (높은 점프)</button>
+              <button class="preset-btn" data-preset="hardcore">🔥 불지옥 하드코어 (1-Life)</button>
+              <button class="preset-btn" data-preset="autoscroll">🚀 긴박한 강제 스크롤 러너</button>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div class="setting-card">
+              <h3>🎮 게임 형식 & 목표</h3>
+              <div class="form-group">
+                <label>형식 선택:</label>
+                <select id="modal-select-game-mode" class="skin-select">
+                  <option value="standard">🚩 일반 도달 (깃발에 도달하면 클리어)</option>
+                  <option value="coin_all">🪙 코인 올 컬렉트 (모든 코인 수집 필수)</option>
+                  <option value="enemy_wipeout">👾 몬스터 토벌 (모든 적 처치 필수)</option>
+                  <option value="time_attack">⏱️ 타임어택 (제한 시간 내 클리어)</option>
+                  <option value="hardcore">💀 1-Life 하드코어 (목숨 1개)</option>
+                  <option value="auto_scroll">🚀 오토 스크롤 (화면 강제 전진)</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="modal-group-time-limit">
+                <label>⏱️ 타임어택 제한 시간: <strong id="modal-val-time-limit">30초</strong></label>
+                <input type="range" id="modal-slider-time-limit" min="10" max="90" step="5" value="30">
+              </div>
+
+              <div class="form-group" id="modal-group-auto-scroll">
+                <label>🚀 오토 스크롤 속도: <strong id="modal-val-auto-scroll">2.0x</strong></label>
+                <input type="range" id="modal-slider-auto-scroll" min="1.0" max="4.5" step="0.5" value="2.0">
+              </div>
+            </div>
+
+            <div class="setting-card">
+              <h3>⚡ 속도 & 물리 파라미터</h3>
+              <div class="form-group">
+                <label>전체 게임 진행 배속: <strong id="modal-val-game-speed">1.0x</strong></label>
+                <input type="range" id="modal-slider-game-speed" min="0.5" max="2.0" step="0.1" value="1.0">
+                <small class="help-text">0.5x(슬로우) ~ 1.0x(보통) ~ 2.0x(초광속)</small>
+              </div>
+
+              <div class="form-group">
+                <label>플레이어 이동 속도: <strong id="modal-val-move-speed">5.2</strong></label>
+                <input type="range" id="modal-slider-move-speed" min="3.0" max="10.0" step="0.5" value="5.2">
+              </div>
+
+              <div class="form-group">
+                <label>기본 점프력: <strong id="modal-val-jump-power">12.5</strong></label>
+                <input type="range" id="modal-slider-jump-power" min="8.0" max="20.0" step="0.5" value="12.5">
+              </div>
+
+              <div class="form-group">
+                <label>중력 세기: <strong id="modal-grav-val">1.0x</strong></label>
+                <input type="range" id="modal-slider-gravity" min="0.3" max="2.0" step="0.1" value="1.0">
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer-row">
+            <button id="btn-save-settings" class="btn-primary btn-large">✔️ 설정 완료 & 적용하기</button>
+          </div>
         </div>
       </div>
     </div>
