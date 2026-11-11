@@ -30,8 +30,8 @@
     </div>
   </div>
 
-  <!-- 1. Windows Lock / Login Screen -->
-  <div class="lock-screen" id="lock-screen">
+  <!-- 1. Windows Lock / Login Screen (선택적 잠금 화면) -->
+  <div class="lock-screen unlocked" id="lock-screen">
     <div class="lock-backdrop"></div>
 
     <!-- Clock Stage (Initial View) -->
@@ -40,24 +40,20 @@
       <div class="lock-date" id="lock-date">2026년 11월 11일 수요일</div>
       <div class="lock-hint">
         <span class="lock-arrow-up">▲</span>
-        <span>화면을 클릭하거나 아무 키나 눌러 로그인하세요</span>
+        <span>화면을 클릭하여 로그인하세요</span>
       </div>
     </div>
 
-    <!-- Auth / Password Stage (After Click) -->
+    <!-- Auth / Login Stage (After Click) -->
     <div class="lock-login-view hidden" id="lock-login-view">
       <div class="user-avatar-circle">
         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="User Avatar" class="user-avatar-img">
       </div>
       <div class="user-display-name">선우 (SsamPong)</div>
       
-      <div class="password-input-group" id="pwd-box">
-        <input type="password" id="lock-pwd-input" placeholder="비밀번호 / PIN 입력" autofocus autocomplete="off">
-        <button id="btn-unlock" class="btn-arrow" title="로그인">➔</button>
+      <div class="login-btn-group" id="pwd-box">
+        <button id="btn-unlock" class="btn-signin" title="로그인">로그인 ➔</button>
       </div>
-
-      <div class="lock-error-msg hidden" id="lock-error-msg">비밀번호가 올바르지 않습니다. 다시 시도하세요.</div>
-      <div class="lock-password-hint">💡 힌트: 지정된 비밀번호 <code>12345678967</code> 입력</div>
     </div>
   </div>
 
@@ -111,14 +107,6 @@
           <span class="icon-emoji">🔒</span>
         </div>
         <span class="icon-label">사용자 지정</span>
-      </div>
-
-      <!-- 7. Windows Update -->
-      <div class="desktop-icon" data-app="update" tabindex="0">
-        <div class="icon-img-box">
-          <span class="icon-emoji">🔄</span>
-        </div>
-        <span class="icon-label">윈도우 업데이트</span>
       </div>
 
       <!-- 8. Notepad -->
@@ -324,12 +312,12 @@
         </div>
       </div>
 
-      <!-- APP 5: User Custom Vault (사용자 지정 & 보안 금고) -->
+      <!-- APP 5: User Custom Vault (사용자 지정 & VIP 제어판) -->
       <div class="window hidden" id="win-vault" style="width: 650px; height: 530px; top: 100px; left: 300px;" data-app="vault">
         <div class="window-titlebar">
           <div class="titlebar-left">
             <span class="titlebar-icon">🔒</span>
-            <span class="titlebar-title">사용자 지정 (보안 인증 및 VIP 제어판)</span>
+            <span class="titlebar-title">사용자 지정 (보안 인증)</span>
           </div>
           <div class="titlebar-controls">
             <button class="win-btn btn-min" data-action="min">─</button>
@@ -341,19 +329,19 @@
           <!-- Password Lock Panel inside App -->
           <div class="vault-auth-view" id="vault-auth-view">
             <div class="vault-lock-icon">🔐</div>
-            <h3>사용자 지정 보안 잠금</h3>
-            <p>보안 관리자 전용 VIP 제어판입니다. 인증 비밀번호를 입력하면 새로운 관리자 창이 열립니다.</p>
+            <h3>사용자 지정 보안 인증</h3>
+            <p>비밀번호를 입력하면 사용자 지정 VIP 제어판 창이 열립니다.</p>
             <div class="vault-input-row">
-              <input type="password" id="vault-pwd-input" placeholder="비밀번호 11자리 입력 (힌트: 123...)" maxlength="20">
-              <button id="btn-vault-unlock" class="btn-primary">잠금 해제</button>
+              <input type="password" id="vault-pwd-input" placeholder="비밀번호 11자리 입력 (힌트: 123...)" maxlength="25" autocomplete="off">
+              <button id="btn-vault-unlock" class="btn-primary">확인 (잠금 해제)</button>
             </div>
-            <div class="vault-msg" id="vault-auth-msg">비밀번호는 <code>12345678967</code> 입니다.</div>
+            <div class="vault-msg" id="vault-auth-msg">💡 힌트: 지정된 비밀번호 <code>12345678967</code> 입력 후 엔터</div>
           </div>
 
           <!-- Unlocked Secret VIP Console -->
           <div class="vault-vip-view hidden" id="vault-vip-view">
             <div class="vip-banner">
-              <h2>👑 쌈뽕 윈도우 VIP 관리자 콘솔</h2>
+              <h2>👑 사용자 지정 VIP 관리자 제어판</h2>
               <span class="badge-success">인증 완료 (비밀번호: 12345678967)</span>
             </div>
 
@@ -429,46 +417,6 @@
         </div>
       </div>
 
-      <!-- APP 7: Windows Update (윈도우 업데이트) -->
-      <div class="window hidden" id="win-update" style="width: 620px; height: 480px; top: 90px; left: 260px;" data-app="update">
-        <div class="window-titlebar">
-          <div class="titlebar-left">
-            <span class="titlebar-icon">🔄</span>
-            <span class="titlebar-title">설정 - Windows 업데이트</span>
-          </div>
-          <div class="titlebar-controls">
-            <button class="win-btn btn-min" data-action="min">─</button>
-            <button class="win-btn btn-max" data-action="max">□</button>
-            <button class="win-btn btn-close" data-action="close">✕</button>
-          </div>
-        </div>
-        <div class="window-content update-window-content">
-          <div class="update-header-box">
-            <div class="update-icon-large">🔄</div>
-            <div>
-              <h3>Windows 업데이트</h3>
-              <p id="update-status-desc">최신 업데이트 상태입니다 (2026-11 업데이트).</p>
-            </div>
-          </div>
-
-          <div class="update-action-box">
-            <button id="btn-check-updates" class="btn-primary">업데이트 확인</button>
-            <button id="btn-trigger-restart" class="btn-danger hidden">지금 다시 시작하여 업데이트 설치</button>
-          </div>
-
-          <div class="update-progress-card hidden" id="update-progress-card">
-            <div class="progress-title-row">
-              <span id="update-progress-label">업데이트 패키지 다운로드 및 설치 중...</span>
-              <span id="update-progress-percent">0%</span>
-            </div>
-            <div class="progress-bar-bg">
-              <div class="progress-bar-fill" id="update-progress-bar"></div>
-            </div>
-            <p class="update-note">패키지: Windows 11 SsamPong 2026 Feature Update (KB50676767)</p>
-          </div>
-        </div>
-      </div>
-
       <!-- APP 8: Notepad (메모장) -->
       <div class="window hidden" id="win-notepad" style="width: 520px; height: 420px; top: 120px; left: 280px;" data-app="notepad">
         <div class="window-titlebar">
@@ -540,9 +488,6 @@
         <button class="taskbar-btn" data-app="vault" title="사용자 지정">
           <span class="tb-icon">🔒</span>
         </button>
-        <button class="taskbar-btn" data-app="update" title="윈도우 업데이트">
-          <span class="tb-icon">🔄</span>
-        </button>
         <button class="taskbar-btn" data-app="notepad" title="메모장">
           <span class="tb-icon">📝</span>
         </button>
@@ -604,10 +549,6 @@
         <div class="start-app-item" data-app="vault">
           <span class="app-emoji">🔒</span>
           <span class="app-text">사용자 지정</span>
-        </div>
-        <div class="start-app-item" data-app="update">
-          <span class="app-emoji">🔄</span>
-          <span class="app-text">업데이트</span>
         </div>
         <div class="start-app-item" data-app="trash">
           <span class="app-emoji">🗑️</span>
@@ -674,14 +615,6 @@
         <strong id="toast-title">Windows 알림</strong>
         <p id="toast-desc">메시지 내용입니다.</p>
       </div>
-    </div>
-
-    <!-- 7. Windows Update Blue Screen Simulation -->
-    <div class="bsod-update-screen hidden" id="bsod-update-screen">
-      <div class="update-spinner"></div>
-      <h2>Windows 업데이트 작업 중입니다</h2>
-      <p id="bsod-percent-text">78% 완료됨. 컴퓨터를 끄지 마십시오.</p>
-      <small class="bsod-note">업데이트 중 컴퓨터가 여러 번 다시 시작될 수 있습니다.</small>
     </div>
   </div>
 

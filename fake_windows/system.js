@@ -130,8 +130,14 @@
     if (bootFinished || !bootScreen) return;
     bootFinished = true;
     bootScreen.classList.add('fade-out');
+    // Direct boot to desktop (bypass lock screen on startup)
+    const ls = document.getElementById('lock-screen');
+    if (ls) ls.classList.add('unlocked');
+
     setTimeout(() => {
       bootScreen.style.display = 'none';
+      SOUNDS.startup();
+      showToast('Windows 11', '선우 (SsamPong) 님, 환영합니다! 🎉', '🪟');
     }, 500);
   }
 
@@ -226,59 +232,45 @@
   }
   buildCalendar();
 
-  // --- Windows Lock & Login Screen ---
+  // --- Windows Lock & Login Screen (선택적 잠금 화면) ---
   const lockScreen = document.getElementById('lock-screen');
   const lockClockView = document.getElementById('lock-clock-view');
   const lockLoginView = document.getElementById('lock-login-view');
-  const lockPwdInput = document.getElementById('lock-pwd-input');
   const btnUnlock = document.getElementById('btn-unlock');
-  const lockErrorMsg = document.getElementById('lock-error-msg');
-  const pwdBox = document.getElementById('pwd-box');
 
   const SECRET_PASSWORD = '12345678967';
 
-  // Click on clock view to show password prompt
-  lockClockView.addEventListener('click', () => {
-    SOUNDS.click();
-    lockClockView.classList.add('hidden');
-    lockLoginView.classList.remove('hidden');
-    lockPwdInput.focus();
-  });
+  // Click on clock view to show login button
+  if (lockClockView) {
+    lockClockView.addEventListener('click', () => {
+      SOUNDS.click();
+      lockClockView.classList.add('hidden');
+      if (lockLoginView) lockLoginView.classList.remove('hidden');
+    });
+  }
 
   window.addEventListener('keydown', (e) => {
-    if (!lockScreen.classList.contains('unlocked')) {
+    if (lockScreen && !lockScreen.classList.contains('unlocked')) {
       if (lockClockView && !lockClockView.classList.contains('hidden')) {
         SOUNDS.click();
         lockClockView.classList.add('hidden');
-        lockLoginView.classList.remove('hidden');
-        setTimeout(() => lockPwdInput.focus(), 100);
+        if (lockLoginView) lockLoginView.classList.remove('hidden');
+      } else if (e.key === 'Enter') {
+        attemptUnlock();
       }
     }
   });
 
   function attemptUnlock() {
     initAudio();
-    const entered = lockPwdInput.value.trim();
-    if (entered === SECRET_PASSWORD) {
-      // Success! Unlock Desktop
-      SOUNDS.startup();
-      lockScreen.classList.add('unlocked');
-      showToast('Windows 11', '선우 (SsamPong) 님, 환영합니다!');
-      lockErrorMsg.classList.add('hidden');
-    } else {
-      // Error
-      SOUNDS.error();
-      lockErrorMsg.classList.remove('hidden');
-      pwdBox.classList.add('shake');
-      setTimeout(() => pwdBox.classList.remove('shake'), 400);
-      lockPwdInput.select();
-    }
+    SOUNDS.startup();
+    if (lockScreen) lockScreen.classList.add('unlocked');
+    showToast('Windows 11', '선우 (SsamPong) 님, 환영합니다!', '🪟');
   }
 
-  btnUnlock.addEventListener('click', attemptUnlock);
-  lockPwdInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') attemptUnlock();
-  });
+  if (btnUnlock) {
+    btnUnlock.addEventListener('click', attemptUnlock);
+  }
 
   // --- Window Manager (Dragging, Z-Index, Min/Max/Close) ---
   let topZIndex = 100;
@@ -311,6 +303,15 @@
     // Sync taskbar button active state
     const tbBtn = document.querySelector(`.taskbar-btn[data-app="${appKey}"]`);
     if (tbBtn) tbBtn.classList.add('active');
+
+    // Auto-focus for User Custom Vault
+    if (appKey === 'vault') {
+      const pwdInput = document.getElementById('vault-pwd-input');
+      const authView = document.getElementById('vault-auth-view');
+      if (pwdInput && authView && !authView.classList.contains('hidden')) {
+        setTimeout(() => pwdInput.focus(), 150);
+      }
+    }
   }
 
   function closeWindow(win) {
@@ -492,10 +493,9 @@
 
   // Power options
   document.getElementById('btn-opt-lock').addEventListener('click', () => {
-    lockScreen.classList.remove('unlocked');
-    lockClockView.classList.remove('hidden');
-    lockLoginView.classList.add('hidden');
-    lockPwdInput.value = '';
+    if (lockScreen) lockScreen.classList.remove('unlocked');
+    if (lockClockView) lockClockView.classList.remove('hidden');
+    if (lockLoginView) lockLoginView.classList.add('hidden');
     startMenu.classList.add('hidden');
   });
 
@@ -1078,21 +1078,23 @@
     const btnLockSys = document.getElementById('btn-lock-system');
     const volSlider = document.getElementById('vip-slider-volume');
     const volVal = document.getElementById('vip-vol-val');
+    const vaultTitle = document.querySelector('#win-vault .titlebar-title');
 
     function checkVaultPwd() {
       if (pwdInput.value.trim() === SECRET_PASSWORD) {
         SOUNDS.fanfare();
         authView.classList.add('hidden');
         vipView.classList.remove('hidden');
+        if (vaultTitle) vaultTitle.textContent = '👑 사용자 지정 VIP 관리자 제어판 (인증 완료)';
         if (window.confetti) {
-          window.confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+          window.confetti({ particleCount: 90, spread: 75, origin: { y: 0.6 } });
         }
-        showToast('VIP 보안 인증 완료', '👑 비밀 제어 콘솔이 개방되었습니다!');
+        showToast('사용자 지정 인증 완료', '👑 새로운 VIP 관리자 제어판 창이 개방되었습니다!', '✨');
       } else {
         SOUNDS.error();
         pwdInput.classList.add('shake');
         setTimeout(() => pwdInput.classList.remove('shake'), 400);
-        showToast('보안 오류', '비밀번호 11자리가 일치하지 않습니다 (12345678967).');
+        showToast('인증 실패', '비밀번호가 올바르지 않습니다. (힌트: 12345678967)', '❌');
       }
     }
 
@@ -1104,8 +1106,9 @@
     btnRelock.addEventListener('click', () => {
       vipView.classList.add('hidden');
       authView.classList.remove('hidden');
+      if (vaultTitle) vaultTitle.textContent = '🔒 사용자 지정 (보안 인증)';
       pwdInput.value = '';
-      showToast('사용자 지정', '🔒 VIP 콘솔이 다시 잠겼습니다.');
+      showToast('사용자 지정', '🔒 VIP 제어판이 다시 잠겼습니다.', '🔒');
     });
 
     btnLockSys.addEventListener('click', () => {
@@ -1221,79 +1224,19 @@
     renderTrash();
   })();
 
-  // ==========================================================================
-  // APP 7: Windows Update (윈도우 업데이트 시뮬레이터)
-  // ==========================================================================
-  (function initWindowsUpdate() {
-    const btnCheck = document.getElementById('btn-check-updates');
-    const btnRestart = document.getElementById('btn-trigger-restart');
-    const cardProgress = document.getElementById('update-progress-card');
-    const progressBar = document.getElementById('update-progress-bar');
-    const progressPercent = document.getElementById('update-progress-percent');
-    const statusDesc = document.getElementById('update-status-desc');
+  function triggerRebootSimulation() {
+    if (bootScreen) {
+      bootScreen.style.display = 'flex';
+      bootScreen.classList.remove('fade-out');
+      bootFinished = false;
 
-    btnCheck.addEventListener('click', () => {
-      SOUNDS.click();
-      btnCheck.disabled = true;
-      btnCheck.textContent = '업데이트 확인 중...';
-      statusDesc.textContent = '새로운 업데이트를 확인하고 있습니다...';
+      // Close open windows
+      windows.forEach(w => w.classList.add('hidden'));
 
       setTimeout(() => {
-        statusDesc.textContent = '중요 업데이트 1건이 발견되었습니다. 설치를 진행합니다.';
-        cardProgress.classList.remove('hidden');
-
-        let percent = 0;
-        const interval = setInterval(() => {
-          percent += Math.floor(Math.random() * 15) + 5;
-          if (percent >= 100) {
-            percent = 100;
-            clearInterval(interval);
-            progressBar.style.width = '100%';
-            progressPercent.textContent = '100%';
-            statusDesc.textContent = '업데이트가 설치되었습니다. 컴퓨터를 다시 시작해야 합니다.';
-            btnCheck.classList.add('hidden');
-            btnRestart.classList.remove('hidden');
-            showToast('Windows 업데이트', '설치 완료! 시스템을 다시 시작하세요.', '🔄');
-          } else {
-            progressBar.style.width = `${percent}%`;
-            progressPercent.textContent = `${percent}%`;
-          }
-        }, 300);
-      }, 1200);
-    });
-
-    btnRestart.addEventListener('click', () => {
-      triggerRebootSimulation();
-    });
-  })();
-
-  function triggerRebootSimulation() {
-    const bsod = document.getElementById('bsod-update-screen');
-    const percentText = document.getElementById('bsod-percent-text');
-    bsod.classList.remove('hidden');
-
-    let percent = 12;
-    const interval = setInterval(() => {
-      percent += Math.floor(Math.random() * 20) + 10;
-      if (percent >= 100) {
-        percent = 100;
-        clearInterval(interval);
-        percentText.textContent = '100% 완료됨. 컴퓨터를 다시 시작합니다...';
-
-        setTimeout(() => {
-          bsod.classList.add('hidden');
-          // Boot sound & lock screen
-          SOUNDS.startup();
-          lockScreen.classList.remove('unlocked');
-          lockClockView.classList.remove('hidden');
-          lockLoginView.classList.add('hidden');
-          lockPwdInput.value = '';
-          showToast('Windows 11', '업데이트가 성공적으로 완료되었습니다!', '✨');
-        }, 2000);
-      } else {
-        percentText.textContent = `${percent}% 완료됨. 컴퓨터를 끄지 마십시오.`;
-      }
-    }, 450);
+        endBootScreen();
+      }, 3000);
+    }
   }
 
   // ==========================================================================

@@ -230,6 +230,31 @@ body.theme-galaxy {
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
+.login-btn-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-signin {
+  background: var(--accent-blue);
+  color: #fff;
+  border: none;
+  padding: 10px 32px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 120, 212, 0.4);
+  transition: all 0.2s;
+}
+
+.btn-signin:hover {
+  background: #0086ea;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 120, 212, 0.6);
+}
+
 .password-input-group {
   display: flex;
   background: rgba(255, 255, 255, 0.15);
@@ -1281,100 +1306,6 @@ body.theme-galaxy {
 .trash-col-name { flex: 2; display: flex; align-items: center; gap: 8px; }
 .trash-col-date { flex: 1; color: #94a3b8; font-size: 0.78rem; }
 .trash-col-size { width: 70px; text-align: right; color: #94a3b8; font-size: 0.78rem; }
-
-/* ==========================================================================
-   APP 7: Windows Update Styles
-   ========================================================================== */
-.update-window-content {
-  padding: 24px;
-  background: #1e293b;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.update-header-box {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.update-icon-large {
-  font-size: 3rem;
-  animation: spinSlow 12s infinite linear;
-}
-
-@keyframes spinSlow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.update-progress-card {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.progress-title-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.88rem;
-  font-weight: 600;
-}
-
-.progress-bar-bg {
-  width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  width: 0%;
-  background: var(--accent-blue);
-  border-radius: 4px;
-  transition: width 0.3s ease;
-}
-
-.update-note {
-  font-size: 0.78rem;
-  color: #94a3b8;
-}
-
-/* Blue Screen Update Overlay */
-.bsod-update-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  background: #0078d7;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  text-align: center;
-}
-
-.update-spinner {
-  width: 52px;
-  height: 52px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spinSpinner 1s infinite linear;
-}
-
-@keyframes spinSpinner {
-  to { transform: rotate(360deg); }
-}
 
 /* ==========================================================================
    APP 8: Notepad Styles
