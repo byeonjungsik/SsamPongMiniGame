@@ -9,6 +9,27 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="theme-bloom">
+  <!-- 0. Windows 11 Initial Boot Loading Screen (~3s) -->
+  <div class="boot-screen" id="boot-screen">
+    <div class="boot-content">
+      <div class="boot-logo">
+        <div class="boot-logo-square"></div>
+        <div class="boot-logo-square"></div>
+        <div class="boot-logo-square"></div>
+        <div class="boot-logo-square"></div>
+      </div>
+      <div class="boot-spinner">
+        <div class="chase-dot"></div>
+        <div class="chase-dot"></div>
+        <div class="chase-dot"></div>
+        <div class="chase-dot"></div>
+        <div class="chase-dot"></div>
+      </div>
+      <div class="boot-text">Windows 11 시작 중...</div>
+      <div class="boot-subtext">잠시만 기다려 주십시오</div>
+    </div>
+  </div>
+
   <!-- 1. Windows Lock / Login Screen -->
   <div class="lock-screen" id="lock-screen">
     <div class="lock-backdrop"></div>

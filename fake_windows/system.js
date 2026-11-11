@@ -122,6 +122,37 @@
     }
   };
 
+  // --- 0. Windows 11 Initial Boot Loading Screen (~3s) ---
+  const bootScreen = document.getElementById('boot-screen');
+  let bootFinished = false;
+
+  function endBootScreen() {
+    if (bootFinished || !bootScreen) return;
+    bootFinished = true;
+    bootScreen.classList.add('fade-out');
+    setTimeout(() => {
+      bootScreen.style.display = 'none';
+    }, 500);
+  }
+
+  if (bootScreen) {
+    // 3-second timer
+    const bootTimer = setTimeout(endBootScreen, 3000);
+
+    // Allow user to click or press key to skip immediately if desired
+    bootScreen.addEventListener('click', () => {
+      clearTimeout(bootTimer);
+      endBootScreen();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (!bootFinished) {
+        clearTimeout(bootTimer);
+        endBootScreen();
+      }
+    });
+  }
+
   // --- Real Live Clock & Calendar Engine ---
   const lockTime = document.getElementById('lock-time');
   const lockDate = document.getElementById('lock-date');
