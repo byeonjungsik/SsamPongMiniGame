@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🎮 쌈뽕 게임 메이커 (SsamPong Game Maker) - 나만의 게임 만들기 & 공유</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="maker-app">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <a href="../" class="btn-back">🏠 게임 목록</a>
+        <div class="title-group">
+          <span class="app-icon">🛠️</span>
+          <h1>쌈뽕 게임 메이커 <span class="sub-badge">Sandbox Platformer Maker</span></h1>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <!-- Mode Switch: Edit vs Play -->
+        <div class="mode-toggle-group">
+          <button id="btn-mode-edit" class="btn-mode active" title="게임 만들기 모드 (E)">🛠️ 만들기 모드</button>
+          <button id="btn-mode-play" class="btn-mode play" title="게임 플레이 테스트 (P)">▶️ 플레이 테스트</button>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button id="btn-gallery-open" class="btn-action btn-gold">🏆 공개 게임 탐색</button>
+        <button id="btn-publish-open" class="btn-action btn-green">🚀 게임 제출 & 공유</button>
+      </div>
+    </header>
+
+    <!-- Editor & Play Area -->
+    <div class="workspace-container">
+      <!-- Left Toolbar (Tile & Character Palette) -->
+      <aside class="palette-sidebar" id="palette-sidebar">
+        <div class="palette-category">
+          <span class="cat-title">🧱 블록 & 지형</span>
+          <div class="tool-grid">
+            <button class="tool-btn active" data-tool="ground" title="일반 땅 블록 (단단한 발판)">
+              <span class="tool-preview ground-preview"></span>
+              <span class="tool-name">땅 블록</span>
+            </button>
+            <button class="tool-btn" data-tool="jump_pad" title="🚀 점프 블록 (밟으면 2.5배 슈퍼 점프!)">
+              <span class="tool-preview jump-pad-preview">⬆️</span>
+              <span class="tool-name">슈퍼 점프대</span>
+            </button>
+            <button class="tool-btn" data-tool="spike" title="⚠️ 가시 함정 (닿으면 사망)">
+              <span class="tool-preview spike-preview">🔺</span>
+              <span class="tool-name">가시 함정</span>
+            </button>
+            <button class="tool-btn" data-tool="ice" title="🧊 얼음 블록 (미끄러운 발판)">
+              <span class="tool-preview ice-preview"></span>
+              <span class="tool-name">얼음 블록</span>
+            </button>
+            <button class="tool-btn" data-tool="brick" title="📦 벽돌 블록 (머리로 치면 부서짐)">
+              <span class="tool-preview brick-preview">🧱</span>
+              <span class="tool-name">벽돌 블록</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="palette-category">
+          <span class="cat-title">🎯 목표 & 아이템</span>
+          <div class="tool-grid">
+            <button class="tool-btn" data-tool="player" title="👤 플레이어 시작점 (스폰 위치)">
+              <span class="tool-preview char-preview">🏃</span>
+              <span class="tool-name">시작 위치</span>
+            </button>
+            <button class="tool-btn" data-tool="goal" title="🏆 골인 깃발 (도달 시 클리어)">
+              <span class="tool-preview goal-preview">🚩</span>
+              <span class="tool-name">골인 깃발</span>
+            </button>
+            <button class="tool-btn" data-tool="coin" title="🪙 코인 (점수 획득)">
+              <span class="tool-preview coin-preview">🪙</span>
+              <span class="tool-name">황금 코인</span>
+            </button>
+            <button class="tool-btn" data-tool="gem" title="💎 루비 보석 (보너스 점수)">
+              <span class="tool-preview gem-preview">💎</span>
+              <span class="tool-name">희귀 보석</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="palette-category">
+          <span class="cat-title">👾 몬스터 & 캐릭터</span>
+          <div class="tool-grid">
+            <button class="tool-btn" data-tool="patrol" title="👾 슬라임 몬스터 (좌우 순찰, 밟아서 처치)">
+              <span class="tool-preview enemy-preview">👾</span>
+              <span class="tool-name">순찰 슬라임</span>
+            </button>
+            <button class="tool-btn" data-tool="flyer" title="🦇 박쥐 몬스터 (상하 비행 몬스터)">
+              <span class="tool-preview enemy-preview">🦇</span>
+              <span class="tool-name">비행 박쥐</span>
+            </button>
+            <button class="tool-btn" data-tool="chaser" title="😈 추적 몬스터 (플레이어를 쫓아옴)">
+              <span class="tool-preview enemy-preview">😈</span>
+              <span class="tool-name">추적 악마</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="palette-category">
+          <span class="cat-title">🛠️ 편집 도구</span>
+          <div class="tool-grid">
+            <button class="tool-btn eraser" data-tool="eraser" title="지우개 (클릭/드래그하여 삭제)">
+              <span class="tool-preview">🧹</span>
+              <span class="tool-name">지우개</span>
+            </button>
+            <button class="tool-btn btn-clear-map" id="btn-clear-map" title="맵 전체 비우기">
+              <span class="tool-preview">🗑️</span>
+              <span class="tool-name">전체 초기화</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="palette-category">
+          <span class="cat-title">🎨 캐릭터 스킨 & 능력</span>
+          <select id="select-char-skin" class="skin-select">
+            <option value="hero">🏃 쌈뽕 기사 (표준 밸런스)</option>
+            <option value="ninja">🥷 섀도우 닌자 (더블 점프)</option>
+            <option value="cyborg">🤖 네온 사이보그 (고속 질주)</option>
+            <option value="cat">🐱 냥이 (벽 타기 슬라이딩)</option>
+          </select>
+        </div>
+
+        <div class="palette-category">
+          <span class="cat-title">🌌 맵 테마 & 중력</span>
+          <div class="theme-controls">
+            <select id="select-theme" class="theme-select">
+              <option value="neon">🏙️ 사이버 네온</option>
+              <option value="dungeon">🏰 중세 지하 던전</option>
+              <option value="volcano">🌋 화산 용암 지대</option>
+              <option value="candy">🍭 캔디 원더랜드</option>
+            </select>
+            <div class="gravity-box">
+              <label>중력: <span id="grav-val">1.0x</span></label>
+              <input type="range" id="slider-gravity" min="0.5" max="1.8" step="0.1" value="1.0">
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Stage Canvas Area -->
+      <main class="viewport-container" id="viewport-container">
+        <!-- Canvas Viewport -->
+        <div class="canvas-wrapper">
+          <canvas id="game-canvas"></canvas>
+
+          <!-- In-Game HUD Overlay (Visible in Play Mode) -->
+          <div class="game-hud hidden" id="game-hud">
+            <div class="hud-item coin-box">
+              <span class="hud-icon">🪙</span>
+              <span id="hud-coins">0</span>
+            </div>
+            <div class="hud-item score-box">
+              <span class="hud-label">SCORE</span>
+              <span id="hud-score">0</span>
+            </div>
+            <div class="hud-item lives-box">
+              <span class="hud-icon">❤️</span>
+              <span id="hud-lives">3</span>
+            </div>
+            <div class="hud-item time-box">
+              <span class="hud-icon">⏱️</span>
+              <span id="hud-timer">00:00</span>
+            </div>
+            <button id="btn-hud-restart" class="hud-btn" title="처음부터 다시 시도 (R)">🔄 리셋</button>
+            <button id="btn-hud-edit" class="hud-btn" title="편집 모드로 복귀 (ESC)">🛠️ 편집</button>
+          </div>
+
+          <!-- Editor Guide Banner (Visible in Edit Mode) -->
+          <div class="editor-guide-banner" id="editor-guide-banner">
+            <span>🖱️ <strong>좌클릭/드래그</strong>: 블록 설치 | <strong>우클릭</strong>: 지우기 | <strong>스페이스바</strong>: 테스트 플레이</span>
+          </div>
+
+          <!-- Toast Notification -->
+          <div class="toast-popup" id="toast-popup">메시지</div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal 1: Publish & Submit Game Modal -->
+    <div class="modal-overlay hidden" id="publish-modal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2>🚀 내가 만든 게임 제출 & 공개하기</h2>
+          <button class="modal-close" id="btn-close-publish">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">게임 이름과 제작자 닉네임을 적고 제출하세요! 공개 갤러리에 즉시 등록되고 공유 링크가 생성됩니다.</p>
+          
+          <div class="form-group">
+            <label for="pub-title">🎮 게임 제목</label>
+            <input type="text" id="pub-title" placeholder="예: 슈퍼 점프 어드벤처 1탄" maxlength="30" value="나만의 쌈뽕 점프 맵">
+          </div>
+
+          <div class="form-group">
+            <label for="pub-author">👤 제작자 닉네임</label>
+            <input type="text" id="pub-author" placeholder="예: 쌈뽕마스터" maxlength="15" value="쌈뽕메이커">
+          </div>
+
+          <div class="form-group">
+            <label for="pub-desc">📝 게임 소개 & 공략 팁</label>
+            <textarea id="pub-desc" placeholder="점프대를 타이밍 맞춰 밟으면 클리어할 수 있어요!" rows="2" maxlength="100"></textarea>
+          </div>
+
+          <div class="pub-actions">
+            <button id="btn-submit-game" class="btn-primary btn-large">🌟 전 세계에 게임 제출 & 공개하기</button>
+          </div>
+
+          <!-- Share Result Box (Shows after publish) -->
+          <div class="share-result-box hidden" id="share-result-box">
+            <div class="share-badge">🎉 게임이 성공적으로 공개되었습니다!</div>
+            <p>아래 링크를 친구에게 공유하면 친구가 바로 이 게임을 플레이할 수 있습니다:</p>
+            <div class="copy-url-group">
+              <input type="text" id="pub-share-url" readonly>
+              <button id="btn-copy-share-url" class="btn-copy">📋 링크 복사</button>
+            </div>
+            <div class="share-sub-actions">
+              <button id="btn-download-json" class="btn-sub">💾 맵 파일(.json) 다운로드</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 2: Community Showcase & Gallery Modal -->
+    <div class="modal-overlay hidden" id="gallery-modal">
+      <div class="modal-card gallery-card">
+        <div class="modal-header">
+          <h2>🏆 사람들이 만든 공개 게임 목록</h2>
+          <button class="modal-close" id="btn-close-gallery">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">유저들이 창작한 기발하고 재밌는 게임들입니다! 원하는 맵을 클릭해 즉시 플레이하거나 수정해보세요.</p>
+
+          <div class="gallery-tabs">
+            <button class="gallery-tab active" data-filter="all">전체 게임 (All)</button>
+            <button class="gallery-tab" data-filter="featured">⭐ 공식 추천 맵</button>
+            <button class="gallery-tab" data-filter="user">👤 유저 제출 맵</button>
+          </div>
+
+          <div class="gallery-grid" id="gallery-grid">
+            <!-- Dynamically populated cards -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 3: Stage Clear Modal -->
+    <div class="modal-overlay hidden" id="clear-modal">
+      <div class="modal-card clear-card">
+        <div class="clear-icon">🏆</div>
+        <h2>STAGE CLEAR!</h2>
+        <p id="clear-desc">축하합니다! 골인 깃발에 도달하여 스테이지를 정복했습니다!</p>
+        <div class="clear-stats">
+          <div class="stat-pill"><span>🪙 코인:</span> <strong id="clear-coins">0</strong></div>
+          <div class="stat-pill"><span>⏱️ 클리어 시간:</span> <strong id="clear-time">00:00</strong></div>
+          <div class="stat-pill"><span>⭐ 최종 점수:</span> <strong id="clear-score">0</strong></div>
+        </div>
+        <div class="modal-actions-row">
+          <button id="btn-clear-replay" class="btn-primary">🔄 다시 플레이</button>
+          <button id="btn-clear-edit" class="btn-sub">🛠️ 맵 수정하기</button>
+          <button id="btn-clear-gallery" class="btn-gold">🏆 다른 게임 하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
