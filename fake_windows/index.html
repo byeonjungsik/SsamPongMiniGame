@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🪟 Windows 11 - 쌈뽕 에디션 (SsamPong Web OS)</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Canvas Confetti for Game/Store Wins -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="theme-bloom">
+  <!-- 1. Windows Lock / Login Screen -->
+  <div class="lock-screen" id="lock-screen">
+    <div class="lock-backdrop"></div>
+
+    <!-- Clock Stage (Initial View) -->
+    <div class="lock-clock-view" id="lock-clock-view">
+      <div class="lock-time" id="lock-time">00:00:00</div>
+      <div class="lock-date" id="lock-date">2026년 11월 11일 수요일</div>
+      <div class="lock-hint">
+        <span class="lock-arrow-up">▲</span>
+        <span>화면을 클릭하거나 아무 키나 눌러 로그인하세요</span>
+      </div>
+    </div>
+
+    <!-- Auth / Password Stage (After Click) -->
+    <div class="lock-login-view hidden" id="lock-login-view">
+      <div class="user-avatar-circle">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="User Avatar" class="user-avatar-img">
+      </div>
+      <div class="user-display-name">선우 (SsamPong)</div>
+      
+      <div class="password-input-group" id="pwd-box">
+        <input type="password" id="lock-pwd-input" placeholder="비밀번호 / PIN 입력" autofocus autocomplete="off">
+        <button id="btn-unlock" class="btn-arrow" title="로그인">➔</button>
+      </div>
+
+      <div class="lock-error-msg hidden" id="lock-error-msg">비밀번호가 올바르지 않습니다. 다시 시도하세요.</div>
+      <div class="lock-password-hint">💡 힌트: 지정된 비밀번호 <code>12345678967</code> 입력</div>
+    </div>
+  </div>
+
+  <!-- 2. Windows Desktop Environment -->
+  <div class="desktop-screen" id="desktop">
+    <!-- Desktop Icons Grid -->
+    <div class="desktop-icons" id="desktop-icons">
+      <!-- 1. Recycle Bin -->
+      <div class="desktop-icon" data-app="trash" tabindex="0">
+        <div class="icon-img-box">
+          <span class="icon-emoji" id="icon-trash-emoji">🗑️</span>
+        </div>
+        <span class="icon-label">휴지통</span>
+      </div>
+
+      <!-- 2. Calculator -->
+      <div class="desktop-icon" data-app="calc" tabindex="0">
+        <div class="icon-img-box">
+          <span class="icon-emoji">🧮</span>
+        </div>
+        <span class="icon-label">계산기</span>
+      </div>
+
+      <!-- 3. Game (Minesweeper) -->
+      <div class="desktop-icon" data-app="game" tabindex="0">
+        <div class="icon-img-box">
+          <span class="icon-emoji">🎮</span>
+        </div>
+        <span class="icon-label">지뢰찾기</span>
+      </div>
+
+      <!-- 4. Coupang -->
+      <div class="desktop-icon" data-app="coupang" tabindex="0">
+        <div class="icon-img-box">
+          <span class="icon-emoji">🛍️</span>
+        </div>
+        <span class="icon-label">쿠팡</span>
+      </div>
+
+      <!-- 5. Google -->
+      <div class="desktop-icon" data-app="google" tabindex="0">
+        <div class="icon-img-box">
+          <span class="icon-emoji">🌐</span>
+        </div>
+        <span class="icon-label">구글 크롬</span>
+      </div>
+
+      <!-- 6. Custom Vault (사용자 지정) -->
+      <div class="desktop-icon" data-app="vault" tabindex="0">
+        <div class="icon-img-box">
+          <span class="icon-emoji">🔒</span>
+        </div>
+        <span class="icon-label">사용자 지정</span>
+      </div>
+
+      <!-- 7. Windows Update -->
+      <div class="desktop-icon" data-app="update" tabindex="0">
+        <div class="icon-img-box">
+          <span class="icon-emoji">🔄</span>
+        </div>
+        <span class="icon-label">윈도우 업데이트</span>
+      </div>
+
+      <!-- 8. Notepad -->
+      <div class="desktop-icon" data-app="notepad" tabindex="0">
+        <div class="icon-img-box">
+          <span class="icon-emoji">📝</span>
+        </div>
+        <span class="icon-label">메모장</span>
+      </div>
+
+      <!-- 9. Mini Game Hub Link -->
+      <a href="../" class="desktop-icon exit-icon" tabindex="0">
+        <div class="icon-img-box">
+          <span class="icon-emoji">🏠</span>
+        </div>
+        <span class="icon-label">게임 허브로 나가기</span>
+      </a>
+    </div>
+
+    <!-- Active Windows Container -->
+    <div class="windows-container" id="windows-container">
+
+      <!-- APP 1: Real Calculator Window -->
+      <div class="window hidden" id="win-calc" style="width: 340px; height: 510px; top: 90px; left: 160px;" data-app="calc">
+        <div class="window-titlebar">
+          <div class="titlebar-left">
+            <span class="titlebar-icon">🧮</span>
+            <span class="titlebar-title">계산기 - 표준</span>
+          </div>
+          <div class="titlebar-controls">
+            <button class="win-btn btn-min" data-action="min">─</button>
+            <button class="win-btn btn-max" data-action="max">□</button>
+            <button class="win-btn btn-close" data-action="close">✕</button>
+          </div>
+        </div>
+        <div class="window-content calc-window-content">
+          <div class="calc-display-box">
+            <div class="calc-history" id="calc-history">&nbsp;</div>
+            <div class="calc-result" id="calc-display">0</div>
+          </div>
+          <div class="calc-keypad">
+            <button class="calc-btn fn" data-k="percent">%</button>
+            <button class="calc-btn fn" data-k="ce">CE</button>
+            <button class="calc-btn fn" data-k="c">C</button>
+            <button class="calc-btn fn" data-k="back">⌫</button>
+            <button class="calc-btn fn" data-k="inv">¹/x</button>
+            <button class="calc-btn fn" data-k="sq">x²</button>
+            <button class="calc-btn fn" data-k="sqrt">√x</button>
+            <button class="calc-btn op" data-k="divide">÷</button>
+            <button class="calc-btn num" data-k="7">7</button>
+            <button class="calc-btn num" data-k="8">8</button>
+            <button class="calc-btn num" data-k="9">9</button>
+            <button class="calc-btn op" data-k="multiply">×</button>
+            <button class="calc-btn num" data-k="4">4</button>
+            <button class="calc-btn num" data-k="5">5</button>
+            <button class="calc-btn num" data-k="6">6</button>
+            <button class="calc-btn op" data-k="minus">−</button>
+            <button class="calc-btn num" data-k="1">1</button>
+            <button class="calc-btn num" data-k="2">2</button>
+            <button class="calc-btn num" data-k="3">3</button>
+            <button class="calc-btn op" data-k="plus">+</button>
+            <button class="calc-btn num" data-k="neg">±</button>
+            <button class="calc-btn num" data-k="0">0</button>
+            <button class="calc-btn num" data-k="dot">.</button>
+            <button class="calc-btn eq" data-k="equals">=</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- APP 2: Real Game Window (Minesweeper) -->
+      <div class="window hidden" id="win-game" style="width: 440px; height: 530px; top: 80px; left: 380px;" data-app="game">
+        <div class="window-titlebar">
+          <div class="titlebar-left">
+            <span class="titlebar-icon">🎮</span>
+            <span class="titlebar-title">지뢰찾기 (Minesweeper Classic)</span>
+          </div>
+          <div class="titlebar-controls">
+            <button class="win-btn btn-min" data-action="min">─</button>
+            <button class="win-btn btn-max" data-action="max">□</button>
+            <button class="win-btn btn-close" data-action="close">✕</button>
+          </div>
+        </div>
+        <div class="window-content game-window-content">
+          <div class="minesweeper-header">
+            <div class="mine-digit-box" id="mine-count-display">010</div>
+            <button class="face-btn" id="btn-mine-restart" title="새 게임 시작">🙂</button>
+            <div class="mine-digit-box" id="mine-timer-display">000</div>
+          </div>
+          <div class="minesweeper-board-wrapper">
+            <div class="minesweeper-board" id="minesweeper-board">
+              <!-- Dynamically populated 9x9 cells -->
+            </div>
+          </div>
+          <div class="minesweeper-footer">
+            <span>🖱️ <strong>좌클릭</strong>: 칸 열기 | <strong>우클릭</strong>: 깃발(🚩) 꽂기</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- APP 3: Coupang Window (쿠팡 쇼핑 앱) -->
+      <div class="window hidden" id="win-coupang" style="width: 720px; height: 560px; top: 60px; left: 240px;" data-app="coupang">
+        <div class="window-titlebar">
+          <div class="titlebar-left">
+            <span class="titlebar-icon">🛍️</span>
+            <span class="titlebar-title">쿠팡 (Coupang) - 로켓배송 온라인 스토어</span>
+          </div>
+          <div class="titlebar-controls">
+            <button class="win-btn btn-min" data-action="min">─</button>
+            <button class="win-btn btn-max" data-action="max">□</button>
+            <button class="win-btn btn-close" data-action="close">✕</button>
+          </div>
+        </div>
+        <div class="window-content coupang-window-content">
+          <header class="coupang-app-header">
+            <div class="coupang-logo-text">coupang <span class="rocket-pill">🚀 로켓배송</span></div>
+            <div class="coupang-search-bar">
+              <input type="text" id="coupang-search-input" placeholder="찾고 싶은 상품을 검색해보세요! (예: 라면, 맥북, 간식, 닌텐도)">
+              <button id="btn-coupang-search">🔍</button>
+            </div>
+            <div class="coupang-cart-badge" id="btn-view-cart">
+              🛒 장바구니 <strong id="coupang-cart-count">0</strong>
+            </div>
+          </header>
+
+          <div class="coupang-product-banner">
+            <span>🎉 [오늘의 와우 특가] 전 상품 무료배송 & 내일 새벽 도착 보장!</span>
+          </div>
+
+          <div class="coupang-product-grid" id="coupang-product-grid">
+            <!-- Dynamically populated cards -->
+          </div>
+        </div>
+      </div>
+
+      <!-- APP 4: Google Chrome Window (구글 검색) -->
+      <div class="window hidden" id="win-google" style="width: 760px; height: 580px; top: 50px; left: 200px;" data-app="google">
+        <div class="window-titlebar">
+          <div class="titlebar-left">
+            <span class="titlebar-icon">🌐</span>
+            <span class="titlebar-title">Google 크롬 - 빠른 웹 검색</span>
+          </div>
+          <div class="titlebar-controls">
+            <button class="win-btn btn-min" data-action="min">─</button>
+            <button class="win-btn btn-max" data-action="max">□</button>
+            <button class="win-btn btn-close" data-action="close">✕</button>
+          </div>
+        </div>
+        <div class="window-content google-window-content">
+          <div class="browser-address-bar">
+            <button class="nav-btn">◀</button>
+            <button class="nav-btn">▶</button>
+            <button class="nav-btn" id="btn-google-reload">🔄</button>
+            <div class="url-input-box">
+              <span class="url-lock">🔒</span>
+              <span class="url-text">https://www.google.com</span>
+            </div>
+          </div>
+
+          <!-- Google Home View -->
+          <div class="google-home-view" id="google-home-view">
+            <div class="google-logo">
+              <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+            </div>
+            <div class="google-search-form">
+              <div class="google-input-box">
+                <span class="g-search-icon">🔍</span>
+                <input type="text" id="google-query-input" placeholder="Google 검색 또는 URL 입력" autocomplete="off">
+                <span class="g-mic-icon">🎙️</span>
+              </div>
+              <div class="google-btns-row">
+                <button id="btn-google-search" class="g-btn">Google 검색</button>
+                <button id="btn-google-lucky" class="g-btn">I'm Feeling Lucky</button>
+              </div>
+            </div>
+            <div class="google-quick-links">
+              <button class="quick-chip" data-q="쌈뽕 미니게임 천국">🎮 쌈뽕 미니게임</button>
+              <button class="quick-chip" data-q="오늘의 실시간 날씨">⛅ 오늘 날씨</button>
+              <button class="quick-chip" data-q="지뢰찾기 필승 공략">💣 지뢰찾기 공략</button>
+              <button class="quick-chip" data-q="숫자 67 비밀 연구">⭐ 숫자 67 찬양</button>
+            </div>
+          </div>
+
+          <!-- Google Search Results View -->
+          <div class="google-results-view hidden" id="google-results-view">
+            <div class="results-header-bar">
+              <div class="small-google-logo" id="btn-back-to-google-home">
+                <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+              </div>
+              <input type="text" id="google-results-input" class="results-search-input">
+              <button id="btn-results-search" class="results-search-btn">🔍</button>
+            </div>
+            <div class="results-tabs">
+              <span class="tab active">전체</span>
+              <span class="tab">이미지</span>
+              <span class="tab">뉴스</span>
+              <span class="tab">동영상</span>
+              <span class="tab">쇼핑</span>
+            </div>
+            <div class="results-container" id="google-results-list">
+              <!-- Dynamically populated search items -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APP 5: User Custom Vault (사용자 지정 & 보안 금고) -->
+      <div class="window hidden" id="win-vault" style="width: 650px; height: 530px; top: 100px; left: 300px;" data-app="vault">
+        <div class="window-titlebar">
+          <div class="titlebar-left">
+            <span class="titlebar-icon">🔒</span>
+            <span class="titlebar-title">사용자 지정 (보안 인증 및 VIP 제어판)</span>
+          </div>
+          <div class="titlebar-controls">
+            <button class="win-btn btn-min" data-action="min">─</button>
+            <button class="win-btn btn-max" data-action="max">□</button>
+            <button class="win-btn btn-close" data-action="close">✕</button>
+          </div>
+        </div>
+        <div class="window-content vault-window-content">
+          <!-- Password Lock Panel inside App -->
+          <div class="vault-auth-view" id="vault-auth-view">
+            <div class="vault-lock-icon">🔐</div>
+            <h3>사용자 지정 보안 잠금</h3>
+            <p>보안 관리자 전용 VIP 제어판입니다. 인증 비밀번호를 입력하면 새로운 관리자 창이 열립니다.</p>
+            <div class="vault-input-row">
+              <input type="password" id="vault-pwd-input" placeholder="비밀번호 11자리 입력 (힌트: 123...)" maxlength="20">
+              <button id="btn-vault-unlock" class="btn-primary">잠금 해제</button>
+            </div>
+            <div class="vault-msg" id="vault-auth-msg">비밀번호는 <code>12345678967</code> 입니다.</div>
+          </div>
+
+          <!-- Unlocked Secret VIP Console -->
+          <div class="vault-vip-view hidden" id="vault-vip-view">
+            <div class="vip-banner">
+              <h2>👑 쌈뽕 윈도우 VIP 관리자 콘솔</h2>
+              <span class="badge-success">인증 완료 (비밀번호: 12345678967)</span>
+            </div>
+
+            <div class="vip-sections-grid">
+              <!-- Custom Wallpaper -->
+              <div class="vip-card">
+                <h4>🖼️ 데스크톱 배경화면 변경</h4>
+                <div class="wallpaper-options">
+                  <button class="wp-btn active" data-theme="theme-bloom">🌸 윈도우11 기본 Bloom</button>
+                  <button class="wp-btn" data-theme="theme-dark">🌌 네온 사이버 다크</button>
+                  <button class="wp-btn" data-theme="theme-bliss">🏞️ 윈도우 XP 푸른 초원</button>
+                  <button class="wp-btn" data-theme="theme-galaxy">🌠 환상의 우주 은하수</button>
+                </div>
+              </div>
+
+              <!-- System Cheats & Tools -->
+              <div class="vip-card">
+                <h4>⚡ 시스템 치트 & 이스터에그</h4>
+                <div class="cheat-actions">
+                  <button id="btn-cheat-minesweeper" class="btn-tool">💣 지뢰찾기 투시경 치트</button>
+                  <button id="btn-cheat-coupang" class="btn-tool">💰 쿠팡 무한 머니 (+500만원)</button>
+                  <button id="btn-cheat-calc" class="btn-tool">🧮 계산기 황금 네온 스킨</button>
+                  <button id="btn-cheat-praise" class="btn-tool">⭐ 전설의 67 찬양 모드</button>
+                </div>
+              </div>
+
+              <!-- Sound Effects Controller -->
+              <div class="vip-card">
+                <h4>🔊 시스템 사운드 볼륨</h4>
+                <div class="volume-slider-box">
+                  <label>효과음 음량: <span id="vip-vol-val">100%</span></label>
+                  <input type="range" id="vip-slider-volume" min="0" max="100" value="100">
+                </div>
+                <button id="btn-test-chime" class="btn-sub">🔔 윈도우 시작음 테스트</button>
+              </div>
+
+              <!-- Lock / Relock -->
+              <div class="vip-card">
+                <h4>🔐 세션 보안</h4>
+                <p>작업 완료 후 콘솔을 다시 잠그거나 잠금화면으로 즉시 전환합니다.</p>
+                <div class="btn-row">
+                  <button id="btn-relock-vault" class="btn-danger">🔒 VIP 콘솔 다시 잠그기</button>
+                  <button id="btn-lock-system" class="btn-sub">🖥️ 윈도우 전체 잠금</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APP 6: Recycle Bin (휴지통) -->
+      <div class="window hidden" id="win-trash" style="width: 580px; height: 460px; top: 110px; left: 220px;" data-app="trash">
+        <div class="window-titlebar">
+          <div class="titlebar-left">
+            <span class="titlebar-icon">🗑️</span>
+            <span class="titlebar-title">휴지통</span>
+          </div>
+          <div class="titlebar-controls">
+            <button class="win-btn btn-min" data-action="min">─</button>
+            <button class="win-btn btn-max" data-action="max">□</button>
+            <button class="win-btn btn-close" data-action="close">✕</button>
+          </div>
+        </div>
+        <div class="window-content trash-window-content">
+          <div class="trash-toolbar">
+            <button id="btn-empty-trash" class="trash-btn">🗑️ 휴지통 비우기</button>
+            <button id="btn-restore-trash" class="trash-btn">🔄 모든 항목 복원</button>
+            <span class="trash-status" id="trash-item-count">항목 4개</span>
+          </div>
+          <div class="trash-list" id="trash-list">
+            <!-- Dynamically populated deleted items -->
+          </div>
+        </div>
+      </div>
+
+      <!-- APP 7: Windows Update (윈도우 업데이트) -->
+      <div class="window hidden" id="win-update" style="width: 620px; height: 480px; top: 90px; left: 260px;" data-app="update">
+        <div class="window-titlebar">
+          <div class="titlebar-left">
+            <span class="titlebar-icon">🔄</span>
+            <span class="titlebar-title">설정 - Windows 업데이트</span>
+          </div>
+          <div class="titlebar-controls">
+            <button class="win-btn btn-min" data-action="min">─</button>
+            <button class="win-btn btn-max" data-action="max">□</button>
+            <button class="win-btn btn-close" data-action="close">✕</button>
+          </div>
+        </div>
+        <div class="window-content update-window-content">
+          <div class="update-header-box">
+            <div class="update-icon-large">🔄</div>
+            <div>
+              <h3>Windows 업데이트</h3>
+              <p id="update-status-desc">최신 업데이트 상태입니다 (2026-11 업데이트).</p>
+            </div>
+          </div>
+
+          <div class="update-action-box">
+            <button id="btn-check-updates" class="btn-primary">업데이트 확인</button>
+            <button id="btn-trigger-restart" class="btn-danger hidden">지금 다시 시작하여 업데이트 설치</button>
+          </div>
+
+          <div class="update-progress-card hidden" id="update-progress-card">
+            <div class="progress-title-row">
+              <span id="update-progress-label">업데이트 패키지 다운로드 및 설치 중...</span>
+              <span id="update-progress-percent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="update-progress-bar"></div>
+            </div>
+            <p class="update-note">패키지: Windows 11 SsamPong 2026 Feature Update (KB50676767)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- APP 8: Notepad (메모장) -->
+      <div class="window hidden" id="win-notepad" style="width: 520px; height: 420px; top: 120px; left: 280px;" data-app="notepad">
+        <div class="window-titlebar">
+          <div class="titlebar-left">
+            <span class="titlebar-icon">📝</span>
+            <span class="titlebar-title" id="notepad-title">제목 없음 - 메모장</span>
+          </div>
+          <div class="titlebar-controls">
+            <button class="win-btn btn-min" data-action="min">─</button>
+            <button class="win-btn btn-max" data-action="max">□</button>
+            <button class="win-btn btn-close" data-action="close">✕</button>
+          </div>
+        </div>
+        <div class="window-content notepad-window-content">
+          <div class="notepad-menu-bar">
+            <span id="btn-notepad-save">파일(F) / 저장</span>
+            <span id="btn-notepad-clear">새로 만들기(N)</span>
+          </div>
+          <textarea id="notepad-textarea" placeholder="여기에 메모를 입력하세요..."></textarea>
+          <div class="notepad-status-bar">
+            <span id="notepad-line-col">줄 1, 열 1</span>
+            <span>UTF-8 | Windows (CRLF)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. Windows Taskbar (작업 표시줄) -->
+    <div class="taskbar" id="taskbar">
+      <!-- Left: Widgets / Mini Weather -->
+      <div class="taskbar-left">
+        <div class="widget-weather" id="widget-weather" title="오늘의 날씨">
+          <span class="weather-icon">⛅</span>
+          <span class="weather-temp">18°C 맑음</span>
+        </div>
+      </div>
+
+      <!-- Center: Start Button & App Icons -->
+      <div class="taskbar-center">
+        <!-- Windows 11 Start Logo Button -->
+        <button class="taskbar-btn start-logo-btn" id="btn-start" title="시작">
+          <div class="win-logo-grid">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </button>
+
+        <!-- Search Icon Button -->
+        <button class="taskbar-btn" id="btn-taskbar-search" title="검색">
+          <span class="tb-icon">🔍</span>
+        </button>
+
+        <!-- Pinned / Active App Buttons -->
+        <button class="taskbar-btn" data-app="trash" title="휴지통">
+          <span class="tb-icon">🗑️</span>
+        </button>
+        <button class="taskbar-btn" data-app="calc" title="계산기">
+          <span class="tb-icon">🧮</span>
+        </button>
+        <button class="taskbar-btn" data-app="game" title="지뢰찾기">
+          <span class="tb-icon">🎮</span>
+        </button>
+        <button class="taskbar-btn" data-app="coupang" title="쿠팡">
+          <span class="tb-icon">🛍️</span>
+        </button>
+        <button class="taskbar-btn" data-app="google" title="구글 크롬">
+          <span class="tb-icon">🌐</span>
+        </button>
+        <button class="taskbar-btn" data-app="vault" title="사용자 지정">
+          <span class="tb-icon">🔒</span>
+        </button>
+        <button class="taskbar-btn" data-app="update" title="윈도우 업데이트">
+          <span class="tb-icon">🔄</span>
+        </button>
+        <button class="taskbar-btn" data-app="notepad" title="메모장">
+          <span class="tb-icon">📝</span>
+        </button>
+      </div>
+
+      <!-- Right: System Tray (Tray, Clock, Notification) -->
+      <div class="taskbar-right">
+        <div class="tray-icons">
+          <span class="tray-icon" title="인터넷 연결됨">📶</span>
+          <span class="tray-icon" title="스피커 100%">🔊</span>
+          <span class="tray-icon" title="배터리 100% 충전됨">🔋</span>
+        </div>
+
+        <!-- Real Live Clock & Date Button -->
+        <div class="taskbar-clock-btn" id="btn-taskbar-clock" title="달력 및 알림 보기">
+          <div class="tb-time" id="taskbar-time">00:00:00</div>
+          <div class="tb-date" id="taskbar-date">2026-11-11</div>
+        </div>
+
+        <!-- Notification Bell -->
+        <button class="taskbar-btn bell-btn" id="btn-taskbar-bell" title="알림 센터">
+          <span class="tb-icon">🔔</span>
+        </button>
+
+        <!-- Show Desktop Edge Strip -->
+        <div class="show-desktop-strip" id="btn-show-desktop" title="바탕 화면 보기"></div>
+      </div>
+    </div>
+
+    <!-- 4. Start Menu Flyout -->
+    <div class="start-menu hidden" id="start-menu">
+      <div class="start-search-box">
+        <span class="search-ico">🔍</span>
+        <input type="text" id="start-search-input" placeholder="앱, 설정, 문서 검색..." autocomplete="off">
+      </div>
+
+      <div class="start-section-title">
+        <span>고정됨 (Pinned)</span>
+        <button class="btn-all-apps" id="btn-all-apps">모든 앱 ➔</button>
+      </div>
+
+      <div class="start-pinned-grid">
+        <div class="start-app-item" data-app="calc">
+          <span class="app-emoji">🧮</span>
+          <span class="app-text">계산기</span>
+        </div>
+        <div class="start-app-item" data-app="game">
+          <span class="app-emoji">🎮</span>
+          <span class="app-text">지뢰찾기</span>
+        </div>
+        <div class="start-app-item" data-app="coupang">
+          <span class="app-emoji">🛍️</span>
+          <span class="app-text">쿠팡</span>
+        </div>
+        <div class="start-app-item" data-app="google">
+          <span class="app-emoji">🌐</span>
+          <span class="app-text">구글 크롬</span>
+        </div>
+        <div class="start-app-item" data-app="vault">
+          <span class="app-emoji">🔒</span>
+          <span class="app-text">사용자 지정</span>
+        </div>
+        <div class="start-app-item" data-app="update">
+          <span class="app-emoji">🔄</span>
+          <span class="app-text">업데이트</span>
+        </div>
+        <div class="start-app-item" data-app="trash">
+          <span class="app-emoji">🗑️</span>
+          <span class="app-text">휴지통</span>
+        </div>
+        <div class="start-app-item" data-app="notepad">
+          <span class="app-emoji">📝</span>
+          <span class="app-text">메모장</span>
+        </div>
+      </div>
+
+      <div class="start-section-title">
+        <span>맞춤 추천 (Recommended)</span>
+      </div>
+
+      <div class="start-rec-list">
+        <div class="start-rec-item" data-app="vault">
+          <span class="rec-icon">🔑</span>
+          <div class="rec-texts">
+            <span class="rec-name">사용자지정_보안인증_가이드.txt</span>
+            <span class="rec-desc">비밀번호는 12345678967 입니다</span>
+          </div>
+        </div>
+        <div class="start-rec-item" data-app="coupang">
+          <span class="rec-icon">📦</span>
+          <div class="rec-texts">
+            <span class="rec-name">로켓배송_주문내역.pdf</span>
+            <span class="rec-desc">방금 전 쿠팡 쇼핑몰</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="start-bottom-bar">
+        <div class="user-info">
+          <span class="user-mini-avatar">👤</span>
+          <span class="user-mini-name">선우 (SsamPong)</span>
+        </div>
+        <div class="power-menu-wrapper">
+          <button class="btn-power" id="btn-power" title="전원 옵션">⏻</button>
+          <div class="power-popup hidden" id="power-popup">
+            <div class="power-option" id="btn-opt-lock">🔒 잠금 (Lock)</div>
+            <div class="power-option" id="btn-opt-restart">🔄 다시 시작 (Restart)</div>
+            <div class="power-option" id="btn-opt-shutdown">⏻ 시스템 종료</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Calendar Flyout -->
+    <div class="calendar-flyout hidden" id="calendar-flyout">
+      <div class="calendar-clock-header">
+        <div class="cal-time" id="cal-big-time">00:00:00</div>
+        <div class="cal-date" id="cal-big-date">2026년 11월 11일 수요일</div>
+      </div>
+      <div class="calendar-month-grid" id="calendar-grid">
+        <!-- Real Monthly Calendar Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- 6. Notifications Toast Popup -->
+    <div class="win-toast hidden" id="win-toast">
+      <div class="toast-icon" id="toast-icon">ℹ️</div>
+      <div class="toast-body">
+        <strong id="toast-title">Windows 알림</strong>
+        <p id="toast-desc">메시지 내용입니다.</p>
+      </div>
+    </div>
+
+    <!-- 7. Windows Update Blue Screen Simulation -->
+    <div class="bsod-update-screen hidden" id="bsod-update-screen">
+      <div class="update-spinner"></div>
+      <h2>Windows 업데이트 작업 중입니다</h2>
+      <p id="bsod-percent-text">78% 완료됨. 컴퓨터를 끄지 마십시오.</p>
+      <small class="bsod-note">업데이트 중 컴퓨터가 여러 번 다시 시작될 수 있습니다.</small>
+    </div>
+  </div>
+
+  <script src="system.js"></script>
+</body>
+</html>
