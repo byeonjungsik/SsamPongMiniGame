@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>♟️ 쌈뽕 체스 (SsamPong Chess) - 실시간 AI 대결 & 승률 분석</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Canvas Confetti for Victory Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="theme-green">
+  <div class="chess-app-container">
+
+    <!-- Top Navigation & Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <a href="../index.html" class="nav-back-btn">🏠 게임 허브</a>
+        <h1 class="game-logo">♟️ 쌈뽕 체스 <span class="logo-badge">CHESS</span></h1>
+      </div>
+      <div class="header-right">
+        <!-- Board Theme Picker -->
+        <div class="theme-picker-group">
+          <span class="picker-label">🎨 테마:</span>
+          <button class="theme-pill active" data-theme="theme-green" title="클래식 그린">🌿 그린</button>
+          <button class="theme-pill" data-theme="theme-wood" title="로열 우드">🪵 우드</button>
+          <button class="theme-pill" data-theme="theme-neon" title="사이버 네온">🌌 네온</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Settings Bar -->
+    <section class="settings-bar">
+      <!-- Game Mode -->
+      <div class="setting-item">
+        <label>🎮 모드</label>
+        <div class="pill-group">
+          <button id="mode-ai" class="pill-btn active" data-mode="ai">🤖 AI 대결</button>
+          <button id="mode-2p" class="pill-btn" data-mode="2p">👥 2인 대전</button>
+        </div>
+      </div>
+
+      <!-- AI Difficulty (Only active in AI mode) -->
+      <div class="setting-item" id="setting-diff">
+        <label>🎯 AI 난이도</label>
+        <div class="pill-group">
+          <button class="diff-btn" data-diff="easy">🌱 쉬움</button>
+          <button class="diff-btn active" data-diff="normal">⚡ 중간</button>
+          <button class="diff-btn hard" data-diff="hard">🔥 어려움</button>
+        </div>
+      </div>
+
+      <!-- Side Selection (White / Black) -->
+      <div class="setting-item" id="setting-side">
+        <label>⚪⚫ 내 진영</label>
+        <div class="pill-group">
+          <button class="side-btn active" data-side="w">⚪ 백 (선공)</button>
+          <button class="side-btn" data-side="b">⚫ 흑 (후공)</button>
+        </div>
+      </div>
+
+      <!-- Clock / Timer -->
+      <div class="setting-item">
+        <label>⏱️ 시간 제한</label>
+        <div class="pill-group">
+          <button class="time-btn active" data-time="0">무제한</button>
+          <button class="time-btn" data-time="180">3분</button>
+          <button class="time-btn" data-time="300">5분</button>
+          <button class="time-btn" data-time="600">10분</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Game Arena -->
+    <main class="game-arena">
+
+      <!-- 1. Left: Live Evaluation Bar (승률 게이지) -->
+      <aside class="eval-bar-wrapper" id="eval-bar-wrapper">
+        <div class="eval-bar-container">
+          <div class="eval-bar-black" id="eval-bar-black"></div>
+          <div class="eval-bar-white" id="eval-bar-white"></div>
+        </div>
+        <div class="eval-value-label" id="eval-value-label">50%</div>
+      </aside>
+
+      <!-- 2. Center: Chess Board Column -->
+      <section class="board-column">
+
+        <!-- Top Opponent Player Bar -->
+        <div class="player-bar top-player" id="top-player-bar">
+          <div class="player-profile">
+            <div class="player-avatar" id="top-avatar">🤖</div>
+            <div class="player-info">
+              <div class="player-name-row">
+                <span class="player-name" id="top-name">알파쌈뽕 (AI 중간)</span>
+                <span class="player-tag" id="top-color-tag">⚫ 흑</span>
+              </div>
+              <div class="captured-box" id="top-captured">
+                <!-- Captured piece icons -->
+              </div>
+            </div>
+          </div>
+          <div class="player-clock-box">
+            <span class="player-clock" id="top-clock">--:--</span>
+          </div>
+        </div>
+
+        <!-- The 8x8 Chessboard Container -->
+        <div class="board-wrapper">
+          <div class="board" id="chessboard">
+            <!-- 64 Squares dynamically rendered -->
+          </div>
+        </div>
+
+        <!-- Bottom Player Bar -->
+        <div class="player-bar bottom-player" id="bottom-player-bar">
+          <div class="player-profile">
+            <div class="player-avatar" id="bottom-avatar">😎</div>
+            <div class="player-info">
+              <div class="player-name-row">
+                <span class="player-name" id="bottom-name">선우 (플레이어)</span>
+                <span class="player-tag" id="bottom-color-tag">⚪ 백</span>
+              </div>
+              <div class="captured-box" id="bottom-captured">
+                <!-- Captured piece icons -->
+              </div>
+            </div>
+          </div>
+          <div class="player-clock-box">
+            <span class="player-clock" id="bottom-clock">--:--</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 3. Right: Control Panel, Evaluation & Move History -->
+      <aside class="info-column">
+
+        <!-- Turn & Game Status Banner -->
+        <div class="status-card" id="status-card">
+          <div class="turn-indicator">
+            <span class="turn-dot white" id="turn-dot"></span>
+            <span class="turn-text" id="turn-text">⚪ 백의 차례입니다</span>
+          </div>
+          <div class="check-alert hidden" id="check-alert">⚠️ 체크! (Check)</div>
+        </div>
+
+        <!-- Evaluation Score Card -->
+        <div class="eval-card">
+          <div class="eval-title-row">
+            <span>📊 AI 실시간 형세 분석</span>
+            <span class="eval-score-badge" id="eval-score-text">+0.0</span>
+          </div>
+          <div class="eval-progress">
+            <div class="eval-fill" id="eval-fill-bar" style="width: 50%;"></div>
+          </div>
+          <div class="eval-details-row">
+            <span id="eval-white-pct">⚪ 백: 50%</span>
+            <span id="eval-black-pct">⚫ 흑: 50%</span>
+          </div>
+        </div>
+
+        <!-- Move History Box -->
+        <div class="history-card">
+          <div class="history-header">
+            <span>📜 기보 기록 (Move List)</span>
+            <span class="history-count" id="move-count-badge">0수</span>
+          </div>
+          <div class="history-list" id="history-list">
+            <!-- Dynamic notation rows (e.g. 1. e4 e5) -->
+          </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="action-buttons-grid">
+          <button id="btn-undo" class="action-btn" title="한 수 무르기">
+            <span class="btn-icon">↩️</span>
+            <span>무르기</span>
+          </button>
+          <button id="btn-hint" class="action-btn" title="AI 최선의 수 힌트">
+            <span class="btn-icon">💡</span>
+            <span>힌트</span>
+          </button>
+          <button id="btn-flip" class="action-btn" title="보드 위아래 뒤집기">
+            <span class="btn-icon">🔄</span>
+            <span>보드 회전</span>
+          </button>
+          <button id="btn-restart" class="action-btn primary" title="새 게임 시작">
+            <span class="btn-icon">🔁</span>
+            <span>새 게임</span>
+          </button>
+        </div>
+
+      </aside>
+
+    </main>
+
+  </div>
+
+  <!-- Pawn Promotion Modal -->
+  <div class="modal-overlay hidden" id="promotion-modal">
+    <div class="promotion-dialog">
+      <h3>👑 폰 프로모션 (승급)</h3>
+      <p>원하는 기물을 선택하세요:</p>
+      <div class="promotion-pieces-grid" id="promo-pieces">
+        <button class="promo-btn" data-piece="Q" title="퀸 (Queen)">
+          <div class="promo-icon" id="promo-q"></div>
+          <span>퀸 (Queen)</span>
+        </button>
+        <button class="promo-btn" data-piece="R" title="룩 (Rook)">
+          <div class="promo-icon" id="promo-r"></div>
+          <span>룩 (Rook)</span>
+        </button>
+        <button class="promo-btn" data-piece="B" title="비숍 (Bishop)">
+          <div class="promo-icon" id="promo-b"></div>
+          <span>비숍 (Bishop)</span>
+        </button>
+        <button class="promo-btn" data-piece="N" title="나이트 (Knight)">
+          <div class="promo-icon" id="promo-n"></div>
+          <span>나이트 (Knight)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div class="modal-overlay hidden" id="game-over-modal">
+    <div class="game-over-dialog">
+      <div class="game-over-trophy" id="game-over-icon">🏆</div>
+      <h2 id="game-over-title">체크메이트!</h2>
+      <p id="game-over-desc">백(선우)의 승리입니다!</p>
+      <div class="game-over-stats" id="game-over-stats">
+        <div>총 수: <strong id="stat-total-moves">0</strong>수</div>
+        <div>소요 시간: <strong id="stat-time">0:00</strong></div>
+      </div>
+      <div class="game-over-btns">
+        <button id="btn-modal-restart" class="btn-primary">🔁 새 게임 하기</button>
+        <button id="btn-modal-review" class="btn-secondary">🔍 기보 복기하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="chess.js"></script>
+</body>
+</html>
