@@ -328,21 +328,21 @@
         <div class="window-content vault-window-content">
           <!-- Password Lock Panel inside App -->
           <div class="vault-auth-view" id="vault-auth-view">
-            <div class="vault-lock-icon">🔐</div>
-            <h3>사용자 지정 보안 인증</h3>
-            <p>비밀번호를 입력하면 사용자 지정 VIP 제어판 창이 열립니다.</p>
+            <div class="vault-lock-icon">🛡️</div>
+            <h3>[CLASSIFIED] 1급 기밀 보안 터미널</h3>
+            <p>인가된 관리자 보안 마스터키를 입력하십시오. (접근 기록이 실시간으로 로깅됩니다.)</p>
             <div class="vault-input-row">
-              <input type="password" id="vault-pwd-input" placeholder="비밀번호 11자리 입력 (힌트: 123...)" maxlength="25" autocomplete="off">
-              <button id="btn-vault-unlock" class="btn-primary">확인 (잠금 해제)</button>
+              <input type="password" id="vault-pwd-input" placeholder="보안 마스터키 입력..." maxlength="25" autocomplete="off">
+              <button id="btn-vault-unlock" class="btn-primary">액세스 승인 요청</button>
             </div>
-            <div class="vault-msg" id="vault-auth-msg">💡 힌트: 지정된 비밀번호 <code>12345678967</code> 입력 후 엔터</div>
+            <div class="vault-msg" id="vault-auth-msg">⚠️ 보안 경고: 비인가자의 무단 접근 시도 시 시스템이 잠금 처리될 수 있습니다.</div>
           </div>
 
           <!-- Unlocked Secret VIP Console -->
           <div class="vault-vip-view hidden" id="vault-vip-view">
             <div class="vip-banner">
               <h2>👑 사용자 지정 VIP 관리자 제어판</h2>
-              <span class="badge-success">인증 완료 (비밀번호: 12345678967)</span>
+              <span class="badge-success">인증 완료 (보안 등급: 최고 관리자 Class-S)</span>
             </div>
 
             <div class="vip-sections-grid">
@@ -566,10 +566,10 @@
 
       <div class="start-rec-list">
         <div class="start-rec-item" data-app="vault">
-          <span class="rec-icon">🔑</span>
+          <span class="rec-icon">📁</span>
           <div class="rec-texts">
-            <span class="rec-name">사용자지정_보안인증_가이드.txt</span>
-            <span class="rec-desc">비밀번호는 12345678967 입니다</span>
+            <span class="rec-name">기밀_프로토콜_지침서.enc</span>
+            <span class="rec-desc">[암호화됨] 인가된 관리자 마스터키 필요</span>
           </div>
         </div>
         <div class="start-rec-item" data-app="coupang">

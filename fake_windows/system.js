@@ -1094,7 +1094,7 @@
         SOUNDS.error();
         pwdInput.classList.add('shake');
         setTimeout(() => pwdInput.classList.remove('shake'), 400);
-        showToast('인증 실패', '비밀번호가 올바르지 않습니다. (힌트: 12345678967)', '❌');
+        showToast('접근 거부 (403 Forbidden)', '보안 마스터키가 일치하지 않습니다. (인가되지 않은 접근 시도 감지)', '⛔');
       }
     }
 
@@ -1174,7 +1174,7 @@
       { name: '기말고사_공부자료_최종.pdf', date: '2026-11-10', size: '4.2 MB', icon: '📄' },
       { name: '인터넷_익스플로러_구버전.exe', date: '2026-11-09', size: '18.5 MB', icon: '💾' },
       { name: '숙제_진짜_진짜_final.docx', date: '2026-11-08', size: '512 KB', icon: '📝' },
-      { name: '비밀번호_모음_1234.txt', date: '2026-11-07', size: '12 KB', icon: '🔑' }
+      { name: '손상된_보안_로그_백업.log', date: '2026-11-07', size: '12 KB', icon: '🔒' }
     ];
 
     function renderTrash() {
@@ -1215,7 +1215,7 @@
         { name: '기말고사_공부자료_최종.pdf', date: '2026-11-10', size: '4.2 MB', icon: '📄' },
         { name: '인터넷_익스플로러_구버전.exe', date: '2026-11-09', size: '18.5 MB', icon: '💾' },
         { name: '숙제_진짜_진짜_final.docx', date: '2026-11-08', size: '512 KB', icon: '📝' },
-        { name: '비밀번호_모음_1234.txt', date: '2026-11-07', size: '12 KB', icon: '🔑' }
+        { name: '손상된_보안_로그_백업.log', date: '2026-11-07', size: '12 KB', icon: '🔒' }
       ];
       renderTrash();
       showToast('휴지통', '모든 항목이 복원되었습니다.');
