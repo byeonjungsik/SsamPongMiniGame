@@ -444,9 +444,11 @@ body {
   filter: brightness(1.2);
 }
 
-.cell:active:not(.opened) {
-  border: 1px solid var(--tile-opened-border);
-  background: var(--tile-opened-bg);
+.cell:active:not(.opened),
+.cell.depressed:not(.opened):not(.flagged) {
+  border: 1px solid var(--tile-opened-border) !important;
+  background: var(--tile-opened-bg) !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5) !important;
 }
 
 /* Cell Opened State */

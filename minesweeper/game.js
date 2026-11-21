@@ -492,6 +492,35 @@
     bestScoreDisplayEl.textContent = bestTime ? `${bestTime}초` : '--초';
   }
 
+  // Chording & Both-Click tracking
+  let isChording = false;
+  let chordTarget = null;
+  let suppressClick = false;
+  let suppressContext = false;
+
+  function setDepressedNeighbors(r, c, apply) {
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+          const cell = board[nr][nc];
+          if (!cell.isOpen && !cell.isFlagged) {
+            const el = mineBoardEl.querySelector(`.cell[data-r="${nr}"][data-c="${nc}"]`);
+            if (el) {
+              if (apply) el.classList.add('depressed');
+              else el.classList.remove('depressed');
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function clearAllDepressed() {
+    const depressedEls = mineBoardEl.querySelectorAll('.cell.depressed');
+    depressedEls.forEach(el => el.classList.remove('depressed'));
+  }
+
   // --- 10. DOM Board Rendering ---
   function renderBoard() {
     mineBoardEl.style.gridTemplateColumns = `repeat(${cols}, 32px)`;
@@ -529,15 +558,75 @@
           }
         }
 
-        // Mouse Down Face Reaction
+        // Mouse Down (Handling Left, Right, Both, and Middle click)
         cellEl.addEventListener('mousedown', (e) => {
-          if (e.button === 0 && gameState !== 'WON' && gameState !== 'LOST' && !cell.isOpen) {
+          if (gameState === 'WON' || gameState === 'LOST') return;
+
+          const isBoth = (e.buttons === 3) || ((e.buttons & 1) && (e.buttons & 2));
+          const isMiddle = (e.button === 1) || (e.buttons === 4);
+
+          if (isBoth || isMiddle) {
+            e.preventDefault();
+            isChording = true;
+            suppressClick = true;
+            suppressContext = true;
+            chordTarget = { r, c };
+            clearAllDepressed();
+            setDepressedNeighbors(r, c, true);
+            faceEmojiEl.textContent = '😮';
+            return;
+          }
+
+          if (e.button === 0) {
             faceEmojiEl.textContent = '😮';
           }
         });
 
-        // Mouse Events
+        // Mouse Enter (Move chord target if holding both buttons)
+        cellEl.addEventListener('mouseenter', (e) => {
+          if (isChording && (e.buttons === 3 || e.buttons === 4 || ((e.buttons & 1) && (e.buttons & 2)))) {
+            chordTarget = { r, c };
+            clearAllDepressed();
+            setDepressedNeighbors(r, c, true);
+          }
+        });
+
+        cellEl.addEventListener('mouseleave', () => {
+          if (isChording) {
+            clearAllDepressed();
+          }
+        });
+
+        // Mouse Up on cell
+        cellEl.addEventListener('mouseup', (e) => {
+          if (isChording) {
+            clearAllDepressed();
+            if (gameState !== 'WON' && gameState !== 'LOST') faceEmojiEl.textContent = '😊';
+            if (chordTarget) {
+              const targetCell = board[chordTarget.r][chordTarget.c];
+              if (targetCell.isOpen && targetCell.count > 0) {
+                performChord(chordTarget.r, chordTarget.c);
+              }
+            }
+            isChording = false;
+            chordTarget = null;
+            suppressClick = true;
+            suppressContext = true;
+            setTimeout(() => {
+              suppressClick = false;
+              suppressContext = false;
+            }, 120);
+            return;
+          }
+        });
+
+        // Click Event
         cellEl.addEventListener('click', (e) => {
+          if (suppressClick) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
           if (gameState === 'WON' || gameState === 'LOST') return;
           if (touchMode === 'flag') {
             toggleFlag(r, c);
@@ -550,8 +639,10 @@
           }
         });
 
+        // Context Menu (Right Click)
         cellEl.addEventListener('contextmenu', (e) => {
           e.preventDefault();
+          if (suppressContext || isChording) return;
           toggleFlag(r, c);
         });
 
@@ -582,6 +673,21 @@
   }
 
   document.addEventListener('mouseup', () => {
+    if (isChording) {
+      clearAllDepressed();
+      if (chordTarget) {
+        const targetCell = board[chordTarget.r][chordTarget.c];
+        if (targetCell && targetCell.isOpen && targetCell.count > 0) {
+          performChord(chordTarget.r, chordTarget.c);
+        }
+      }
+      isChording = false;
+      chordTarget = null;
+      setTimeout(() => {
+        suppressClick = false;
+        suppressContext = false;
+      }, 120);
+    }
     if (gameState !== 'WON' && gameState !== 'LOST') {
       faceEmojiEl.textContent = '😊';
     }
